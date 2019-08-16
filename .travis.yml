@@ -1,9 +1,7 @@
 ---
 os: osx
 osx_image: xcode10.1
-before_script:
-  - pwd
-  - ls -halrt
+sudo: required
 script:
   - ./install
 
