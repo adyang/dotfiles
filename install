@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo --validate
+while true; do sudo --non-interactive true; sleep 20; kill -0 "$$" || exit; done 2>/dev/null &
+
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew bundle --verbose
+
