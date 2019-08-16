@@ -1,7 +1,9 @@
 #!/bin/bash
 
-sudo --validate
-while true; do sudo --non-interactive true; sleep 20; kill -0 "$$" || exit; done 2>/dev/null &
+if [[ "${CI}" != true ]]; then
+  sudo --validate
+  while true; do sudo --non-interactive true; sleep 20; kill -0 "$$" || exit; done 2>/dev/null &
+fi
 
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew bundle --verbose
