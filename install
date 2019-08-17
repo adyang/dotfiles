@@ -8,3 +8,17 @@ fi
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew bundle --verbose
 
+echo "Symlinking dotfiles to ${HOME} ..."
+script_dir="$(dirname "$(realpath -s "${BASH_SOURCE[0]}")")"
+shopt -s dotglob
+for filepath in "${script_dir}/home"/*; do
+  file="${filepath##*/}"
+  if [[ -f "${HOME}/${file}" && ! -L "${HOME}/${file}" ]]; then
+    mv "${HOME}/${file}" "${HOME}/${file}.bak"
+  fi
+  if [[ ! -e "${HOME}/${file}" ]]; then
+    ln -s "${filepath}" "${HOME}/${file}"
+  fi
+done
+shopt -u dotglob
+
