@@ -1,4 +1,5 @@
 tap "caskroom/versions"
+tap "homebrew/cask-fonts"
 
 brew "vim"
 brew "git"
@@ -27,6 +28,7 @@ brew "bats-core"
 
 cask "1password"
 cask "iterm2"
+cask "font-inconsolata-g-for-powerline"
 cask "spectacle"
 cask "firefox"
 cask "waterfox"
