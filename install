@@ -7,6 +7,7 @@ main() {
   brew_packages
   install_powerline
   symlink_dotfiles
+  configure_iterm2
 }
 
 sudo_keep_alive() {
@@ -22,7 +23,7 @@ brew_packages() {
 }
 
 install_powerline() {
-  echo "Installing powerline-go..."
+  echo 'Installing powerline-go...'
   local local_bin="${HOME}/.local/bin"
   local install_dir="${HOME}/.powerline-go"
   local url='https://github.com/justjanne/powerline-go/releases/download/v1.13.0/powerline-go-darwin-amd64'
@@ -61,6 +62,14 @@ symlink_if_absent() {
   if [[ ! -e "${target}" ]]; then
     ln -sv "${src}" "${target}"
   fi
+}
+
+configure_iterm2() {
+  echo 'Configuring iterm2 preferences...'
+  defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '~/.iterm2'
+  defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
+  echo '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
+  echo '                     Cmd + , > Preferences > Tick "Load preferences from a custom folder or URL"'
 }
 
 main "$@"
