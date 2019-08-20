@@ -8,6 +8,7 @@ main() {
   install_powerline
   symlink_dotfiles
   configure_iterm2
+  configure_asdf_plugins
 }
 
 sudo_keep_alive() {
@@ -72,6 +73,40 @@ configure_iterm2() {
   defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
   echo '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
   echo '                     Cmd + , > Preferences > Tick "Load preferences from a custom folder or URL"'
+}
+
+configure_asdf_plugins() {
+  echo 'Configuring asdf plugins...'
+  source "$(brew --prefix asdf)/asdf.sh"
+  local plugin_props
+  while IFS=' ' read -ra plugin_props; do
+    configure_plugin "${plugin_props[@]}"
+  done < "${HOME}/.tool-versions"
+}
+
+configure_plugin() {
+  local plugin="$1"
+  local versions=("${@:2}")
+  upadd_plugin "${plugin}"
+  install_plugin_versions "${plugin}" "${versions[@]}"
+}
+
+upadd_plugin() {
+  local plugin="$1"
+  if [[ "$(asdf plugin-list)" =~ (^|$'\n')"${plugin}"($|$'\n') ]]; then
+    asdf plugin-update "${plugin}"
+  else
+    asdf plugin-add "${plugin}"
+  fi
+}
+
+install_plugin_versions() {
+  local plugin="$1"
+  local versions=("${@:2}")
+  for v in "${versions[@]}"; do
+    asdf install "${plugin}" "${v}"
+  done
+  asdf global "${plugin}" "${versions[@]}"
 }
 
 main "$@"
