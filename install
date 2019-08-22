@@ -9,6 +9,7 @@ main() {
   symlink_dotfiles
   configure_iterm2
   configure_asdf_plugins
+  install_pip_packages
 }
 
 sudo_keep_alive() {
@@ -107,6 +108,11 @@ install_plugin_versions() {
     asdf install "${plugin}" "${v}"
   done
   asdf global "${plugin}" "${versions[@]}"
+}
+
+install_pip_packages() {
+  python -m pip install --upgrade pip
+  python -m pip install --upgrade --user pipx
 }
 
 main "$@"
