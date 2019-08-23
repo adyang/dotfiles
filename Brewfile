@@ -23,6 +23,7 @@ brew "gradle"
 brew "maven"
 brew "leiningen"
 
+cask "dotnet-sdk"
 brew "r"
 brew "bats-core"
 
