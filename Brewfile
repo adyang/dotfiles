@@ -38,5 +38,6 @@ cask "intellij-idea"
 cask "rstudio"
 cask "docker"
 cask "vagrant"
+brew "vagrant-completion"
 cask "squidman"
 
