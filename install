@@ -8,6 +8,7 @@ main() {
   install_powerline
   symlink_dotfiles
   configure_iterm2
+  configure_vim
   configure_asdf_plugins
   install_pip_packages
 }
@@ -74,6 +75,32 @@ configure_iterm2() {
   defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
   echo '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
   echo '                     Cmd + , > Preferences > Tick "Load preferences from a custom folder or URL"'
+}
+
+configure_vim() {
+  echo 'Configuring vim...'
+  local plugins_path="${HOME}/.vim/pack/plugins"
+  mkdir -p "${plugins_path}"/{start,opt}
+  local plugins=(
+    'https://github.com/chriskempson/base16-vim.git'
+    'https://github.com/scrooloose/nerdtree.git'
+    'https://github.com/tpope/vim-fireplace.git'
+    'https://github.com/pangloss/vim-javascript.git'
+    'https://github.com/bhurlow/vim-parinfer.git'
+    'https://github.com/tpope/vim-repeat.git'
+    'https://github.com/tpope/vim-surround.git'
+  )
+  for plugin in "${plugins[@]}"; do
+    local basename="${plugin##*/}"
+    local dirname="${basename%.*}"
+    local plugin_dir="${plugins_path}/start/${dirname}"
+    if [[ -d "${plugin_dir}" ]]; then
+      git -C "${plugin_dir}" pull origin master
+    else
+      git clone "${plugin}" "${plugin_dir}"
+    fi
+  done
+  vim -c 'helptags ALL' -c 'qall!' &> /dev/null
 }
 
 configure_asdf_plugins() {
