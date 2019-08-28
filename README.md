@@ -1,0 +1,14 @@
+# Dotfiles
+
+## Bootstrap
+1. `./generate-ssh-key` and paste public key into repository services (can be done while install script runs in parallel).
+2. `./install`
+3. `brew bundle --verbose --file=Brewfile-kext`, it will fail for the 1st time. Go to `Security & Privacy` > click on `Allow` and rerun the command.
+
+## References
+1. https://github.com/trptcolin/dotfiles
+2. https://github.com/sam-hosseini/dotfiles
+3. https://github.com/mathiasbynens/dotfiles
+4. https://github.com/holman/dotfiles
+5. https://github.com/TimMoore/dotfiles
+
