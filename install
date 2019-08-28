@@ -44,7 +44,13 @@ install_powerline() {
 symlink_dotfiles() {
   echo "Symlinking dotfiles to ${HOME} ..."
   local script_dir="$(dirname "$(realpath -s "${BASH_SOURCE[0]}")")"
+  symlink_home_files "${script_dir}"
+  symlink_nested_home_files "${script_dir}"
+}
+
+symlink_home_files() {
   shopt -s dotglob
+  local script_dir="$1"
   local filepath
   for filepath in "${script_dir}/home"/*; do
     local file="${filepath##*/}"
@@ -52,6 +58,18 @@ symlink_dotfiles() {
     symlink_if_absent "${filepath}" "${HOME}/${file}"
   done
   shopt -u dotglob
+}
+
+symlink_nested_home_files() {
+  local script_dir="$1"
+  local filepath
+  while IFS= read -rd '' filepath; do
+    local main_path="${filepath#*home-nested/}"
+    local main_basedir="${main_path%/*}"
+    mkdir -p "${HOME}/${main_basedir}"
+    backup_if_regular_file "${HOME}/${main_path}"
+    symlink_if_absent "${filepath}" "${HOME}/${main_path}"
+  done < <(find "${script_dir}/home-nested" -mindepth 2 -type f -print0)
 }
 
 backup_if_regular_file() {
