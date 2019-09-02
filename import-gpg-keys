@@ -1,0 +1,71 @@
+#!/bin/bash
+
+main() {
+  parse_arguments "$@"
+  exit_if_no_options
+  import_keys
+}
+
+parse_arguments() {
+  while true; do
+    case "$1" in
+      --public-key)
+        PUBLIC_KEY="$2"
+        [[ -f "${PUBLIC_KEY}" ]] || exit_on_invalid_file '--public-key' "${PUBLIC_KEY}"
+        shift
+        ;;
+      --secret-key)
+        SECRET_KEY="$2"
+        [[ -f "${SECRET_KEY}" ]] || exit_on_invalid_file '--secret-key' "${SECRET_KEY}"
+        shift
+        ;;
+      --ownertrust)
+        OWNERTRUST="$2"
+        [[ -f "${OWNERTRUST}" ]] || exit_on_invalid_file '--ownertrust' "${OWNERTRUST}"
+        shift
+        ;;
+      --*)
+        err "Invalid option: '$1'"
+        usage
+        ;;
+      *) break;;
+    esac
+    shift
+  done
+  readonly PUBLIC_KEY SECRET_KEY OWNERTRUST
+}
+
+exit_if_no_options() {
+  if [[ "${PUBLIC_KEY}" == '' && "${SECRET_KEY}" == '' && "${OWNERTRUST}" == '' ]]; then
+    usage
+  fi
+}
+
+import_keys() {
+  if [[ -f "${PUBLIC_KEY}" ]]; then gpg --import "${PUBLIC_KEY}"; fi
+  if [[ -f "${SECRET_KEY}" ]]; then gpg --batch --import "${SECRET_KEY}"; fi
+  if [[ -f "${OWNERTRUST}" ]]; then gpg --import-ownertrust "${OWNERTRUST}"; fi
+}
+
+exit_on_invalid_file() {
+  local option="$1"
+  local value="$2"
+  err "Invalid value for '${option}': '${value}' is not a valid file or does not exists"
+  usage
+}
+
+err() {
+  printf "%s\n" "$*" >&2
+}
+
+usage() {
+  printf '%s' "\
+usage: ./import-gpg-keys [--public-key <public-key-file>]
+                         [--secret-key <secret-key-file>]
+                         [--ownertrust <ownertrust-file>]
+" >&2
+  exit 2
+}
+
+main "$@"
+

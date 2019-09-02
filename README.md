@@ -4,6 +4,7 @@
 1. `./generate-ssh-key` and paste public key into repository services (can be done while install script runs in parallel).
 2. `./install`
 3. `brew bundle --verbose --file=Brewfile-kext`, it will fail for the 1st time. Go to `Security & Privacy` > click on `Allow` and rerun the command.
+4. `./import-gpg-keys --public-key <public-key-file> --secret-key <secret-key-file> --ownertrust <ownertrust-file>`
 
 ## References
 1. https://github.com/trptcolin/dotfiles

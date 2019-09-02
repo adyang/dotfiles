@@ -1,0 +1,6 @@
+#!/bin/bash
+
+readonly SCRIPT_DIR="$(dirname "$(realpath -s "${BASH_SOURCE[0]}")")"
+
+"${SCRIPT_DIR}/libs/bats-core/bin/bats" "${SCRIPT_DIR}"/*.bats
+
