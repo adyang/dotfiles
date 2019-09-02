@@ -5,4 +5,5 @@ sudo: required
 script:
   - ./generate-ssh-key <<< $'pass\npass\npass'
   - ./install
+  - ./test/run-tests
 
