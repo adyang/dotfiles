@@ -3,7 +3,7 @@ os: osx
 osx_image: xcode10.1
 sudo: required
 script:
-  - ./generate-ssh-key <<< $'pass\npass\npass'
+  - ./generate-ssh-keys <<< $'pass\npass\npass'
   - ./install
   - ./test/run-tests
 
