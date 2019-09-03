@@ -107,6 +107,7 @@ configure_vim() {
     'https://github.com/bhurlow/vim-parinfer.git'
     'https://github.com/tpope/vim-repeat.git'
     'https://github.com/tpope/vim-surround.git'
+    'https://github.com/dense-analysis/ale.git'
   )
   for plugin in "${plugins[@]}"; do
     local basename="${plugin##*/}"
