@@ -14,8 +14,16 @@ main() {
 }
 
 sudo_keep_alive() {
-  sudo --validate
-  while true; do sudo --non-interactive true; sleep 20; kill -0 "$$" || exit; done 2>/dev/null &
+  sudo --stdin --validate || exit "$?"
+  sudo_until_process_ends
+}
+
+sudo_until_process_ends() {
+  while true; do
+    sudo --non-interactive true
+    sleep 20
+    kill -0 "$$" || exit
+  done 2>/dev/null &
 }
 
 brew_packages() {
@@ -164,5 +172,5 @@ install_pip_packages() {
   pipx install yolk3k
 }
 
-main "$@"
+(return 0 2>/dev/null) || main "$@"
 

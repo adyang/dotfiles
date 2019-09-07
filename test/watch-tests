@@ -8,5 +8,5 @@ grep --recursive --word-regexp --files-with-matches  \
   "${SCRIPT_DIR}/.." \
   --regexp='#!/bin/bash' \
   --regexp='#!/usr/bin/env bats' \
-  | entr "${SCRIPT_DIR}/run-tests"
+  | entr "${SCRIPT_DIR}/run-tests" "$@"
 
