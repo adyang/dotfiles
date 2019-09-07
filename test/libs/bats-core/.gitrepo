@@ -5,8 +5,8 @@
 ;
 [subrepo]
 	remote = https://github.com/bats-core/bats-core.git
-	branch = v1.1.0
-	commit = c706d1470dd1376687776bbe985ac22d09780327
-	parent = 851e4b7c3c00af081bb9bebbbdf68ea330c85303
+	branch = master
+	commit = e582ef5aa6303285000edb5ef8651e6235705382
+	parent = ba7f538389527491fb731bfddb8872067a46ff1f
 	method = merge
 	cmdver = 0.4.0
