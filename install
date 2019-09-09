@@ -28,11 +28,13 @@ sudo_until_process_ends() {
 
 brew_packages() {
   if ! type brew &>/dev/null; then
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    local install
+    install="$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" || exit "$?"
+    /usr/bin/ruby -e "${install}"
   fi
   brew analytics off && brew analytics
-  brew update
-  brew bundle --verbose
+  brew update || exit "$?"
+  brew bundle --verbose || exit "$?"
 }
 
 install_powerline() {
