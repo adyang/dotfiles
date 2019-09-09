@@ -3,8 +3,6 @@
 load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
 
-source "${BATS_TEST_DIRNAME}/../install" 
-
 @test "sudo_keep_alive: password validation failure" {
   sudo_until_process_ends() {
     echo '[FAILURE] should exit immediately on sudo validation failure'
@@ -140,5 +138,51 @@ mock_brew_failure() {
       echo "brew $@"
     fi
   }
+}
+
+setup() {
+  tmpdir="$(mktemp -d)"
+  DOT_HOME="${tmpdir}"
+  source "${BATS_TEST_DIRNAME}/../install" 
+}
+
+teardown() {
+  rm -rf "${tmpdir}"
+}
+
+@test "install_powerline: powerline-go already installed" {
+  mock_curl_echo
+  mkdir -p "${DOT_HOME}/.powerline-go"
+  touch "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.13.0"
+  
+  run install_powerline
+
+  assert_success
+  refute_line --partial 'curl'
+}
+
+@test "install_powerline: powerline-go not installed" {
+  curl() {
+    mkdir -p "${DOT_HOME}/.powerline-go"
+    touch "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.13.0"
+  }
+
+  run install_powerline
+
+  assert_success
+  assert [ "${DOT_HOME}/.local/bin/powerline-go" -ef "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.13.0" ]
+}
+
+@test "install_powerline: powerline-go not installed but download fails" {
+  curl() {
+    return 22
+  }
+  
+  run install_powerline
+
+  assert_failure 22
+  refute [ -x "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.13.0" ]
+  refute [ -d "${DOT_HOME}/.local/bin" ]
+  refute [ "${DOT_HOME}/.local/bin/powerline-go" -ef "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.13.0" ]
 }
 
