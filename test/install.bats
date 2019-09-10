@@ -186,3 +186,52 @@ teardown() {
   refute [ "${DOT_HOME}/.local/bin/powerline-go" -ef "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.13.0" ]
 }
 
+@test "find_script_dir: dirname fails" {
+  dirname() {
+    return 1
+  }
+  cd() {
+    echo "cd $@"
+  }
+  
+  run find_script_dir
+
+  assert_failure 1
+  refute_line --partial 'cd'
+}
+
+@test "find_script_dir: cd fails" {
+  cd() {
+    return 1;
+  }
+  pwd() {
+    echo "pwd $@"
+  }
+  
+  run find_script_dir
+
+  assert_failure 1
+  refute_line --partial 'pwd'
+}
+
+@test "find_script_dir: success" {
+  run find_script_dir
+
+  assert_success
+  assert_output "${BATS_TEST_DIRNAME%/*}"
+}
+
+@test "find_script_dir: cd writes noise to stdout and stderr" {
+  cd() {
+    echo 'stdout noise'
+    echo 'stderr noise' >&2
+    unset -f cd
+    cd "$1"
+  }
+  
+  run find_script_dir
+
+  assert_success
+  assert_output "${BATS_TEST_DIRNAME%/*}"
+}
+

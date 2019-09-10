@@ -53,6 +53,12 @@ install_powerline() {
   fi
 }
 
+find_script_dir() {
+  local dir
+  dir="$(dirname "${BASH_SOURCE[0]}")" || return "$?"
+  cd "${dir}" &>/dev/null && pwd -P
+}
+
 symlink_dotfiles() {
   echo "Symlinking dotfiles to ${HOME} ..."
   local script_dir="$(dirname "$(realpath -s "${BASH_SOURCE[0]}")")"
