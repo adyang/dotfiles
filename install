@@ -1,6 +1,14 @@
 #!/bin/bash
 
-readonly DOT_HOME="${DOT_HOME:-${HOME}}"
+find_script_dir() {
+  local dir
+  dir="$(dirname "${BASH_SOURCE[0]}")" || return "$?"
+  cd "${dir}" &>/dev/null && pwd -P
+}
+
+if [[ -z "${SCRIPT_DIR}" ]]; then SCRIPT_DIR="$(find_script_dir)" || exit "$?"; fi
+DOT_HOME="${DOT_HOME:-${HOME}}"
+readonly SCRIPT_DIR DOT_HOME
 
 main() {
   if [[ "${CI}" != 'true' ]]; then
@@ -53,17 +61,10 @@ install_powerline() {
   fi
 }
 
-find_script_dir() {
-  local dir
-  dir="$(dirname "${BASH_SOURCE[0]}")" || return "$?"
-  cd "${dir}" &>/dev/null && pwd -P
-}
-
 symlink_dotfiles() {
-  echo "Symlinking dotfiles to ${HOME} ..."
-  local script_dir="$(dirname "$(realpath -s "${BASH_SOURCE[0]}")")"
-  symlink_home_files "${script_dir}"
-  symlink_nested_home_files "${script_dir}"
+  echo "Symlinking dotfiles to ${DOT_HOME} ..."
+  symlink_home_files "${SCRIPT_DIR}"
+  symlink_nested_home_files "${SCRIPT_DIR}"
 }
 
 symlink_home_files() {
@@ -72,8 +73,8 @@ symlink_home_files() {
   local filepath
   for filepath in "${script_dir}/home"/*; do
     local file="${filepath##*/}"
-    backup_if_regular_file "${HOME}/${file}"
-    symlink_if_absent "${filepath}" "${HOME}/${file}"
+    backup_if_regular_file "${DOT_HOME}/${file}" || exit "$?"
+    symlink_if_absent "${filepath}" "${DOT_HOME}/${file}" || exit "$?"
   done
   shopt -u dotglob
 }
@@ -84,9 +85,9 @@ symlink_nested_home_files() {
   while IFS= read -rd '' filepath; do
     local main_path="${filepath#*home-nested/}"
     local main_basedir="${main_path%/*}"
-    mkdir -p "${HOME}/${main_basedir}"
-    backup_if_regular_file "${HOME}/${main_path}"
-    symlink_if_absent "${filepath}" "${HOME}/${main_path}"
+    mkdir -p "${DOT_HOME}/${main_basedir}"
+    backup_if_regular_file "${DOT_HOME}/${main_path}" || exit "$?"
+    symlink_if_absent "${filepath}" "${DOT_HOME}/${main_path}" || exit "$?"
   done < <(find "${script_dir}/home-nested" -mindepth 2 -type f -print0)
 }
 

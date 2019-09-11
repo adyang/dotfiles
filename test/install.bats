@@ -3,6 +3,19 @@
 load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
 
+setup() {
+  tmp_dot_home="$(mktemp -d)"
+  DOT_HOME="${tmp_dot_home}"
+  tmp_script_dir="$(mktemp -d)"
+  SCRIPT_DIR="${tmp_script_dir}"
+  source "${BATS_TEST_DIRNAME}/../install" 
+}
+
+teardown() {
+  rm -rf "${tmp_dot_home}"
+  rm -rf "${tmp_script_dir}"
+}
+
 @test "sudo_keep_alive: password validation failure" {
   sudo_until_process_ends() {
     echo '[FAILURE] should exit immediately on sudo validation failure'
@@ -140,16 +153,6 @@ mock_brew_failure() {
   }
 }
 
-setup() {
-  tmpdir="$(mktemp -d)"
-  DOT_HOME="${tmpdir}"
-  source "${BATS_TEST_DIRNAME}/../install" 
-}
-
-teardown() {
-  rm -rf "${tmpdir}"
-}
-
 @test "install_powerline: powerline-go already installed" {
   mock_curl_echo
   mkdir -p "${DOT_HOME}/.powerline-go"
@@ -233,5 +236,95 @@ teardown() {
 
   assert_success
   assert_output "${BATS_TEST_DIRNAME%/*}"
+}
+
+@test "symlink_dotfiles: regular file with same name as home file present" {
+  mkdir "${tmp_script_dir}/home"
+  touch "${tmp_script_dir}/home/present-file"
+  echo 'present-file' > "${tmp_dot_home}/present-file"
+  
+  run symlink_dotfiles
+
+  assert_success
+  assert [ "$(cat "${tmp_dot_home}/present-file.bak")" == 'present-file' ]
+  assert [ "${tmp_dot_home}/present-file" -ef "${tmp_script_dir}/home/present-file" ]
+}
+
+@test "symlink_dotfiles: directory with same name as home file present" {
+  mkdir "${tmp_script_dir}/home"
+  touch "${tmp_script_dir}/home/same-name"
+  mkdir "${tmp_dot_home}/same-name"
+  
+  run symlink_dotfiles
+
+  assert_success
+  assert [ -d "${tmp_dot_home}/same-name" ]
+  refute [ -e "${tmp_dot_home}/same-name.bak" ]
+  refute [ "${tmp_dot_home}/same-name" -ef "${tmp_script_dir}/home/same_name" ]
+}
+
+@test "symlink_dotfiles: symlink with same name as home file present" {
+  mkdir "${tmp_script_dir}/home"
+  touch "${tmp_script_dir}/home/same-name"
+  touch "${tmp_dot_home}/old-src"
+  ln -sv "${tmp_dot_home}/old-src" "${tmp_dot_home}/same-name"
+  
+  run symlink_dotfiles
+
+  assert_success
+  assert [ "${tmp_dot_home}/same-name" -ef "${tmp_dot_home}/old-src" ]
+  refute [ -e "${tmp_dot_home}/same-name.bak" ]
+}
+
+@test "symlink_dotfiles: hidden and non-hidden dotfiles" {
+  mkdir "${tmp_script_dir}/home"
+  touch "${tmp_script_dir}/home/"{.hidden,non-hidden}
+  mkdir "${tmp_script_dir}/home/"{.hidden-dir,non-hidden-dir}
+  
+  run symlink_dotfiles
+
+  assert_success
+  for file in .hidden non-hidden .hidden-dir non-hidden-dir; do
+    assert [ "${tmp_dot_home}/${file}" -ef "${tmp_script_dir}/home/${file}" ]
+  done
+}
+
+@test "symlink_dotfiles: nested home files" {
+  mkdir -p "${tmp_script_dir}/home-nested/nest1/nest2"
+  touch "${tmp_script_dir}/home-nested/nest1/nest2/nested-file"
+  
+  run symlink_dotfiles
+
+  assert_success
+  assert [ "${tmp_dot_home}/nest1/nest2/nested-file" -ef "${tmp_script_dir}/home-nested/nest1/nest2/nested-file" ]
+}
+
+@test "symlink_dotfiles: backup of regular file fails" {
+  backup_if_regular_file() {
+    return 1
+  }
+  symlink_if_absent() {
+    echo "symlink_if_absent $@"
+  }
+  
+  run symlink_dotfiles
+
+  assert_failure 1
+  refute_line --partial 'symlink_if_absent'
+}
+
+@test "symlink_dotfiles: symlink fails" {
+  symlink_if_absent() {
+    return 1
+  }
+  symlink_dotfiles_with_exit_test() {
+    symlink_dotfiles
+    echo '[FAILURE] failed to exit'
+  }
+  
+  run symlink_dotfiles_with_exit_test
+
+  assert_failure 1
+  refute_line '[FAILURE] failed to exit'
 }
 
