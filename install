@@ -108,6 +108,7 @@ symlink_if_absent() {
 
 configure_iterm2() {
   echo 'Configuring iterm2 preferences...'
+  # shellcheck disable=SC2088
   defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '~/.iterm2'
   defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
   echo '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
@@ -148,6 +149,7 @@ install_vim_plugins() {
 
 configure_asdf_plugins() {
   echo 'Configuring asdf plugins...'
+  # shellcheck disable=SC1090
   source "$(brew --prefix asdf)/asdf.sh" || exit "$?"
   local plugin_props
   while IFS=' ' read -ra plugin_props; do
