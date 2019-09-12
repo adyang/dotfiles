@@ -455,3 +455,81 @@ mock_asdf_failure() {
   }
 }
 
+@test "install_pip_packages: upgrade pip fails" {
+  mock_python_failure '-m pip install --upgrade pip'
+  mock_pipx_echo
+
+  run install_pip_packages
+
+  assert_failure 1
+  refute_line 'python -m pip install --upgrade --user pipx'
+}
+
+@test "install_pip_packages: install pipx fails" {
+  mock_python_failure '-m pip install --upgrade --user pipx'
+  mock_pipx_echo
+
+  run install_pip_packages
+
+  assert_failure 1
+  refute_line --partial 'pipx'
+}
+
+@test "install_pip_packages: pipx install ansible fails" {
+  mock_pipx_failure 'install ansible'
+  mock_python_echo
+
+  run install_pip_packages
+
+  assert_failure 1
+  refute_line --partial 'pipx install'
+}
+
+@test "install_pip_packages: pipx install yolk3k fails" {
+  mock_pipx_failure 'install yolk3k'
+  mock_python_echo
+  install_pip_packages_with_exit_test() {
+    install_pip_packages
+    echo '[FAILURE] failed to exit'
+  }
+
+  run install_pip_packages_with_exit_test
+
+  assert_failure 1
+  refute_line '[FAILURE] failed to exit'
+}
+
+mock_python_failure() {
+  failure_cmd="$*"
+  python() {
+    if [[ "$*" == "${failure_cmd}"* ]]; then
+      return 1
+    else
+      echo "python $@"
+    fi
+  }
+}
+
+mock_pipx_echo() {
+  pipx() {
+    echo "pipx $@"
+  }
+}
+
+mock_pipx_failure() {
+  failure_cmd="$*"
+  pipx() {
+    if [[ "$*" == "${failure_cmd}"* ]]; then
+      return 1
+    else
+      echo "pipx $@"
+    fi
+  }
+}
+
+mock_python_echo() {
+  python() {
+    echo "python $@"
+  }
+}
+
