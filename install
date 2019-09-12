@@ -148,17 +148,17 @@ install_vim_plugins() {
 
 configure_asdf_plugins() {
   echo 'Configuring asdf plugins...'
-  source "$(brew --prefix asdf)/asdf.sh"
+  source "$(brew --prefix asdf)/asdf.sh" || exit "$?"
   local plugin_props
   while IFS=' ' read -ra plugin_props; do
-    configure_plugin "${plugin_props[@]}"
-  done < "${HOME}/.tool-versions"
+    configure_plugin "${plugin_props[@]}" || exit "$?"
+  done < "${DOT_HOME}/.tool-versions"
 }
 
 configure_plugin() {
   local plugin="$1"
   local versions=("${@:2}")
-  upadd_plugin "${plugin}"
+  upadd_plugin "${plugin}" || return "$?"
   install_plugin_versions "${plugin}" "${versions[@]}"
 }
 
@@ -174,8 +174,9 @@ upadd_plugin() {
 install_plugin_versions() {
   local plugin="$1"
   local versions=("${@:2}")
+  local v
   for v in "${versions[@]}"; do
-    asdf install "${plugin}" "${v}"
+    asdf install "${plugin}" "${v}" || return "$?"
   done
   asdf global "${plugin}" "${versions[@]}"
 }

@@ -395,3 +395,63 @@ mock_vim_echo() {
   }
 }
 
+@test "configure_asdf_plugins: source asdf fails" {
+  source() {
+    return 1
+  }
+  configure_plugin() {
+    echo "configure_plugin $@"
+  }
+  echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
+
+  run configure_asdf_plugins
+
+  assert_failure 1
+  refute_line --partial 'configure_plugin'
+}
+
+@test "configure_asdf_plugins: upadd_plugin fails" {
+  upadd_plugin() {
+    return 1
+  }
+  source() {
+    echo "source $@"
+  }
+  install_plugin_versions() {
+    echo "install_plugin_versions $@"
+  }
+  echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
+
+  run configure_asdf_plugins
+
+  assert_failure 1
+  refute_line --partial 'install_plugin_versions'
+}
+
+@test "configure_asdf_plugins: asdf install <plugin> <version> fails" {
+  mock_asdf_failure 'install'
+  source() {
+    echo "source $@"
+  }
+  upadd_plugin() {
+    echo "upadd_plugin $@"
+  }
+  echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
+
+  run configure_asdf_plugins
+
+  assert_failure 1
+  refute_line --partial 'asdf global'
+}
+
+mock_asdf_failure() {
+  failure_cmd="$1"
+  asdf() {
+    if [[ "$1" == "${failure_cmd}" ]]; then
+      return 1
+    else
+      echo "asdf $@"
+    fi
+  }
+}
+
