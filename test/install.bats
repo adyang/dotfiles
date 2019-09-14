@@ -32,13 +32,13 @@ teardown() {
   curl() {
     echo 'brew-script'
   }
-  mock_ruby_echo
-  mock_brew_echo
+  mock_echo '/usr/bin/ruby'
+  mock_echo 'brew'
 
   run brew_packages
 
   assert_success
-  assert_line --index 0 'ruby -e brew-script'
+  assert_line --index 0 '/usr/bin/ruby -e brew-script'
 }
 
 
@@ -47,34 +47,34 @@ teardown() {
   curl() {
     return 22
   }
-  mock_ruby_echo
-  mock_brew_echo
+  mock_echo '/usr/bin/ruby'
+  mock_echo 'brew'
 
   run brew_packages
 
   assert_failure 22
-  refute_output --partial 'ruby'
+  refute_output --partial '/usr/bin/ruby'
   refute_output --partial 'brew'
 }
 
 @test "brew_packages: homebrew is installed" {
   mock_is_brew_installed 0
-  mock_curl_echo
-  mock_ruby_echo
-  mock_brew_echo
+  mock_echo 'curl'
+  mock_echo '/usr/bin/ruby'
+  mock_echo 'brew'
 
   run brew_packages
 
   assert_success
   refute_output --partial 'curl'
-  refute_output --partial 'ruby'
+  refute_output --partial '/usr/bin/ruby'
 }
 
 @test "brew_packages: brew commands are all successful" {
   mock_is_brew_installed 0
-  mock_curl_echo
-  mock_ruby_echo
-  mock_brew_echo
+  mock_echo 'curl'
+  mock_echo '/usr/bin/ruby'
+  mock_echo 'brew'
 
   run brew_packages
 
@@ -87,9 +87,9 @@ teardown() {
 
 @test "brew_packages: brew update fails" {
   mock_is_brew_installed 0
-  mock_curl_echo
-  mock_ruby_echo
-  mock_brew_failure 'update'
+  mock_echo 'curl'
+  mock_echo '/usr/bin/ruby'
+  mock_failure 'brew' 'update'
 
   run brew_packages
 
@@ -99,9 +99,9 @@ teardown() {
 
 @test "brew_packages: brew bundle fails" {
   mock_is_brew_installed 0
-  mock_curl_echo
-  mock_ruby_echo
-  mock_brew_failure 'bundle'
+  mock_echo 'curl'
+  mock_echo '/usr/bin/ruby'
+  mock_failure 'brew' 'bundle'
   brew_packages_with_exit_test() {
     brew_packages
     echo '[FAILURE] failed to exit'
@@ -124,37 +124,8 @@ mock_is_brew_installed() {
   }
 }
 
-mock_curl_echo() {
-  curl() {
-    echo "curl $@"
-  }
-}
-
-mock_ruby_echo() {
-  /usr/bin/ruby() {
-    echo "ruby $@"
-  }
-}
-
-mock_brew_echo() {
-  brew() {
-    echo "brew $@"
-  }
-}
-
-mock_brew_failure() {
-  failure_cmd="$1"
-  brew() {
-    if [[ "$1" == "${failure_cmd}" ]]; then
-      return 1
-    else
-      echo "brew $@"
-    fi
-  }
-}
-
 @test "install_powerline: powerline-go already installed" {
-  mock_curl_echo
+  mock_echo 'curl'
   mkdir -p "${DOT_HOME}/.powerline-go"
   touch "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.13.0"
   
@@ -193,9 +164,7 @@ mock_brew_failure() {
   dirname() {
     return 1
   }
-  cd() {
-    echo "cd $@"
-  }
+  mock_echo 'cd'
   
   run find_script_dir
 
@@ -207,9 +176,7 @@ mock_brew_failure() {
   cd() {
     return 1;
   }
-  pwd() {
-    echo "pwd $@"
-  }
+  mock_echo 'pwd'
   
   run find_script_dir
 
@@ -303,9 +270,7 @@ mock_brew_failure() {
   backup_if_regular_file() {
     return 1
   }
-  symlink_if_absent() {
-    echo "symlink_if_absent $@"
-  }
+  mock_echo 'symlink_if_absent'
   
   run symlink_dotfiles
 
@@ -329,7 +294,7 @@ mock_brew_failure() {
 }
 
 @test "install_vim_plugins: plugin is not installed" {
-  mock_git_echo
+  mock_echo 'git'
 
   run install_vim_plugins 'https://github.com/dense-analysis/plugin.git'
 
@@ -341,7 +306,7 @@ mock_brew_failure() {
   git() {
     return 1
   }
-  mock_vim_echo
+  mock_echo 'vim'
 
   run install_vim_plugins 'https://github.com/dense-analysis/plugin.git'
 
@@ -351,7 +316,7 @@ mock_brew_failure() {
 
 @test "install_vim_plugins: plugin is already installed" {
   mkdir -p "${tmp_dot_home}/.vim/pack/plugins/start/plugin"
-  mock_git_echo
+  mock_echo 'git'
 
   run install_vim_plugins 'https://github.com/dense-analysis/plugin.git'
 
@@ -364,7 +329,7 @@ mock_brew_failure() {
   git() {
     return 1
   }
-  mock_vim_echo
+  mock_echo 'vim'
 
   run install_vim_plugins 'https://github.com/dense-analysis/plugin.git'
 
@@ -374,7 +339,7 @@ mock_brew_failure() {
 
 @test "install_vim_plugins: multiple plugins" {
   mkdir -p "${tmp_dot_home}/.vim/pack/plugins/start/plugin1"
-  mock_git_echo
+  mock_echo 'git'
 
   run install_vim_plugins 'https://github.com/dense-analysis/plugin1.git' 'https://github.com/dense-analysis/plugin2.git'
 
@@ -383,25 +348,11 @@ mock_brew_failure() {
   assert_line "git clone https://github.com/dense-analysis/plugin2.git ${tmp_dot_home}/.vim/pack/plugins/start/plugin2"
 }
 
-mock_git_echo() {
-  git() {
-    echo "git $@"
-  }
-}
-
-mock_vim_echo() {
-  vim() {
-    echo "vim $@"
-  }
-}
-
 @test "configure_asdf_plugins: source asdf fails" {
   source() {
     return 1
   }
-  configure_plugin() {
-    echo "configure_plugin $@"
-  }
+  mock_echo 'configure_plugin'
   echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
 
   run configure_asdf_plugins
@@ -414,12 +365,8 @@ mock_vim_echo() {
   upadd_plugin() {
     return 1
   }
-  source() {
-    echo "source $@"
-  }
-  install_plugin_versions() {
-    echo "install_plugin_versions $@"
-  }
+  mock_echo 'source'
+  mock_echo 'install_plugin_versions'
   echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
 
   run configure_asdf_plugins
@@ -429,13 +376,9 @@ mock_vim_echo() {
 }
 
 @test "configure_asdf_plugins: asdf install <plugin> <version> fails" {
-  mock_asdf_failure 'install'
-  source() {
-    echo "source $@"
-  }
-  upadd_plugin() {
-    echo "upadd_plugin $@"
-  }
+  mock_failure 'asdf' 'install'
+  mock_echo 'source'
+  mock_echo 'upadd_plugin'
   echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
 
   run configure_asdf_plugins
@@ -444,20 +387,9 @@ mock_vim_echo() {
   refute_line --partial 'asdf global'
 }
 
-mock_asdf_failure() {
-  failure_cmd="$1"
-  asdf() {
-    if [[ "$1" == "${failure_cmd}" ]]; then
-      return 1
-    else
-      echo "asdf $@"
-    fi
-  }
-}
-
 @test "install_pip_packages: upgrade pip fails" {
-  mock_python_failure '-m pip install --upgrade pip'
-  mock_pipx_echo
+  mock_failure 'python' '-m pip install --upgrade pip' 
+  mock_echo 'pipx'
 
   run install_pip_packages
 
@@ -466,8 +398,8 @@ mock_asdf_failure() {
 }
 
 @test "install_pip_packages: install pipx fails" {
-  mock_python_failure '-m pip install --upgrade --user pipx'
-  mock_pipx_echo
+  mock_failure 'python' '-m pip install --upgrade --user pipx'
+  mock_echo 'pipx'
 
   run install_pip_packages
 
@@ -476,8 +408,8 @@ mock_asdf_failure() {
 }
 
 @test "install_pip_packages: pipx install ansible fails" {
-  mock_pipx_failure 'install ansible'
-  mock_python_echo
+  mock_failure 'pipx' 'install ansible'
+  mock_echo 'python'
 
   run install_pip_packages
 
@@ -486,8 +418,8 @@ mock_asdf_failure() {
 }
 
 @test "install_pip_packages: pipx install yolk3k fails" {
-  mock_pipx_failure 'install yolk3k'
-  mock_python_echo
+  mock_failure 'pipx' 'install yolk3k'
+  mock_echo 'python'
   install_pip_packages_with_exit_test() {
     install_pip_packages
     echo '[FAILURE] failed to exit'
@@ -499,37 +431,25 @@ mock_asdf_failure() {
   refute_line '[FAILURE] failed to exit'
 }
 
-mock_python_failure() {
-  failure_cmd="$*"
-  python() {
-    if [[ "$*" == "${failure_cmd}"* ]]; then
-      return 1
-    else
-      echo "python $@"
-    fi
-  }
+mock_echo() {
+  . /dev/stdin <<EOF
+    $1() {
+      echo "$1 \$*"
+    }
+EOF
 }
 
-mock_pipx_echo() {
-  pipx() {
-    echo "pipx $@"
-  }
-}
-
-mock_pipx_failure() {
-  failure_cmd="$*"
-  pipx() {
-    if [[ "$*" == "${failure_cmd}"* ]]; then
-      return 1
-    else
-      echo "pipx $@"
-    fi
-  }
-}
-
-mock_python_echo() {
-  python() {
-    echo "python $@"
-  }
+mock_failure() {
+  local cmd="$1"
+  local failure_args="${*:2}"
+  . /dev/stdin <<EOF
+    ${cmd}() {
+      if [[ "\$*" == '${failure_args}'* ]]; then
+        return 1
+      else
+        echo "${cmd} \$*"
+      fi
+    }
+EOF
 }
 
