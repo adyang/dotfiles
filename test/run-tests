@@ -1,6 +1,7 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)" || exit "$?"
+UNRESOLVED_DIR="$(dirname "${BASH_SOURCE[0]}")" || exit "$?"
+SCRIPT_DIR="$(cd "${UNRESOLVED_DIR}" &>/dev/null && pwd -P)" || exit "$?"
 readonly SCRIPT_DIR
 
 if (( "$#" == 0 )); then
