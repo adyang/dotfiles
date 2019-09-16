@@ -1,12 +1,9 @@
 #!/bin/bash
 
-find_script_dir() {
-  local dir
-  dir="$(dirname "${BASH_SOURCE[0]}")" || return "$?"
-  cd "${dir}" &>/dev/null && pwd -P
-}
-
-if [[ -z "${SCRIPT_DIR}" ]]; then SCRIPT_DIR="$(find_script_dir)" || exit "$?"; fi
+if [[ -z "${SCRIPT_DIR}" ]]; then
+  UNRESOLVED_DIR="$(dirname "${BASH_SOURCE[0]}")" || exit "$?"
+  SCRIPT_DIR="$(cd "${UNRESOLVED_DIR}" &>/dev/null && pwd -P)" || exit "$?"
+fi
 DOT_HOME="${DOT_HOME:-${HOME}}"
 readonly SCRIPT_DIR DOT_HOME
 
