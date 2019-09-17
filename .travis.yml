@@ -5,5 +5,5 @@ sudo: required
 script: >
   ./test/run-tests
   && ./generate-ssh-keys <<< $'pass\npass\npass'
-  && ./install
+  && bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap)
 
