@@ -219,6 +219,8 @@ mock_is_brew_installed() {
 
   assert_success
   assert [ "${tmp_dot_home}/nest1/nest2/nested-file" -ef "${tmp_script_dir}/home-nested/nest1/nest2/nested-file" ]
+  refute [ -L "${tmp_dot_home}/nest1" ]
+  refute [ -L "${tmp_dot_home}/nest1/nest2" ]
 }
 
 @test "symlink_dotfiles: backup of regular file fails" {
