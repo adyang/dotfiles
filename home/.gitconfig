@@ -1,0 +1,9 @@
+# This is Git's per-user configuration file.
+[user]
+	name = adyang
+	email = 20383270+adyang@users.noreply.github.com
+	signingkey = D2517411C00B3D57
+[includeIf "gitdir:~/work/"]
+	path = ~/work/.gitconfig
+[diff]
+	submodule = log
