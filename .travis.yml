@@ -2,8 +2,8 @@
 os: osx
 osx_image: xcode10.1
 sudo: required
-script:
-  - ./test/run-tests \
-      && ./generate-ssh-keys <<< $'pass\npass\npass' \
-      && ./install
+script: >
+./test/run-tests
+  && ./generate-ssh-keys <<< $'pass\npass\npass'
+  && ./install
 
