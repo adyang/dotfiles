@@ -1,8 +1,27 @@
 #!/bin/bash
 
-ssh-keygen -t ed25519 -f "${HOME}/.ssh/id_ed25519"
-ssh-add -K "${HOME}/.ssh/id_ed25519"
+readonly GEN_SSH_HOME="${GEN_SSH_HOME:-${HOME}}"
 
-pbcopy < "${HOME}/.ssh/id_ed25519.pub"
+set +o allexport
+unset -v passphrase
+IFS= read -rsp 'Please enter desired passphrase for SSH key generation: ' passphrase || exit "$?"
+if [[ -z "${passphrase}" ]]; then
+  echo 'Error: passphrase should not be empty.'
+  exit 1
+fi
+
+ssh-keygen -t ed25519 -f "${GEN_SSH_HOME}/.ssh/id_ed25519" -N "${passphrase}" || exit "$?"
+
+expect <<EOF || exit "$?"
+spawn ssh-add -K "${GEN_SSH_HOME}/.ssh/id_ed25519"
+expect -re "^Enter passphrase .*: $"
+send -- "${passphrase}\r"
+expect {
+    -re "Bad passphrase.*: $" { exit 1 }
+    eof
+}
+EOF
+
+pbcopy < "${GEN_SSH_HOME}/.ssh/id_ed25519.pub"
 echo 'Public key has been copied to the clipboard.'
 
