@@ -33,8 +33,9 @@ teardown() {
   rm -rf "${tmpdir}"
 }
 
-@test "no options provided" {
+@test "[import-gpg-keys] no options provided" {
   run "${IMPORT_GPG_KEYS}"
+
   assert_failure 2
   assert_output "\
 usage: ./import-gpg-keys [--public-key <public-key-file>]
@@ -42,20 +43,22 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
                          [--ownertrust <ownertrust-file>]"
 }
 
-@test "no options but unexpected arguments provided" {
+@test "[import-gpg-keys] no options but unexpected arguments provided" {
   run "${IMPORT_GPG_KEYS}" unexpected arguments
+
   assert_failure 2
   assert_line --index 0 --partial 'usage'
 }
 
-@test "invalid option" {
+@test "[import-gpg-keys] invalid option" {
   run "${IMPORT_GPG_KEYS}" --invalid-option
+
   assert_failure 2
   assert_line --index 0 "Invalid option: '--invalid-option'"
   assert_line --index 1 --partial 'usage'
 }
 
-@test "public-key option provided: public-key-file value absent" {
+@test "[import-gpg-keys] public-key option provided: public-key-file value absent" {
   export GNUPGHOME="${tmpdir}/test"
 
   run "${IMPORT_GPG_KEYS}" --public-key
@@ -65,7 +68,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   assert_line --index 1 --partial 'usage'
 }
 
-@test "public-key option provided: public-key-file value does not exists" {
+@test "[import-gpg-keys] public-key option provided: public-key-file value does not exists" {
   export GNUPGHOME="${tmpdir}/test"
 
   run "${IMPORT_GPG_KEYS}" --public-key non-existent-file
@@ -75,7 +78,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   assert_line --index 1 --partial 'usage'
 }
 
-@test "public-key option provided: public-key-file exists" {
+@test "[import-gpg-keys] public-key option provided: public-key-file exists" {
   export GNUPGHOME="${tmpdir}/test"
 
   run "${IMPORT_GPG_KEYS}" --public-key "${public_key}"
@@ -87,7 +90,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   assert_line --partial "${keyid}"
 }
 
-@test "secret-key option provided: secret-key-file value does not exists" {
+@test "[import-gpg-keys] secret-key option provided: secret-key-file value does not exists" {
   export GNUPGHOME="${tmpdir}/test"
 
   run "${IMPORT_GPG_KEYS}" --secret-key non-existent-file
@@ -97,7 +100,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   assert_line --index 1 --partial 'usage'
 }
 
-@test "secret-key option provided: secret-key-file exists" {
+@test "[import-gpg-keys] secret-key option provided: secret-key-file exists" {
   export GNUPGHOME="${tmpdir}/test"
 
   run "${IMPORT_GPG_KEYS}" --secret-key "${secret_key}"
@@ -109,7 +112,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   assert_line --partial "${keyid}"
 }
 
-@test "ownertrust option provided: ownertrust-file value does not exists" {
+@test "[import-gpg-keys] ownertrust option provided: ownertrust-file value does not exists" {
   export GNUPGHOME="${tmpdir}/test"
 
   run "${IMPORT_GPG_KEYS}" --ownertrust non-existent-file
@@ -119,7 +122,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   assert_line --index 1 --partial 'usage'
 }
 
-@test "ownertrust option provided: ownertrust-file exists" {
+@test "[import-gpg-keys] ownertrust option provided: ownertrust-file exists" {
   export GNUPGHOME="${tmpdir}/test"
 
   run "${IMPORT_GPG_KEYS}" --ownertrust "${ownertrust}"
@@ -130,7 +133,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   assert_line "${keyid}:6:"
 }
 
-@test "2 options provided: --public-key and --ownertrust" {
+@test "[import-gpg-keys] 2 options provided: --public-key and --ownertrust" {
   export GNUPGHOME="${tmpdir}/test"
 
   run "${IMPORT_GPG_KEYS}" --ownertrust "${ownertrust}" --public-key "${public_key}"
@@ -145,7 +148,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   assert_line --partial "${keyid}"
 }
 
-@test "all options provided" {
+@test "[import-gpg-keys] all options provided" {
   export GNUPGHOME="${tmpdir}/test"
 
   run "${IMPORT_GPG_KEYS}" --secret-key "${secret_key}" --ownertrust "${ownertrust}" --public-key "${public_key}"
