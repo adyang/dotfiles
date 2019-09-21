@@ -27,7 +27,7 @@ teardown() {
   refute_output --partial '[FAILURE]'
 }
 
-@test "brew_packages: homebrew is not installed" {
+@test "install_brew: homebrew is not installed" {
   mock_is_brew_installed 1
   curl() {
     echo 'brew-script'
@@ -35,14 +35,14 @@ teardown() {
   mock_echo '/usr/bin/ruby'
   mock_echo 'brew'
 
-  run brew_packages
+  run install_brew
 
   assert_success
   assert_line --index 0 '/usr/bin/ruby -e brew-script'
 }
 
 
-@test "brew_packages: homebrew is not installed but download fails" {
+@test "install_brew: homebrew is not installed but download fails" {
   mock_is_brew_installed 1
   curl() {
     return 22
@@ -50,67 +50,62 @@ teardown() {
   mock_echo '/usr/bin/ruby'
   mock_echo 'brew'
 
-  run brew_packages
+  run install_brew
 
   assert_failure 22
   refute_output --partial '/usr/bin/ruby'
   refute_output --partial 'brew'
 }
 
-@test "brew_packages: homebrew is installed" {
+@test "install_brew: homebrew is not installed but installation fails" {
+  mock_is_brew_installed 1
+  mock_echo 'curl'
+  mock_failure '/usr/bin/ruby'
+  mock_echo 'brew'
+
+  run install_brew
+
+  assert_failure 1
+  refute_output --partial 'brew'
+}
+
+@test "install_brew: homebrew is installed" {
   mock_is_brew_installed 0
   mock_echo 'curl'
   mock_echo '/usr/bin/ruby'
   mock_echo 'brew'
 
-  run brew_packages
+  run install_brew
 
   assert_success
   refute_output --partial 'curl'
   refute_output --partial '/usr/bin/ruby'
 }
 
-@test "brew_packages: brew commands are all successful" {
+@test "install_brew: brew commands are all successful" {
   mock_is_brew_installed 0
   mock_echo 'curl'
   mock_echo '/usr/bin/ruby'
   mock_echo 'brew'
 
-  run brew_packages
+  run install_brew
 
   assert_success
   assert_line --index 0 'brew analytics off'
   assert_line --index 1 'brew analytics'
   assert_line --index 2 'brew update'
-  assert_line --index 3 'brew bundle --verbose'
 }
 
-@test "brew_packages: brew update fails" {
+@test "install_brew: brew update fails" {
   mock_is_brew_installed 0
   mock_echo 'curl'
   mock_echo '/usr/bin/ruby'
   mock_failure 'brew' 'update'
 
-  run brew_packages
+  run install_brew
 
   assert_failure 1
   refute_line --partial 'brew bundle'
-}
-
-@test "brew_packages: brew bundle fails" {
-  mock_is_brew_installed 0
-  mock_echo 'curl'
-  mock_echo '/usr/bin/ruby'
-  mock_failure 'brew' 'bundle'
-  brew_packages_with_exit_test() {
-    brew_packages
-    echo '[FAILURE] failed to exit'
-  }
-
-  run brew_packages_with_exit_test
-
-  assert_failure 1
-  refute_line '[FAILURE] failed to exit'
 }
 
 mock_is_brew_installed() {
@@ -122,6 +117,19 @@ mock_is_brew_installed() {
       exit 2
     fi
   }
+}
+
+@test "brew_packages: brew bundle fails" {
+  mock_failure 'brew' 'bundle'
+  brew_packages_with_exit_test() {
+    brew_packages
+    echo '[FAILURE] failed to exit'
+  }
+
+  run brew_packages_with_exit_test
+
+  assert_failure 1
+  refute_line '[FAILURE] failed to exit'
 }
 
 @test "install_powerline: powerline-go already installed" {

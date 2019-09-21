@@ -11,6 +11,7 @@ main() {
   if [[ "${CI}" != 'true' ]]; then
     sudo_keep_alive
   fi
+  install_brew
   brew_packages
   install_powerline
   symlink_dotfiles
@@ -33,14 +34,17 @@ sudo_until_process_ends() {
   done 2>/dev/null &
 }
 
-brew_packages() {
+install_brew() {
   if ! type brew &>/dev/null; then
     local install
     install="$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" || exit "$?"
-    /usr/bin/ruby -e "${install}"
+    /usr/bin/ruby -e "${install}" || exit "$?"
   fi
   brew analytics off && brew analytics
   brew update || exit "$?"
+}
+
+brew_packages() {
   brew bundle --verbose || exit "$?"
 }
 
