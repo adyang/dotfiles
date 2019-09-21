@@ -4,5 +4,7 @@ if [[ ! -d dotfiles ]]; then
   git clone https://github.com/adyang/dotfiles.git || exit "$?"
 fi
 
-cd dotfiles && ./install
+cd dotfiles \
+  && ./generate-ssh-keys \
+  && ./install
 

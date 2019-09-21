@@ -21,7 +21,7 @@ main() {
 }
 
 sudo_keep_alive() {
-  sudo --stdin --validate || exit "$?"
+  sudo --stdin --validate --prompt="Please enter %u's password for sudo: " || exit "$?"
   sudo_until_process_ends
 }
 

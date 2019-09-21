@@ -4,6 +4,5 @@ osx_image: xcode10.1
 sudo: required
 script: >
   ./test/run-tests
-  && ./generate-ssh-keys <<< 'pass'
-  && bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap)
+  && bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap) <<< 'pass'
 
