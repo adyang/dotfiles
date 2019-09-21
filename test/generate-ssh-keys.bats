@@ -21,7 +21,7 @@ teardown() {
 }
 
 @test "[generate-ssh-keys] generate SSH keys" {
-  run "${GENERATE_SSH_KEYS}" <<<$'pass\n'
+  run "${GENERATE_SSH_KEYS}" <<<'pass'
 
   assert_success
   assert [ -f "${tmp_gen_ssh_home}/.ssh/id_ed25519" ]
@@ -29,7 +29,7 @@ teardown() {
 }
 
 @test "[generate-ssh-keys] add SSH key identity to agent" {
-  run "${GENERATE_SSH_KEYS}" <<<$'pass\n'
+  run "${GENERATE_SSH_KEYS}" <<<'pass'
 
   assert_success
   assert_line --partial "ssh-add -K \"${GEN_SSH_HOME}/.ssh/id_ed25519\""
@@ -52,7 +52,7 @@ teardown() {
   }
   export -f read ssh-keygen
 
-  run "${GENERATE_SSH_KEYS}" <<<$'pass\n'
+  run "${GENERATE_SSH_KEYS}" <<<'pass'
 
   assert_failure 1
   refute_line --partial "ssh-keygen"
@@ -64,7 +64,7 @@ teardown() {
   }
   export -f ssh-keygen
 
-  run "${GENERATE_SSH_KEYS}" <<<$'pass\n'
+  run "${GENERATE_SSH_KEYS}" <<<'pass'
 
   assert_failure 1
   refute_line --partial "ssh-add -K \"${GEN_SSH_HOME}/.ssh/id_ed25519\""
@@ -79,7 +79,7 @@ teardown() {
   }
   export -f pbcopy
 
-  run "${GENERATE_SSH_KEYS}" <<<$'pass\n'
+  run "${GENERATE_SSH_KEYS}" <<<'pass'
 
   assert_failure 1
   refute_line --partial '[FAILURE] failed to exit'
