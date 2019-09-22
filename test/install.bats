@@ -32,13 +32,15 @@ teardown() {
   curl() {
     echo 'brew-script'
   }
+  mock_echo 'sudo'
   mock_echo '/usr/bin/ruby'
   mock_echo 'brew'
 
   run install_brew
 
   assert_success
-  assert_line --index 0 '/usr/bin/ruby -e brew-script'
+  assert_line --index 0 'sudo mkdir -p /usr/local/lib/pkgconfig'
+  assert_line --index 1 '/usr/bin/ruby -e brew-script'
 }
 
 
@@ -47,6 +49,7 @@ teardown() {
   curl() {
     return 22
   }
+  mock_echo 'sudo'
   mock_echo '/usr/bin/ruby'
   mock_echo 'brew'
 
@@ -60,6 +63,7 @@ teardown() {
 @test "install_brew: homebrew is not installed but installation fails" {
   mock_is_brew_installed 1
   mock_echo 'curl'
+  mock_echo 'sudo'
   mock_failure '/usr/bin/ruby'
   mock_echo 'brew'
 
@@ -72,6 +76,7 @@ teardown() {
 @test "install_brew: homebrew is installed" {
   mock_is_brew_installed 0
   mock_echo 'curl'
+  mock_echo 'sudo'
   mock_echo '/usr/bin/ruby'
   mock_echo 'brew'
 
@@ -85,6 +90,7 @@ teardown() {
 @test "install_brew: brew commands are all successful" {
   mock_is_brew_installed 0
   mock_echo 'curl'
+  mock_echo 'sudo'
   mock_echo '/usr/bin/ruby'
   mock_echo 'brew'
 
