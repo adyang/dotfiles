@@ -119,6 +119,65 @@ mock_is_brew_installed() {
   }
 }
 
+@test "brew_kext_packages: first brew bundle succeeds" {
+  mock_echo 'brew'
+
+  run brew_kext_packages
+
+  assert_success
+  assert_output 'brew bundle --verbose --file=Brewfile-kext'
+}
+
+@test "brew_kext_packages: first brew bundle fails" {
+  attempt_count=0
+  brew() {
+    attempt_count=$(( attempt_count + 1 ))
+    if (( attempt_count == 1 )); then
+      return 1
+    else
+      echo "brew $*"
+    fi
+  }
+
+  run brew_kext_packages <<<$'\n'
+
+  assert_success
+  assert_line --index 0 --partial 'Please allow kext installation'
+  assert_line --index 1 'brew bundle --verbose --file=Brewfile-kext'
+}
+
+@test "brew_kext_packages: first brew bundle fails and read fails" {
+  attempt_count=0
+  brew() {
+    attempt_count=$(( attempt_count + 1 ))
+    if (( attempt_count == 1 )); then
+      return 1
+    else
+      echo "brew $*"
+    fi
+  }
+  mock_failure 'read'
+
+  run brew_kext_packages
+
+  assert_failure 1
+  assert_line --index 0 --partial 'Please allow kext installation'
+  refute_line --index 1 'brew bundle --verbose --file=Brewfile-kext'
+}
+
+@test "brew_kext_packages: first brew bundle fails and second brew bundle fails" {
+  mock_failure 'brew' 'bundle'
+  brew_kext_packages_with_exit_test() {
+    brew_kext_packages <<<$'\n'
+    echo '[FAILURE] failed to exit'
+  }
+
+  run brew_kext_packages_with_exit_test
+
+  assert_failure 1
+  refute_line '[FAILURE] failed to exit'
+}
+
 @test "brew_packages: brew bundle fails" {
   mock_failure 'brew' 'bundle'
   brew_packages_with_exit_test() {

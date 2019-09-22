@@ -8,10 +8,9 @@ DOT_HOME="${DOT_HOME:-${HOME}}"
 readonly SCRIPT_DIR DOT_HOME
 
 main() {
-  if [[ "${CI}" != 'true' ]]; then
-    sudo_keep_alive
-  fi
+  [[ "${CI}" == 'true' ]] || sudo_keep_alive
   install_brew
+  [[ "${CI}" == 'true' ]] || brew_kext_packages
   brew_packages
   install_powerline
   symlink_dotfiles
@@ -42,6 +41,14 @@ install_brew() {
   fi
   brew analytics off && brew analytics
   brew update || exit "$?"
+}
+
+brew_kext_packages() {
+  if ! brew bundle --verbose --file=Brewfile-kext; then
+    printf '\nPlease allow kext installation in System Preferences > Security & Privacy > General.\n'
+    read -rp 'Press RETURN to continue when done...' || exit "$?"
+    brew bundle --verbose --file=Brewfile-kext || exit "$?"
+  fi
 }
 
 brew_packages() {
