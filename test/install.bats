@@ -419,7 +419,6 @@ mock_is_brew_installed() {
 
 @test "install_pip_packages: upgrade pip fails" {
   mock_failure 'python' '-m pip install --upgrade pip' 
-  mock_echo 'pipx'
 
   run install_pip_packages
 
@@ -429,7 +428,6 @@ mock_is_brew_installed() {
 
 @test "install_pip_packages: install pipx fails" {
   mock_failure 'python' '-m pip install --upgrade --user pipx'
-  mock_echo 'pipx'
 
   run install_pip_packages
 
@@ -438,8 +436,7 @@ mock_is_brew_installed() {
 }
 
 @test "install_pip_packages: pipx install ansible fails" {
-  mock_failure 'pipx' 'install ansible'
-  mock_echo 'python'
+  mock_failure 'python' '-m pipx install ansible'
 
   run install_pip_packages
 
@@ -448,8 +445,8 @@ mock_is_brew_installed() {
 }
 
 @test "install_pip_packages: pipx install yolk3k fails" {
-  mock_failure 'pipx' 'install yolk3k'
-  mock_echo 'python'
+  mock_failure 'python' '-m pipx install yolk3k'
+
   install_pip_packages_with_exit_test() {
     install_pip_packages
     echo '[FAILURE] failed to exit'

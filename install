@@ -197,8 +197,8 @@ install_pip_packages() {
   echo 'Installing pip packages...'
   python -m pip install --upgrade pip || exit "$?"
   python -m pip install --upgrade --user pipx || exit "$?"
-  pipx install ansible || exit "$?"
-  pipx install yolk3k || exit "$?"
+  python -m pipx install ansible || exit "$?"
+  python -m pipx install yolk3k || exit "$?"
 }
 
 (return 0 2>/dev/null) || main "$@"
