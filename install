@@ -15,7 +15,7 @@ main() {
   install_powerline
   symlink_dotfiles
   configure_iterm2
-  configure_vim
+  "${SCRIPT_DIR}/configure-vim"
   configure_asdf_plugins
   install_pip_packages
 }
