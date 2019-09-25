@@ -5,6 +5,7 @@ if [[ ! -d dotfiles ]]; then
 fi
 
 cd dotfiles \
+  && printf '%s\n' "export DOT_DIR='${PWD}'" > "${HOME}/.dot-env" \
   && ./generate-ssh-keys \
   && ./install
 

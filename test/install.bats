@@ -131,7 +131,7 @@ mock_is_brew_installed() {
   run brew_kext_packages
 
   assert_success
-  assert_output 'brew bundle --verbose --file=Brewfile-kext'
+  assert_output --regexp '^brew bundle --verbose --file=.*Brewfile-kext$'
 }
 
 @test "brew_kext_packages: first brew bundle fails" {
@@ -149,7 +149,7 @@ mock_is_brew_installed() {
 
   assert_success
   assert_line --index 0 --partial 'Please allow kext installation'
-  assert_line --index 1 'brew bundle --verbose --file=Brewfile-kext'
+  assert_line --index 1 --regexp '^brew bundle --verbose --file=.*Brewfile-kext$'
 }
 
 @test "brew_kext_packages: first brew bundle fails and read fails" {

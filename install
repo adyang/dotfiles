@@ -46,15 +46,15 @@ install_brew() {
 }
 
 brew_kext_packages() {
-  if ! brew bundle --verbose --file=Brewfile-kext; then
+  if ! brew bundle --verbose --file="${SCRIPT_DIR}/Brewfile-kext"; then
     printf '\nPlease allow kext installation in System Preferences > Security & Privacy > General.\n'
     read -rp 'Press RETURN to continue when done...' || exit "$?"
-    brew bundle --verbose --file=Brewfile-kext || exit "$?"
+    brew bundle --verbose --file="${SCRIPT_DIR}/Brewfile-kext" || exit "$?"
   fi
 }
 
 brew_packages() {
-  brew bundle --verbose || exit "$?"
+  brew bundle --verbose --file="${SCRIPT_DIR}/Brewfile" || exit "$?"
 }
 
 install_powerline() {
