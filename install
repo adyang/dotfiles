@@ -88,7 +88,7 @@ brew_kext_packages() {
 
 brew_packages() {
   brew update || exit "$?"
-  brew bundle --verbose || exit "$?"
+  brew bundle --verbose --file="${DOT_HOME}/Brewfile" || exit "$?"
 }
 
 install_powerline() {
