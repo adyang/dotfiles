@@ -1,11 +1,38 @@
 #!/bin/bash
 
-if [[ ! -d dotfiles ]]; then
-  git clone https://github.com/adyang/dotfiles.git || exit "$?"
-fi
+main() {
+  install_brew
+  clone_dotfiles "${PWD}"
 
-cd dotfiles \
-  && printf '%s\n' "export DOT_DIR='${PWD}'" > "${HOME}/.dot-env" \
-  && ./generate-ssh-keys \
-  && ./install
+  cd dotfiles \
+    && setup_dot_env "${PWD}" "${HOME}" \
+    && ./generate-ssh-keys \
+    && ./install
+}
+
+install_brew() {
+  if ! type brew &>/dev/null; then
+    local install
+    install="$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" || exit "$?"
+    # Workaround installer not setting correct permissions when directory does not exists
+    sudo mkdir -p /usr/local/lib/pkgconfig || exit "$?"
+    /usr/bin/ruby -e "${install}" || exit "$?"
+  fi
+  brew analytics off && brew analytics
+}
+
+clone_dotfiles() {
+  local curr_dir="$1"
+  if [[ ! -d "${curr_dir}/dotfiles" ]]; then
+    git clone https://github.com/adyang/dotfiles.git || exit "$?"
+  fi
+}
+
+setup_dot_env() {
+  local curr_dir="$1"
+  local home_dir="$2"
+  printf '%s\n' "export DOT_DIR='${curr_dir}'" > "${home_dir}/.dot-env"
+}
+
+(return 0 2>/dev/null) || main "$@"
 

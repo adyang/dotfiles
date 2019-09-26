@@ -2,6 +2,7 @@
 
 load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
+load 'mock_helper'
 
 setup() {
   tmp_dot_home="$(mktemp -d)"
@@ -66,13 +67,5 @@ teardown() {
   assert_success
   assert_line "git -C ${tmp_dot_home}/.vim/pack/plugins/start/plugin1 pull origin master"
   assert_line "git clone https://github.com/dense-analysis/plugin2.git ${tmp_dot_home}/.vim/pack/plugins/start/plugin2"
-}
-
-mock_echo() {
-  . /dev/stdin <<EOF
-    $1() {
-      echo "$1 \$*"
-    }
-EOF
 }
 

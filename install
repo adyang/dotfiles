@@ -10,7 +10,6 @@ readonly SCRIPT_DIR DOT_HOME
 main() {
   [[ "${CI}" == 'true' ]] || sudo_keep_alive
   symlink_dotfiles
-  install_brew
   [[ "${CI}" == 'true' ]] || brew_kext_packages
   brew_packages
   install_powerline
@@ -78,19 +77,8 @@ symlink_if_absent() {
   fi
 }
 
-install_brew() {
-  if ! type brew &>/dev/null; then
-    local install
-    install="$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" || exit "$?"
-    # Workaround installer not setting correct permissions when directory does not exists
-    sudo mkdir -p /usr/local/lib/pkgconfig || exit "$?"
-    /usr/bin/ruby -e "${install}" || exit "$?"
-  fi
-  brew analytics off && brew analytics
-  brew update || exit "$?"
-}
-
 brew_kext_packages() {
+  brew update || exit "$?"
   if ! brew bundle --verbose --file="${DOT_HOME}/Brewfile-kext"; then
     printf '\nPlease allow kext installation in System Preferences > Security & Privacy > General.\n'
     read -rp 'Press RETURN to continue when done...' || exit "$?"
@@ -99,6 +87,7 @@ brew_kext_packages() {
 }
 
 brew_packages() {
+  brew update || exit "$?"
   brew bundle --verbose || exit "$?"
 }
 
