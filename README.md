@@ -3,10 +3,24 @@
 # Dotfiles
 
 ## Bootstrap
-1. `./generate-ssh-keys` and paste public key into repository services (can be done while install script runs in parallel).
-2. `./install`
-3. `brew bundle --verbose --file=Brewfile-kext`, it will fail for the 1st time. Go to `Security & Privacy` > click on `Allow` and rerun the command.
-4. `./import-gpg-keys --public-key <public-key-file> --secret-key <secret-key-file> --ownertrust <ownertrust-file>`
+```console
+bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap)
+```
+This will setup the dotfiles repository into the current directory.
+
+There are 3 interactive prompts:
+1. Passphrase for SSH key (either use Diceware or generate from external password manager)
+    - The public key will be copied into your clipboard; you can paste it into repository services while the installation proceeds
+2. Password for sudo
+3. Pause after expected failure of first `brew bundle --verbose --file=Brewfile-kext`
+    - Go to `Security & Privacy` > click on `Allow`
+    - Press enter to resume rest of installation
+
+## Import GPG Keys
+Obtain required files from password manager or external source, then run:
+```console
+./import-gpg-keys --public-key <public-key-file> --secret-key <secret-key-file> --ownertrust <ownertrust-file>
+```
 
 ## References
 1. https://github.com/trptcolin/dotfiles
