@@ -16,10 +16,17 @@ There are 3 interactive prompts:
     - Go to `Security & Privacy` > click on `Allow`
     - Press enter to resume rest of installation
 
-## Import GPG Keys
+## Manual Steps
+### Import GPG Keys
 Obtain required files from password manager or external source, then run:
 ```console
 ./import-gpg-keys --public-key <public-key-file> --secret-key <secret-key-file> --ownertrust <ownertrust-file>
+```
+
+### Reboot System
+Reboot system in order for MacOS updates to complete:
+```console
+sudo shutdown -r now
 ```
 
 ## References

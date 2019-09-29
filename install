@@ -17,6 +17,7 @@ main() {
   "${SCRIPT_DIR}/configure-vim"
   configure_asdf_plugins
   install_pip_packages
+  install_macos_updates
 }
 
 sudo_keep_alive() {
@@ -188,6 +189,10 @@ install_pip_packages() {
   python -m pip install --upgrade --user pipx || exit "$?"
   python -m pipx install ansible || exit "$?"
   python -m pipx install yolk3k || exit "$?"
+}
+
+install_macos_updates() {
+  sudo softwareupdate --install --all
 }
 
 (return 0 2>/dev/null) || main "$@"
