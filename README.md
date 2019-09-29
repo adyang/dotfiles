@@ -23,6 +23,12 @@ Obtain required files from password manager or external source, then run:
 ./import-gpg-keys --public-key <public-key-file> --secret-key <secret-key-file> --ownertrust <ownertrust-file>
 ```
 
+### IntelliJ Settings
+Nagivate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
+Enter description > tick `repo` > click `Generate token` > copy access token.
+In IntelliJ, navigate `Configure` > `Settings Repository`, paste HTTPS url of settings repo and enter access token.
+Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins.
+
 ### Reboot System
 Reboot system in order for MacOS updates to complete:
 ```console
