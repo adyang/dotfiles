@@ -118,8 +118,13 @@ configure_iterm2() {
 
 configure_vscode() {
   echo 'Configuring VS Code...'
-  local src_dir="${SCRIPT_DIR}/vscode"
-  local dest_dir="${DOT_HOME}/Library/Application Support/Code/User"
+  symlink_vscode_configs "${SCRIPT_DIR}/vscode" "${DOT_HOME}/Library/Application Support/Code/User"
+  install_vscode_extensions "${SCRIPT_DIR}/vscode/extensions"
+}
+
+symlink_vscode_configs() {
+  local src_dir="$1"
+  local dest_dir="$2"
   mkdir -p "${dest_dir}"
   local configs=('keybindings.json' 'settings.json' 'snippets')
   local config
@@ -127,6 +132,14 @@ configure_vscode() {
     backup_if_regular_file "${dest_dir}/${config}" || exit "$?"
     symlink_if_absent "${src_dir}/${config}" "${dest_dir}/${config}" || exit "$?"
   done
+}
+
+install_vscode_extensions() {
+  local extensions_file="$1"
+  local extension
+  while read -r extension; do
+    code --install-extension "${extension}" || exit "$?"
+  done < "${extensions_file}"
 }
 
 configure_asdf_plugins() {
