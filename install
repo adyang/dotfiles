@@ -15,6 +15,7 @@ main() {
   install_powerline
   configure_iterm2
   "${SCRIPT_DIR}/configure-vim"
+  configure_vscode
   configure_asdf_plugins
   install_pip_packages
   install_macos_updates
@@ -113,6 +114,19 @@ configure_iterm2() {
   defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
   echo '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
   echo '                     Cmd + , > Preferences > Tick "Load preferences from a custom folder or URL"'
+}
+
+configure_vscode() {
+  echo 'Configuring VS Code...'
+  local src_dir="${SCRIPT_DIR}/vscode"
+  local dest_dir="${DOT_HOME}/Library/Application Support/Code/User"
+  mkdir -p "${dest_dir}"
+  local configs=('keybindings.json' 'settings.json' 'snippets')
+  local config
+  for config in "${configs[@]}"; do
+    backup_if_regular_file "${dest_dir}/${config}" || exit "$?"
+    symlink_if_absent "${src_dir}/${config}" "${dest_dir}/${config}" || exit "$?"
+  done
 }
 
 configure_asdf_plugins() {

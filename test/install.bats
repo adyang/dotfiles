@@ -247,6 +247,61 @@ teardown() {
   refute_line '[FAILURE] failed to exit'
 }
 
+@test "[install] configure_vscode: configs absent" {
+  mkdir -p "${tmp_script_dir}/vscode/snippets"
+  touch "${tmp_script_dir}/vscode/"{keybindings,settings}.json
+  
+  run configure_vscode
+
+  assert_success
+  for file in snippets keybindings.json settings.json; do
+    assert [ "${tmp_dot_home}/Library/Application Support/Code/User/${file}" -ef "${tmp_script_dir}/vscode/${file}" ]
+  done
+}
+
+@test "[install] configure_vscode: configs present" {
+  mkdir -p "${tmp_script_dir}/vscode/snippets"
+  touch "${tmp_script_dir}/vscode/"{keybindings,settings}.json
+  mkdir -p "${tmp_dot_home}/Library/Application Support/Code/User"
+  printf 'present-file' > "${tmp_dot_home}/Library/Application Support/Code/User/keybindings.json"
+  printf 'present-file' > "${tmp_dot_home}/Library/Application Support/Code/User/settings.json"
+  
+  run configure_vscode
+
+  assert_success
+  for file in keybindings.json settings.json; do
+    assert [ "$(cat "${tmp_dot_home}/Library/Application Support/Code/User/${file}.bak")" == 'present-file' ]
+    assert [ "${tmp_dot_home}/Library/Application Support/Code/User/${file}" -ef "${tmp_script_dir}/vscode/${file}" ]
+  done
+}
+
+@test "[install] configure_vscode: backup of regular file fails" {
+  mkdir -p "${tmp_script_dir}/vscode/snippets"
+  touch "${tmp_script_dir}/vscode/"{keybindings,settings}.json
+  mock_failure 'backup_if_regular_file'
+  mock_echo 'symlink_if_absent'
+  
+  run configure_vscode
+
+  assert_failure 1
+  refute_line --partial 'symlink_if_absent'
+}
+
+@test "[install] configure_vscode: symlink fails" {
+  mkdir -p "${tmp_script_dir}/vscode/snippets"
+  touch "${tmp_script_dir}/vscode/"{keybindings,settings}.json
+  mock_failure 'symlink_if_absent'
+  configure_vscode_with_exit_test() {
+    configure_vscode
+    echo '[FAILURE] failed to exit'
+  }
+  
+  run configure_vscode_with_exit_test
+
+  assert_failure 1
+  refute_line '[FAILURE] failed to exit'
+}
+
 @test "[install] configure_asdf_plugins: source asdf fails" {
   source() {
     return 1
