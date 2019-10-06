@@ -327,6 +327,89 @@ teardown() {
   refute_line 'code --install-extension extension-three'
 }
 
+@test "[install] create_firefox_profile_if_absent: profile absent" {
+  mock_echo 'firefox'
+  mock_echo 'sleep'
+  mock_echo 'kill'
+  mkdir -p "${tmp_script_dir}/firefox"
+  echo 'profiles' >"${tmp_script_dir}/firefox/profiles.ini"
+  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox"
+  
+  run create_firefox_profile_if_absent 'firefox' "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox"
+
+  assert_success
+  assert_line "firefox -CreateProfile privacy ${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
+  assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/profiles.ini")" 'profiles'
+  assert_line "firefox --headless -P privacy"
+}
+
+@test "[install] create_firefox_profile_if_absent: profile present" {
+  mock_echo 'firefox'
+  mock_echo 'sleep'
+  mock_echo 'kill'
+  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
+  
+  run create_firefox_profile_if_absent 'firefox' "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox"
+
+  assert_success
+  refute_line --partial 'firefox'
+}
+
+@test "[install] create_firefox_profile_if_absent: create profile fails" {
+  mock_failure 'firefox' '-CreateProfile'
+  mock_echo 'cp'
+  mock_echo 'sleep'
+  mock_echo 'kill'
+  mkdir -p "${tmp_script_dir}/firefox"
+  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox"
+  
+  run create_firefox_profile_if_absent 'firefox' "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox"
+
+  assert_failure 1
+  refute_line --partial 'cp'
+}
+
+@test "[install] create_firefox_profile_if_absent: copying profiles.ini fails" {
+  mock_failure 'cp'
+  mock_echo 'firefox'
+  mock_echo 'sleep'
+  mock_echo 'kill'
+  mkdir -p "${tmp_script_dir}/firefox"
+  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox"
+  
+  run create_firefox_profile_if_absent 'firefox' "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox"
+
+  assert_failure 1
+  refute_line 'firefox --headless -P privacy'
+}
+
+@test "[install] symlink_firefox_configs: user.js absent" {
+  mkdir -p "${tmp_script_dir}/firefox"
+  touch "${tmp_script_dir}/firefox/user.js"
+  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
+  echo 'prefs' >"${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/prefs.js"
+  
+  run symlink_firefox_configs "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
+
+  assert_success
+  assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/prefs.js.bak")" 'prefs'
+  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user.js" -ef "${tmp_script_dir}/firefox/user.js" ]
+}
+
+@test "[install] symlink_firefox_configs: user.js present" {
+  mock_echo 'cp'
+  mkdir -p "${tmp_script_dir}/firefox"
+  touch "${tmp_script_dir}/firefox/user.js"
+  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
+  echo 'user.js' >"${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user.js"
+  
+  run symlink_firefox_configs "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
+
+  assert_success
+  assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user.js.bak")" 'user.js'
+  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user.js" -ef "${tmp_script_dir}/firefox/user.js" ]
+}
+
 @test "[install] configure_asdf_plugins: source asdf fails" {
   source() {
     return 1
