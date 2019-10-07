@@ -392,12 +392,12 @@ teardown() {
   run symlink_firefox_configs "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
 
   assert_success
+  refute [ -e "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/prefs.js" ]
   assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/prefs.js.bak")" 'prefs'
   assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user.js" -ef "${tmp_script_dir}/firefox/user.js" ]
 }
 
 @test "[install] symlink_firefox_configs: user.js present" {
-  mock_echo 'cp'
   mkdir -p "${tmp_script_dir}/firefox"
   touch "${tmp_script_dir}/firefox/user.js"
   mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"

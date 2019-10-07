@@ -164,7 +164,7 @@ create_firefox_profile_if_absent() {
 symlink_firefox_configs() {
   local src_dir="$1"
   local profile_dir="$2"
-  cp "${profile_dir}/prefs.js" "${profile_dir}/prefs.js.bak" || exit "$?"
+  backup_if_regular_file "${profile_dir}/prefs.js" || exit "$?"
   backup_if_regular_file "${profile_dir}/user.js" || exit "$?"
   symlink_if_absent "${src_dir}/user.js" "${profile_dir}/user.js" || exit "$?"
 }
