@@ -1,3 +1,4 @@
+tap "homebrew/cask-versions"
 tap "homebrew/cask-fonts"
 
 brew "vim"
