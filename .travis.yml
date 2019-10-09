@@ -6,6 +6,7 @@ addons:
     packages:
       - jq
       - coreutils
+    update: true
 sudo: required
 script: >
   ./test/run-tests
