@@ -1,6 +1,11 @@
 ---
 os: osx
 osx_image: xcode10.1
+addons:
+  homebrew:
+    packages:
+      - jq
+      - coreutils
 sudo: required
 script: >
   ./test/run-tests
