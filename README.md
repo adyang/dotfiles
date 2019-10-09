@@ -8,13 +8,15 @@ bash <(curl --fail --silent --show-error --location https://raw.githubuserconten
 ```
 This will setup the dotfiles repository into the current directory.
 
-There are 3 interactive prompts:
+There are 3 blocking interactive prompts:
 1. Passphrase for SSH key (either use Diceware or generate from external password manager)
     - The public key will be copied into your clipboard; you can paste it into repository services while the installation proceeds
 2. Password for sudo
 3. Pause after expected failure of first `brew bundle --verbose --file=Brewfile-kext`
     - Go to `Security & Privacy` > click on `Allow`
     - Press enter to resume rest of installation
+
+And 1 non-blocking prompt to set the default browser.
 
 ## Manual Steps
 ### Import GPG Keys
@@ -24,10 +26,10 @@ Obtain required files from password manager or external source, then run:
 ```
 
 ### IntelliJ Settings
-Nagivate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
-Enter description > tick `repo` > click `Generate token` > copy access token.
-In IntelliJ, navigate `Configure` > `Settings Repository`, paste HTTPS url of settings repo and enter access token.
-Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins.
+1. Nagivate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
+2. Enter description > tick `repo` > click `Generate token` > copy access token.
+3. In IntelliJ, navigate `Configure` > `Settings Repository`, paste HTTPS url of settings repo and enter access token.
+4. Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins.
 
 ### Reboot System
 Reboot system in order for MacOS updates to complete:
