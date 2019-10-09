@@ -310,21 +310,21 @@ teardown() {
   run install_vscode_extensions "${tmp_script_dir}/vscode/extensions"
 
   assert_success
-  assert_line 'code --install-extension --force extension-one'
-  assert_line 'code --install-extension --force extension-two'
+  assert_line 'code --force --install-extension extension-one'
+  assert_line 'code --force --install-extension extension-two'
 }
 
 @test "[install] install_vscode_extensions: install extension fails" {
-  mock_failure 'code' '--install-extension' '--force' 'extension-two'
+  mock_failure 'code' '--force' '--install-extension' 'extension-two'
   mkdir -p "${tmp_script_dir}/vscode"
   printf '%s\n' 'extension-one' 'extension-two' 'extension-three' >"${tmp_script_dir}/vscode/extensions"
 
   run install_vscode_extensions "${tmp_script_dir}/vscode/extensions"
 
   assert_failure 1
-  assert_line 'code --install-extension --force extension-one'
-  refute_line 'code --install-extension --force extension-two'
-  refute_line 'code --install-extension --force extension-three'
+  assert_line 'code --force --install-extension extension-one'
+  refute_line 'code --force --install-extension extension-two'
+  refute_line 'code --force --install-extension extension-three'
 }
 
 @test "[install] create_firefox_profile_if_absent: profile absent" {

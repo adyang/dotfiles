@@ -146,7 +146,7 @@ install_vscode_extensions() {
   local extensions_file="$1"
   local extension
   while read -r extension; do
-    code --install-extension --force "${extension}" || exit "$?"
+    code --force --install-extension "${extension}" || exit "$?"
   done < "${extensions_file}"
 }
 
