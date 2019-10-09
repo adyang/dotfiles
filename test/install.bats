@@ -412,7 +412,6 @@ teardown() {
 
 @test "[install] install_firefox_extensions: install multiple extensions" {
   mock_echo 'install_firefox_extension_if_absent'
-  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/extensions"
   mkdir -p "${tmp_script_dir}/firefox"
   printf '%s\n' 'https://firefox.com/'{extension-one,extension-two} >"${tmp_script_dir}/firefox/extensions"
 
@@ -426,7 +425,6 @@ teardown() {
 
 @test "[install] install_firefox_extensions: install extension fails" {
   mock_failure 'install_firefox_extension_if_absent'
-  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/extensions"
   mkdir -p "${tmp_script_dir}/firefox"
   printf '%s\n' 'https://firefox.com/'{extension-one,extension-two} >"${tmp_script_dir}/firefox/extensions"
 
@@ -438,7 +436,7 @@ teardown() {
 
 @test "[install] install_firefox_extension_if_absent: extension absent" {
   obtain_firefox_extension_info() {
-    printf '%s\n' 'extension-id' 'extension-name' 'download-url'
+    printf '%s\n' 'extension-id' 'extension-name' 'download-url' 'checksum'
     printf '\0'
   }
   download_firefox_extension() {
@@ -452,13 +450,13 @@ teardown() {
   run install_firefox_extension_if_absent 'extension-meta-url' "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/extensions" "${tmp_dot_home}"
 
   assert_success
-  assert_line "download_firefox_extension download-url ${tmp_dot_home}/extension-id"
+  assert_line "download_firefox_extension download-url ${tmp_dot_home}/extension-id checksum"
   assert [ -e "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/extensions/extension-id.xpi" ]
 }
 
 @test "[install] install_firefox_extension_if_absent: extension present" {
   obtain_firefox_extension_info() {
-    printf '%s\n' 'extension-id' 'extension-name' 'download-url'
+    printf '%s\n' 'extension-id' 'extension-name' 'download-url' 'checksum'
     printf '\0'
   }
   mock_echo 'download_firefox_extension'
@@ -488,7 +486,7 @@ teardown() {
 
 @test "[install] install_firefox_extension_if_absent: download extension fails" {
   obtain_firefox_extension_info() {
-    printf '%s\n' 'extension-id' 'extension-name' 'download-url'
+    printf '%s\n' 'extension-id' 'extension-name' 'download-url' 'checksum'
     printf '\0'
   }
   mock_failure 'download_firefox_extension'
@@ -505,7 +503,7 @@ teardown() {
 @test "[install] obtain_firefox_extension_info: all information present" {
   curl() {
     if [[ "$*" != *'meta-url'* ]]; then return 1; fi
-    printf '%s\n' '{"guid":"extension-id","name":{"en-US":"extension-name"},"current_version":{"files":[{"url":"download-url"}]}}'
+    printf '%s\n' '{"guid":"extension-id","name":{"en-US":"extension-name"},"current_version":{"files":[{"url":"download-url","hash":"checksum"}]}}'
   }
 
   run obtain_firefox_extension_info 'meta-url'
@@ -514,6 +512,7 @@ teardown() {
   assert_line --index 0 'extension-id'
   assert_line --index 1 'extension-name'
   assert_line --index 2 'download-url'
+  assert_line --index 3 'checksum'
 }
 
 @test "[install] obtain_firefox_extension_info: some information absent" {
@@ -536,6 +535,42 @@ teardown() {
 
   assert_failure 1
   refute_line --partial 'jq'
+}
+
+@test "[install] download_firefox_extension: download fails" {
+  mock_failure 'curl'
+  mock_echo 'sha256sum'
+
+  run download_firefox_extension 'download-url' "${tmp_dot_home}/extension-id"
+
+  assert_failure 1
+  refute_line --partial 'sha256sum'
+}
+
+@test "[install] download_firefox_extension: checksum succeeds" {
+  printf 'extension' > "${tmp_dot_home}/extension-download"
+  checksum="$(sha256sum "${tmp_dot_home}/extension-download")"
+  curl() {
+    local dest="$5"
+    mv "${tmp_dot_home}/extension-download" "${dest}"
+  }
+
+  run download_firefox_extension 'download-url' "${tmp_dot_home}/extension-id" "sha256:${checksum% *}"
+
+  assert_success
+  assert_equal "$(cat "${tmp_dot_home}/extension-id")" 'extension'
+}
+
+@test "[install] download_firefox_extension: checksum fails" {
+  curl() {
+    local dest="$5"
+    touch "${dest}"
+  }
+
+  run download_firefox_extension 'download-url' "${tmp_dot_home}/extension-id" "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+
+  assert_failure 1
+  assert_line --partial 'FAILED'
 }
 
 @test "[install] configure_asdf_plugins: source asdf fails" {

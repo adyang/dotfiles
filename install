@@ -181,6 +181,7 @@ install_firefox_extensions() {
   local extension_urls_file="$1"
   local extensions_dir="$2"
   local tmp_dir="$3"
+  mkdir -p "${extensions_dir}" || exit "$?"
   local url
   while read -r url; do
     install_firefox_extension_if_absent "${url}" "${extensions_dir}" "${tmp_dir}" || exit "$?"
@@ -191,14 +192,14 @@ install_firefox_extension_if_absent() {
   local meta_url="$1"
   local extensions_dir="$2"
   local tmp_dir="$3"
-  local extension_id extension_name download_url
+  local extension_id extension_name download_url checksum
   obtain_firefox_extension_info "${meta_url}" > "${tmp_dir}/extension-info" || return "$?"
-  IFS=$'\n' read -rd '' extension_id extension_name download_url < "${tmp_dir}/extension-info"
+  IFS=$'\n' read -rd '' extension_id extension_name download_url checksum < "${tmp_dir}/extension-info"
   if [[ -f "${extensions_dir}/${extension_id}.xpi" ]]; then
     echo "${extension_name} already exists at '${extensions_dir}/${extension_id}.xpi'."
   else
     echo "Installing ${extension_name}..."
-    download_firefox_extension "${download_url}" "${tmp_dir}/${extension_id}" || return "$?"
+    download_firefox_extension "${download_url}" "${tmp_dir}/${extension_id}" "${checksum}" || return "$?"
     mv -v "${tmp_dir}/${extension_id}" "${extensions_dir}/${extension_id}.xpi"
   fi
 }
@@ -208,7 +209,7 @@ obtain_firefox_extension_info() {
   local meta
   meta="$(curl --fail --silent --show-error --location "${meta_url}")" || return "$?"
   jq --raw-output --exit-status \
-    '.guid, .name."en-US", .current_version.files[0].url, "\u0000"
+    '.guid, .name."en-US", .current_version.files[0].url, .current_version.files[0].hash, "\u0000"
       | if . == null then
           "Error: missing extension info field(s).\n"|halt_error(1)
         else . end' \
@@ -218,7 +219,9 @@ obtain_firefox_extension_info() {
 download_firefox_extension() {
   local url="$1"
   local dest="$2"
-  curl --fail --progress-bar --location --output "${dest}" "${url}"
+  local checksum="$3"
+  curl --fail --progress-bar --location --output "${dest}" "${url}" || return "$?"
+  sha256sum --check <<<"${checksum#sha256:} ${dest}"
 }
 
 configure_asdf_plugins() {
