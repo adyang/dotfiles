@@ -4,10 +4,10 @@ if [[ -z "${SCRIPT_DIR}" ]]; then
   UNRESOLVED_DIR="$(dirname "${BASH_SOURCE[0]}")" || exit "$?"
   SCRIPT_DIR="$(cd "${UNRESOLVED_DIR}" &>/dev/null && pwd -P)" || exit "$?"
 fi
-DOT_HOME="${DOT_HOME:-${HOME}}"
-readonly SCRIPT_DIR DOT_HOME
+readonly SCRIPT_DIR
 
 main() {
+  setup_environment
   [[ "${CI}" == 'true' ]] || sudo_keep_alive
   symlink_dotfiles
   [[ "${CI}" == 'true' ]] || brew_kext_packages
@@ -20,6 +20,13 @@ main() {
   configure_asdf_plugins
   install_pip_packages
   [[ "${CI}" == 'true' ]] || install_macos_updates
+}
+
+setup_environment() {
+  DOT_HOME="${HOME}"
+  DOT_TMP_DIR="$(mktemp -d)" || exit "$?"
+  readonly DOT_HOME DOT_TMP_DIR
+  trap 'rm -rf "${DOT_TMP_DIR}"' EXIT
 }
 
 sudo_keep_alive() {
@@ -147,6 +154,7 @@ configure_firefox() {
   echo 'Configuring Firefox...'
   create_firefox_profile_if_absent '/Applications/Firefox.app/Contents/MacOS/firefox' "${SCRIPT_DIR}/firefox" "${DOT_HOME}/Library/Application Support/Firefox"
   symlink_firefox_configs "${SCRIPT_DIR}/firefox" "${DOT_HOME}/Library/Application Support/Firefox/Profiles/privacy"
+  install_firefox_extensions "${SCRIPT_DIR}/firefox/extensions" "${DOT_HOME}/Library/Application Support/Firefox/Profiles/privacy/extensions" "${DOT_TMP_DIR}"
 }
 
 create_firefox_profile_if_absent() {
@@ -167,6 +175,50 @@ symlink_firefox_configs() {
   backup_if_regular_file "${profile_dir}/prefs.js" || exit "$?"
   backup_if_regular_file "${profile_dir}/user.js" || exit "$?"
   symlink_if_absent "${src_dir}/user.js" "${profile_dir}/user.js" || exit "$?"
+}
+
+install_firefox_extensions() {
+  local extension_urls_file="$1"
+  local extensions_dir="$2"
+  local tmp_dir="$3"
+  local url
+  while read -r url; do
+    install_firefox_extension_if_absent "${url}" "${extensions_dir}" "${tmp_dir}" || exit "$?"
+  done < "${extension_urls_file}"
+}
+
+install_firefox_extension_if_absent() {
+  local meta_url="$1"
+  local extensions_dir="$2"
+  local tmp_dir="$3"
+  local extension_id extension_name download_url
+  obtain_firefox_extension_info "${meta_url}" > "${tmp_dir}/extension-info" || return "$?"
+  IFS=$'\n' read -rd '' extension_id extension_name download_url < "${tmp_dir}/extension-info"
+  if [[ -f "${extensions_dir}/${extension_id}.xpi" ]]; then
+    echo "${extension_name} already exists at '${extensions_dir}/${extension_id}.xpi'."
+  else
+    echo "Installing ${extension_name}..."
+    download_firefox_extension "${download_url}" "${tmp_dir}/${extension_id}" || return "$?"
+    mv -v "${tmp_dir}/${extension_id}" "${extensions_dir}/${extension_id}.xpi"
+  fi
+}
+
+obtain_firefox_extension_info() {
+  local meta_url="$1"
+  local meta
+  meta="$(curl --fail --silent --show-error --location "${meta_url}")" || return "$?"
+  jq --raw-output --exit-status \
+    '.guid, .name."en-US", .current_version.files[0].url, "\u0000"
+      | if . == null then
+          "Error: missing extension info field(s).\n"|halt_error(1)
+        else . end' \
+    <<<"${meta}"
+}
+
+download_firefox_extension() {
+  local url="$1"
+  local dest="$2"
+  curl --fail --progress-bar --location --output "${dest}" "${url}"
 }
 
 configure_asdf_plugins() {
