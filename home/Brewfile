@@ -1,4 +1,3 @@
-tap "homebrew/cask-versions"
 tap "homebrew/cask-fonts"
 
 brew "vim"
@@ -18,8 +17,6 @@ brew "jq"
 
 brew "asdf"
 
-cask "adoptopenjdk"
-cask "adoptopenjdk8"
 brew "gradle"
 brew "maven"
 brew "leiningen"
