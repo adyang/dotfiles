@@ -26,10 +26,18 @@ Obtain required files from password manager or external source, then run:
 ```
 
 ### IntelliJ Settings
-1. Nagivate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
+1. Navigate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
 2. Enter description > tick `repo` > click `Generate token` > copy access token.
 3. In IntelliJ, navigate `Configure` > `Settings Repository`, paste HTTPS url of settings repo and enter access token.
 4. Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins.
+
+### Enable Firefox Extensions
+The Firefox extensions installed via the scripts are disabled by default. To enable them:
+1. Navigate to `about:addons`.
+2. Click on the triple dot `...` on one of the extensions > `Enable`.
+3. Click `Enable` again on the popup dialog.
+4. Tick `Allow this extension to run in Private Windows` > `Okay, Got It` on another popup dialog.
+5. Repeat for the rest of the disabled extensions.
 
 ### Reboot System
 Reboot system in order for MacOS updates to complete:
