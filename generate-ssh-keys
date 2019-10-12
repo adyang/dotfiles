@@ -1,7 +1,14 @@
 #!/bin/bash
 
-readonly GEN_SSH_HOME="${GEN_SSH_HOME:-${HOME}}"
+UNRESOLVED_DIR="$(dirname "${BASH_SOURCE[0]}")" || exit "$?"
+SCRIPT_DIR="$(cd "${UNRESOLVED_DIR}" &>/dev/null && pwd -P)" || exit "$?"
+GEN_SSH_HOME="${GEN_SSH_HOME:-${HOME}}"
+readonly SCRIPT_DIR GEN_SSH_HOME
 
+# shellcheck source=lib/log.sh
+source "${SCRIPT_DIR}/lib/log.sh"
+
+header 'Generate SSH Keys'
 set +o allexport
 unset -v passphrase
 IFS= read -rsp 'Please enter desired passphrase for SSH key generation: ' passphrase || exit "$?"
@@ -23,5 +30,5 @@ expect {
 EOF
 
 pbcopy < "${GEN_SSH_HOME}/.ssh/id_ed25519.pub"
-echo 'Public key has been copied to the clipboard.'
+note 'Public key has been copied to the clipboard.'
 

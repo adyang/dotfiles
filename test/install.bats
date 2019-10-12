@@ -8,7 +8,6 @@ setup() {
   tmp_dot_home="$(mktemp -d)"
   DOT_HOME="${tmp_dot_home}"
   tmp_script_dir="$(mktemp -d)"
-  SCRIPT_DIR="${tmp_script_dir}"
   source "${BATS_TEST_DIRNAME}/../install" 
 }
 
@@ -43,8 +42,9 @@ teardown() {
   run brew_kext_packages <<<$'\n'
 
   assert_success
-  assert_equal "${#lines[@]}" 2
-  assert_line --index 1 --regexp '^brew bundle --verbose --file=.*Brewfile-kext$'
+  assert_equal "${#lines[@]}" 3
+  assert_line --index 1 --regexp '^brew update'
+  assert_line --index 2 --regexp '^brew bundle --verbose --file=.*Brewfile-kext$'
 }
 
 @test "[install] brew_kext_packages: first brew bundle fails" {
@@ -62,8 +62,8 @@ teardown() {
   run brew_kext_packages <<<$'\n'
 
   assert_success
-  assert_line --index 0 --partial 'Please allow kext installation'
-  assert_line --index 1 --regexp '^brew bundle --verbose --file=.*Brewfile-kext$'
+  assert_line --index 1 --partial 'Please allow kext installation'
+  assert_line --index 2 --regexp '^brew bundle --verbose --file=.*Brewfile-kext$'
 }
 
 @test "[install] brew_kext_packages: first brew bundle fails and read fails" {
@@ -82,8 +82,8 @@ teardown() {
   run brew_kext_packages
 
   assert_failure 1
-  assert_line --index 0 --partial 'Please allow kext installation'
-  refute_line --index 1 'brew bundle --verbose --file=Brewfile-kext'
+  assert_line --index 1 --partial 'Please allow kext installation'
+  refute_line --index 2 'brew bundle --verbose --file=Brewfile-kext'
 }
 
 @test "[install] brew_kext_packages: first brew bundle fails and second brew bundle fails" {
@@ -157,24 +157,24 @@ teardown() {
   refute [ "${DOT_HOME}/.local/bin/powerline-go" -ef "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.13.0" ]
 }
 
-@test "[install] symlink_dotfiles: regular file with same name as home file present" {
+@test "[install] symlink_home_files: regular file with same name as home file present" {
   mkdir "${tmp_script_dir}/home"
   touch "${tmp_script_dir}/home/present-file"
   echo 'present-file' > "${tmp_dot_home}/present-file"
   
-  run symlink_dotfiles
+  run symlink_home_files "${tmp_script_dir}"
 
   assert_success
   assert [ "$(cat "${tmp_dot_home}/present-file.bak")" == 'present-file' ]
   assert [ "${tmp_dot_home}/present-file" -ef "${tmp_script_dir}/home/present-file" ]
 }
 
-@test "[install] symlink_dotfiles: directory with same name as home file present" {
+@test "[install] symlink_home_files: directory with same name as home file present" {
   mkdir "${tmp_script_dir}/home"
   touch "${tmp_script_dir}/home/same-name"
   mkdir "${tmp_dot_home}/same-name"
   
-  run symlink_dotfiles
+  run symlink_home_files "${tmp_script_dir}"
 
   assert_success
   assert [ -d "${tmp_dot_home}/same-name" ]
@@ -182,25 +182,25 @@ teardown() {
   refute [ "${tmp_dot_home}/same-name" -ef "${tmp_script_dir}/home/same_name" ]
 }
 
-@test "[install] symlink_dotfiles: symlink with same name as home file present" {
+@test "[install] symlink_home_files: symlink with same name as home file present" {
   mkdir "${tmp_script_dir}/home"
   touch "${tmp_script_dir}/home/same-name"
   touch "${tmp_dot_home}/old-src"
   ln -sv "${tmp_dot_home}/old-src" "${tmp_dot_home}/same-name"
   
-  run symlink_dotfiles
+  run symlink_home_files "${tmp_script_dir}"
 
   assert_success
   assert [ "${tmp_dot_home}/same-name" -ef "${tmp_dot_home}/old-src" ]
   refute [ -e "${tmp_dot_home}/same-name.bak" ]
 }
 
-@test "[install] symlink_dotfiles: hidden and non-hidden dotfiles" {
+@test "[install] symlink_home_files: hidden and non-hidden dotfiles" {
   mkdir "${tmp_script_dir}/home"
   touch "${tmp_script_dir}/home/"{.hidden,non-hidden}
   mkdir "${tmp_script_dir}/home/"{.hidden-dir,non-hidden-dir}
   
-  run symlink_dotfiles
+  run symlink_home_files "${tmp_script_dir}"
 
   assert_success
   for file in .hidden non-hidden .hidden-dir non-hidden-dir; do
@@ -208,43 +208,43 @@ teardown() {
   done
 }
 
-@test "[install] symlink_dotfiles: nested home files" {
-  mkdir -p "${tmp_script_dir}/home-nested/nest1/nest2"
-  touch "${tmp_script_dir}/home-nested/nest1/nest2/nested-file"
-  
-  run symlink_dotfiles
-
-  assert_success
-  assert [ "${tmp_dot_home}/nest1/nest2/nested-file" -ef "${tmp_script_dir}/home-nested/nest1/nest2/nested-file" ]
-  refute [ -L "${tmp_dot_home}/nest1" ]
-  refute [ -L "${tmp_dot_home}/nest1/nest2" ]
-}
-
-@test "[install] symlink_dotfiles: backup of regular file fails" {
+@test "[install] symlink_home_files: backup of regular file fails" {
   backup_if_regular_file() {
     return 1
   }
   mock_echo 'symlink_if_absent'
   
-  run symlink_dotfiles
+  run symlink_home_files "${tmp_script_dir}"
 
   assert_failure 1
   refute_line --partial 'symlink_if_absent'
 }
 
-@test "[install] symlink_dotfiles: symlink fails" {
+@test "[install] symlink_home_files: symlink fails" {
   symlink_if_absent() {
     return 1
   }
-  symlink_dotfiles_with_exit_test() {
-    symlink_dotfiles
+  symlink_home_files_with_exit_test() {
+    symlink_home_files "${tmp_script_dir}"
     echo '[FAILURE] failed to exit'
   }
   
-  run symlink_dotfiles_with_exit_test
+  run symlink_home_files_with_exit_test
 
   assert_failure 1
   refute_line '[FAILURE] failed to exit'
+}
+
+@test "[install] symlink_nested_home_files: nested home files" {
+  mkdir -p "${tmp_script_dir}/home-nested/nest1/nest2"
+  touch "${tmp_script_dir}/home-nested/nest1/nest2/nested-file"
+  
+  run symlink_nested_home_files "${tmp_script_dir}"
+
+  assert_success
+  assert [ "${tmp_dot_home}/nest1/nest2/nested-file" -ef "${tmp_script_dir}/home-nested/nest1/nest2/nested-file" ]
+  refute [ -L "${tmp_dot_home}/nest1" ]
+  refute [ -L "${tmp_dot_home}/nest1/nest2" ]
 }
 
 @test "[install] symlink_vscode_configs: configs absent" {

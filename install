@@ -1,10 +1,11 @@
 #!/bin/bash
 
-if [[ -z "${SCRIPT_DIR}" ]]; then
-  UNRESOLVED_DIR="$(dirname "${BASH_SOURCE[0]}")" || exit "$?"
-  SCRIPT_DIR="$(cd "${UNRESOLVED_DIR}" &>/dev/null && pwd -P)" || exit "$?"
-fi
+UNRESOLVED_DIR="$(dirname "${BASH_SOURCE[0]}")" || exit "$?"
+SCRIPT_DIR="$(cd "${UNRESOLVED_DIR}" &>/dev/null && pwd -P)" || exit "$?"
 readonly SCRIPT_DIR
+
+# shellcheck source=lib/log.sh
+source "${SCRIPT_DIR}/lib/log.sh"
 
 main() {
   setup_environment
@@ -43,7 +44,7 @@ sudo_until_process_ends() {
 }
 
 symlink_dotfiles() {
-  echo "Symlinking dotfiles to ${DOT_HOME} ..."
+  header "Symlink dotfiles to ${DOT_HOME}"
   symlink_home_files "${SCRIPT_DIR}"
   symlink_nested_home_files "${SCRIPT_DIR}"
 }
@@ -88,6 +89,7 @@ symlink_if_absent() {
 }
 
 brew_kext_packages() {
+  header 'Brew Packages Requiring KEXT Permissions'
   brew update || exit "$?"
   if ! brew bundle --verbose --file="${DOT_HOME}/Brewfile-kext"; then
     printf '\nPlease allow kext installation in System Preferences > Security & Privacy > General.\n'
@@ -97,12 +99,13 @@ brew_kext_packages() {
 }
 
 brew_packages() {
+  header 'Brewing Packages'
   brew update || exit "$?"
   brew bundle --verbose --file="${DOT_HOME}/Brewfile" || exit "$?"
 }
 
 install_powerline() {
-  echo 'Installing powerline-go...'
+  header 'Install powerline-go'
   local local_bin="${DOT_HOME}/.local/bin"
   local install_dir="${DOT_HOME}/.powerline-go"
   local url='https://github.com/justjanne/powerline-go/releases/download/v1.13.0/powerline-go-darwin-amd64'
@@ -116,16 +119,16 @@ install_powerline() {
 }
 
 configure_iterm2() {
-  echo 'Configuring iterm2 preferences...'
+  header 'Configure iterm2 Preferences'
   # shellcheck disable=SC2088
   defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '~/.iterm2'
   defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
-  echo '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
-  echo '                     Cmd + , > Preferences > Tick "Load preferences from a custom folder or URL"'
+  note '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
+  note '                     Cmd + , > Preferences > Tick "Load preferences from a custom folder or URL"'
 }
 
 configure_vscode() {
-  echo 'Configuring VS Code...'
+  header 'Configure VS Code'
   symlink_vscode_configs "${SCRIPT_DIR}/vscode" "${DOT_HOME}/Library/Application Support/Code/User"
   install_vscode_extensions "${SCRIPT_DIR}/vscode/extensions"
 }
@@ -151,7 +154,7 @@ install_vscode_extensions() {
 }
 
 configure_firefox() {
-  echo 'Configuring Firefox...'
+  header 'Configure Firefox'
   create_firefox_profile_if_absent '/Applications/Firefox.app/Contents/MacOS/firefox' "${SCRIPT_DIR}/firefox" "${DOT_HOME}/Library/Application Support/Firefox"
   symlink_firefox_configs "${SCRIPT_DIR}/firefox" "${DOT_HOME}/Library/Application Support/Firefox/Profiles/privacy"
   install_firefox_extensions "${SCRIPT_DIR}/firefox/extensions" "${DOT_HOME}/Library/Application Support/Firefox/Profiles/privacy/extensions" "${DOT_TMP_DIR}"
@@ -225,7 +228,7 @@ download_firefox_extension() {
 }
 
 configure_asdf_plugins() {
-  echo 'Configuring asdf plugins...'
+  header 'Configure asdf Plugins'
   # shellcheck source=/dev/null
   source "$(brew --prefix asdf)/asdf.sh" || exit "$?"
   local plugin_props
@@ -261,7 +264,7 @@ install_plugin_versions() {
 }
 
 install_pip_packages() {
-  echo 'Installing pip packages...'
+  header 'Install pip Packages'
   python -m pip install --upgrade pip || exit "$?"
   python -m pip install --upgrade --user pipx || exit "$?"
   python -m pipx install ansible || exit "$?"
@@ -269,8 +272,8 @@ install_pip_packages() {
 }
 
 install_macos_updates() {
+  header 'Install MacOS Updates'
   sudo softwareupdate --install --all
 }
 
 (return 0 2>/dev/null) || main "$@"
-

@@ -1,5 +1,12 @@
 #!/bin/bash
 
+UNRESOLVED_DIR="$(dirname "${BASH_SOURCE[0]}")" || exit "$?"
+SCRIPT_DIR="$(cd "${UNRESOLVED_DIR}" &>/dev/null && pwd -P)" || exit "$?"
+readonly SCRIPT_DIR
+
+# shellcheck source=lib/log.sh
+source "${SCRIPT_DIR}/lib/log.sh"
+
 main() {
   DOT_HOME="${DOT_HOME:-${HOME}}"
   readonly DOT_HOME
@@ -8,7 +15,7 @@ main() {
 }
 
 configure_vim() {
-  echo 'Configuring vim...'
+  header 'Configure Vim'
   local plugins=(
     'https://github.com/chriskempson/base16-vim.git'
     'https://github.com/scrooloose/nerdtree.git'
@@ -40,4 +47,3 @@ install_vim_plugins() {
 }
 
 (return 0 2>/dev/null) || main "$@"
-
