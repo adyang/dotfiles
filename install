@@ -15,6 +15,7 @@ main() {
   brew_packages
   install_powerline
   configure_iterm2
+  configure_dock
   "${SCRIPT_DIR}/configure-vim"
   configure_vscode
   configure_firefox
@@ -125,6 +126,12 @@ configure_iterm2() {
   defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
   note '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
   note '                     Cmd + , > Preferences > Tick "Load preferences from a custom folder or URL"'
+}
+
+configure_dock() {
+  header 'Configure MacOS Dock'
+  defaults write com.apple.dock persistent-apps -array \
+    && killall Dock
 }
 
 configure_vscode() {
