@@ -17,6 +17,7 @@ main() {
   configure_iterm2
   configure_dock
   configure_finder
+  configure_spectacle
   "${SCRIPT_DIR}/configure-vim"
   configure_vscode
   configure_firefox
@@ -153,6 +154,13 @@ configure_finder() {
   defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
   killall Finder
+}
+
+configure_spectacle() {
+  header 'Configure Spectacle'
+  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Spectacle.app", hidden:false}'
+  printf 'Existing login items:\n'
+  osascript -e 'tell application "System Events" to get the name of every login item'
 }
 
 configure_vscode() {
