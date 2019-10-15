@@ -1,6 +1,7 @@
 source /usr/local/opt/asdf/asdf.sh
-source "${HOME}/.asdf/plugins/java/set-java-home.sh"
 
 if asdf current java >/dev/null 2>&1; then
-  export JAVA_HOME="$(asdf which java)"
+  asdf_java_path="$(asdf which java)"
+  export JAVA_HOME="${asdf_java_path%/*/*}"
+  unset -v asdf_java_path
 fi
