@@ -19,6 +19,11 @@ There are 3 blocking interactive prompts:
 And 1 non-blocking prompt to set the default browser.
 
 ## Manual Steps
+### Enable FileVault
+```console
+sudo fdesetup enable
+```
+
 ### Import GPG Keys
 Obtain required files from password manager or external source, then run:
 ```console
