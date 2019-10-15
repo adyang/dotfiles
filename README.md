@@ -39,6 +39,10 @@ The Firefox extensions installed via the scripts are disabled by default. To ena
 4. Tick `Allow this extension to run in Private Windows` > `Okay, Got It` on another popup dialog.
 5. Repeat for the rest of the disabled extensions.
 
+### Ensure iTerm2 Preferences are Activated
+Activate iTerm2 preferences in case auto-activation does not work.
+`Cmd + ,` > `Preferences` > Tick `Load preferences from a custom folder or URL`
+
 ### Reboot System
 Reboot system in order for MacOS updates to complete:
 ```console
