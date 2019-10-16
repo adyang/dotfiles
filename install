@@ -14,6 +14,7 @@ main() {
   [[ "${CI}" == 'true' ]] || brew_kext_packages
   brew_packages
   install_powerline
+  prepare_macos_configuration
   configure_iterm2
   configure_dock
   configure_finder
@@ -123,6 +124,11 @@ install_powerline() {
     mkdir -p "${local_bin}"
     ln -sfv "${dest}" "${local_bin}/powerline-go"
   fi
+}
+
+prepare_macos_configuration() {
+  header 'Prepare MacOS Configuration'
+  osascript -e 'tell application "System Preferences" to quit'
 }
 
 configure_iterm2() {
