@@ -266,7 +266,7 @@ create_firefox_profile_if_absent() {
     "${firefox_bin}" -CreateProfile "privacy ${firefox_dir}/Profiles/privacy" || exit "$?"
     cp "${src_dir}/profiles.ini" "${firefox_dir}/" || exit "$?"
     # Workaround to ensure Firefox starts default last start profile that is set in profiles.ini
-    "${firefox_bin}" --headless -setDefaultBrowser -P 'privacy' & sleep 1 && kill "$!"
+    "${firefox_bin}" --headless -setDefaultBrowser -P 'privacy' & sleep 2 && kill "$!"
   fi
 }
 
