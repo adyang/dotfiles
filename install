@@ -19,6 +19,8 @@ main() {
   configure_finder
   configure_spotlight
   configure_spectacle
+  harden_macos
+  reload_preferences
   "${SCRIPT_DIR}/configure-vim"
   configure_vscode
   configure_firefox
@@ -194,6 +196,18 @@ configure_spectacle() {
   osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Spectacle.app", hidden:false}' >/dev/null
   printf 'Existing login items:\n'
   osascript -e 'tell application "System Events" to get the name of every login item'
+}
+
+harden_macos() {
+  header 'Harden MacOS'
+  sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
+  sudo -u _locationd defaults -currentHost write com.apple.locationd LocationServicesEnabled -int 0
+  defaults write '/Library/Application Support/CrashReporter/DiagnosticMessagesHistory' AutoSubmit -int 0
+}
+
+reload_preferences() {
+  header 'Reload Preferences'
+  killall -HUP cfprefsd
 }
 
 configure_vscode() {
