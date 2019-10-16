@@ -14,20 +14,12 @@ main() {
   [[ "${CI}" == 'true' ]] || brew_kext_packages
   brew_packages
   install_powerline
-  prepare_macos_configuration
-  configure_iterm2
-  configure_dock
-  configure_finder
-  configure_spotlight
-  configure_spectacle
-  harden_macos
-  disable_siri
-  reload_preferences
   "${SCRIPT_DIR}/configure-vim"
   configure_vscode
   configure_firefox
   configure_asdf_plugins
   install_pip_packages
+  "${SCRIPT_DIR}/configure-macos"
   [[ "${CI}" == 'true' ]] || install_macos_updates
 }
 
@@ -124,105 +116,6 @@ install_powerline() {
     mkdir -p "${local_bin}"
     ln -sfv "${dest}" "${local_bin}/powerline-go"
   fi
-}
-
-prepare_macos_configuration() {
-  header 'Prepare MacOS Configuration'
-  osascript -e 'tell application "System Preferences" to quit'
-}
-
-configure_iterm2() {
-  header 'Configure iterm2 Preferences'
-  # shellcheck disable=SC2088
-  defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '~/.iterm2'
-  defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
-  note '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
-  note '                     Cmd + , > Preferences > Tick "Load preferences from a custom folder or URL"'
-}
-
-configure_dock() {
-  header 'Configure MacOS Dock'
-  defaults write com.apple.dock persistent-apps -array
-  killall Dock
-}
-
-configure_finder() {
-  header 'Configure MacOS Finder'
-  defaults write com.apple.finder NewWindowTarget -string 'PfLo'
-  defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}"
-
-  defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
-
-  defaults write com.apple.finder AppleShowAllFiles -bool true
-  defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-  defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-
-  defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
-  defaults write com.apple.finder FXPreferredViewStyle -string 'Nlsv'
-
-  defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-  defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-
-  killall Finder
-}
-
-configure_spotlight() {
-  header 'Configure Spotlight'
-  sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array '/Volumes'
-
-  defaults write com.apple.spotlight orderedItems -array \
-    '{"enabled" = 1; "name" = "APPLICATIONS";}' \
-    '{"enabled" = 1; "name" = "SYSTEM_PREFS";}' \
-    '{"enabled" = 1; "name" = "DIRECTORIES";}' \
-    '{"enabled" = 0; "name" = "MENU_SPOTLIGHT_SUGGESTIONS";}' \
-    '{"enabled" = 0; "name" = "MENU_CONVERSION";}' \
-    '{"enabled" = 0; "name" = "MENU_EXPRESSION";}' \
-    '{"enabled" = 0; "name" = "MENU_DEFINITION";}' \
-    '{"enabled" = 0; "name" = "MENU_OTHER";}' \
-    '{"enabled" = 0; "name" = "DOCUMENTS";}' \
-    '{"enabled" = 0; "name" = "PRESENTATIONS";}' \
-    '{"enabled" = 0; "name" = "SPREADSHEETS";}' \
-    '{"enabled" = 0; "name" = "PDF";}' \
-    '{"enabled" = 0; "name" = "FONTS";}' \
-    '{"enabled" = 0; "name" = "MESSAGES";}' \
-    '{"enabled" = 0; "name" = "CONTACT";}' \
-    '{"enabled" = 0; "name" = "EVENT_TODO";}' \
-    '{"enabled" = 0; "name" = "IMAGES";}' \
-    '{"enabled" = 0; "name" = "BOOKMARKS";}' \
-    '{"enabled" = 0; "name" = "MUSIC";}' \
-    '{"enabled" = 0; "name" = "MOVIES";}'
-  defaults write com.apple.lookup.shared LookupSuggestionsDisabled -int 1
-  
-  sudo killall mds
-  sudo mdutil -i on / >/dev/null
-  sudo mdutil -E / >/dev/null
-}
-
-configure_spectacle() {
-  header 'Configure Spectacle'
-  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Spectacle.app", hidden:false}' >/dev/null
-  printf 'Existing login items:\n'
-  osascript -e 'tell application "System Events" to get the name of every login item'
-}
-
-harden_macos() {
-  header 'Harden MacOS'
-  sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
-  sudo -u _locationd defaults -currentHost write com.apple.locationd LocationServicesEnabled -int 0
-  defaults write '/Library/Application Support/CrashReporter/DiagnosticMessagesHistory' AutoSubmit -int 0
-}
-
-disable_siri() {
-  header 'Disable Siri'
-  defaults write com.apple.Siri StatusMenuVisible -bool false
-  defaults write com.apple.Siri UserHasDeclinedEnable -bool true
-  defaults write com.apple.assistant.support 'Assistant Enabled' -int 0
-}
-
-reload_preferences() {
-  header 'Reload Preferences'
-  killall -HUP cfprefsd
-  killall SystemUIServer
 }
 
 configure_vscode() {
