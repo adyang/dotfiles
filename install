@@ -20,6 +20,7 @@ main() {
   configure_spotlight
   configure_spectacle
   harden_macos
+  disable_siri
   reload_preferences
   "${SCRIPT_DIR}/configure-vim"
   configure_vscode
@@ -205,9 +206,17 @@ harden_macos() {
   defaults write '/Library/Application Support/CrashReporter/DiagnosticMessagesHistory' AutoSubmit -int 0
 }
 
+disable_siri() {
+  header 'Disable Siri'
+  defaults write com.apple.Siri StatusMenuVisible -bool false
+  defaults write com.apple.Siri UserHasDeclinedEnable -bool true
+  defaults write com.apple.assistant.support 'Assistant Enabled' -int 0
+}
+
 reload_preferences() {
   header 'Reload Preferences'
   killall -HUP cfprefsd
+  killall SystemUIServer
 }
 
 configure_vscode() {
