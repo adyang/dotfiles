@@ -92,7 +92,7 @@ brew_kext_packages() {
   header 'Brew Packages Requiring KEXT Permissions'
   brew update || exit "$?"
   if ! brew bundle --verbose --file="${DOT_HOME}/Brewfile-kext"; then
-    printf '\nPlease allow kext installation in System Preferences > Security & Privacy > General.\n'
+    note '\nPlease allow kext installation in System Preferences > Security & Privacy > General.'
     read -rp 'Press RETURN to continue when done...' || exit "$?"
     brew bundle --verbose --file="${DOT_HOME}/Brewfile-kext" || exit "$?"
   fi
