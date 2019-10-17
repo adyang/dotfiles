@@ -113,20 +113,20 @@ vagrant snapshot restore fresh-install
 [installinstallmacos.py](https://github.com/munki/macadmin-scripts/blob/master/installinstallmacos.py) is used to download a macOS installer disk image.
 
 1. Download desired disk image:
-  ```console
-  installinstallmacos.py
-  ```
-  Select desired installer and choose build base on host hardware.
+    ```console
+    installinstallmacos.py
+    ```
+    Select desired installer and choose build base on host hardware.
 
 2. Install macinbox:
-  ```console
-  sudo gem install macinbox
-  ```
+    ```console
+    sudo gem install macinbox
+    ```
 
 3. Create macOS Vagrant Box, e.g.:
-  ```console
-  sudo macinbox --name macos-10.14 --box-format virtualbox --memory 4096 --installer-dmg <path/to/downloaded/disk/image>
-  ```
+    ```console
+    sudo macinbox --name macos-10.14 --box-format virtualbox --memory 4096 --installer-dmg <path/to/downloaded/disk/image>
+    ```
 
 ## References
 1. https://github.com/trptcolin/dotfiles
