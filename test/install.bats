@@ -340,7 +340,7 @@ teardown() {
   assert_success
   assert_line "firefox -CreateProfile privacy ${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
   assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/profiles.ini")" 'profiles'
-  assert_line "firefox --headless -setDefaultBrowser -P privacy"
+  assert_line "firefox --headless -P privacy"
 }
 
 @test "[install] create_firefox_profile_if_absent: profile present" {
@@ -352,7 +352,7 @@ teardown() {
   run create_firefox_profile_if_absent 'firefox' "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox"
 
   assert_success
-  refute_line --partial 'firefox'
+  refute_line --partial 'firefox -CreateProfile'
 }
 
 @test "[install] create_firefox_profile_if_absent: create profile fails" {
