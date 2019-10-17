@@ -14,6 +14,35 @@ teardown() {
   rm -rf "${tmp_dot_home}"
 }
 
+@test "[configure-vim] configure_vim: plugins file absent" {
+  mock_echo 'install_vim_plugins'
+
+  run configure_vim "${tmp_dot_home}/.vim-plugins"
+
+  assert_failure 1
+  refute_line --partial 'install_vim_plugins'
+}
+
+@test "[configure-vim] configure_vim: plugins file present" {
+  mock_echo 'install_vim_plugins'
+  printf 'plugin-one\nplugin-two\n' >"${tmp_dot_home}/.vim-plugins"
+
+  run configure_vim "${tmp_dot_home}/.vim-plugins"
+
+  assert_success
+  assert_line 'install_vim_plugins plugin-one plugin-two'
+}
+
+@test "[configure-vim] configure_vim: plugins file has missing terminating newline" {
+  mock_echo 'install_vim_plugins'
+  printf 'plugin-one\nplugin-two' >"${tmp_dot_home}/.vim-plugins"
+
+  run configure_vim "${tmp_dot_home}/.vim-plugins"
+
+  assert_success
+  assert_line 'install_vim_plugins plugin-one plugin-two'
+}
+
 @test "[configure-vim] install_vim_plugins: plugin is not installed" {
   mock_echo 'git'
 
