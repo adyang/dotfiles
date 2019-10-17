@@ -60,10 +60,73 @@ Reboot system in order for MacOS updates to complete:
 sudo shutdown -r now
 ```
 
+## Testing
+Run all tests:
+```console
+./test/run-tests
+```
+Run specific test(s):
+```console
+./test/run-tests <paths/to/bats/file ...>
+```
+Watch all tests:
+```console
+./test/watch-tests
+```
+Watch specific test(s):
+```console
+./test/watch-tests <paths/to/bats/file ...>
+```
+
+## Development
+### Development Commands
+Start virtual machine:
+```console
+vagrant up
+```
+Sync files into /vagrant folder in another terminal:
+```console
+vagrant rsync-auto
+```
+Consider taking a snapshot of the fresh installation:
+```console
+vagrant snapshot save fresh-install
+```
+Run bootstrap via standard instructions:
+```console
+vagrant ssh
+eval "$(ssh-agent -s)"
+bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap)
+```
+Run install script (note to clean up symlinked files or reset snapshot if standard bootstrap was previously run):
+```console
+vagrant ssh -c '/vagrant/install' <<<$'vagrant\n'
+```
+Restore snapshot:
+```console
+vagrant snapshot restore fresh-install
+```
+
+### Creating macOS Vagrant Boxes
+[macinbox](https://github.com/bacongravy/macinbox) is used to create macOS Vagrant Box.
+[installinstallmacos.py](https://github.com/munki/macadmin-scripts/blob/master/installinstallmacos.py) is used to download a macOS installer disk image.
+1. Download desired disk image:
+  ```console
+  installinstallmacos.py
+  ```
+  Select desired installer and choose build base on host hardware.
+2. Install macinbox:
+  ```console
+  sudo gem install macinbox
+  ```
+3. Create macOS Vagrant Box, e.g.:
+  ```console
+  sudo macinbox --name macos-10.14 --box-format virtualbox --memory 4096 --installer-dmg <path/to/downloaded/disk/image>
+  ```
+
 ## References
 1. https://github.com/trptcolin/dotfiles
 2. https://github.com/sam-hosseini/dotfiles
 3. https://github.com/mathiasbynens/dotfiles
 4. https://github.com/holman/dotfiles
 5. https://github.com/TimMoore/dotfiles
-
