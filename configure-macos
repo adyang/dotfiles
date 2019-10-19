@@ -30,8 +30,6 @@ configure_iterm2() {
   # shellcheck disable=SC2088
   defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '~/.iterm2'
   defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
-  note '[Manual Workaround]: Activate iTerm2 preferences if auto-activation does not work'
-  note '                     Cmd + , > Preferences > Tick "Load preferences from a custom folder or URL"'
 }
 
 configure_dock() {

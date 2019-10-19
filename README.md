@@ -50,10 +50,6 @@ The Firefox extensions installed via the scripts are disabled by default. To ena
 3. Navigate to `about:preferences#search`
 4. Under `Default Search Engine` > select target search engine.
 
-### Ensure iTerm2 Preferences are Activated
-Activate iTerm2 preferences in case auto-activation does not work.
-`Cmd + ,` > `Preferences` > Tick `Load preferences from a custom folder or URL`
-
 ### Reboot System
 Reboot system in order for MacOS updates to complete:
 ```console
