@@ -114,6 +114,16 @@ Restore snapshot:
 vagrant snapshot restore fresh-install
 ```
 
+### Workaround Development Issues
+If `vagrant up` keeps failing because of box download, use the following command to keep retrying:
+```console
+while ! vagrant box add apscommode/macos-10.14; do : ; done
+```
+Also if using macOS, consider keeping the display on:
+```console
+caffeinate -d
+```
+
 ### Creating macOS Vagrant Boxes
 [macinbox](https://github.com/bacongravy/macinbox) is used to create macOS Vagrant Box.
 
