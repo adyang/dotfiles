@@ -90,28 +90,28 @@ configure_spotlight() {
 
 configure_spectacle() {
   sub_header 'Configure Spectacle'
-  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Spectacle.app", hidden:false}' >/dev/null
-  printf 'Existing login items:\n'
+  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Spectacle.app", hidden:false}' >/dev/null &&
+  printf 'Existing login items:\n' &&
   osascript -e 'tell application "System Events" to get the name of every login item'
 }
 
 harden_macos() {
   sub_header 'Harden MacOS'
-  sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
-  sudo -u _locationd defaults -currentHost write com.apple.locationd LocationServicesEnabled -int 0
+  sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1 &&
+  sudo -u _locationd defaults -currentHost write com.apple.locationd LocationServicesEnabled -int 0 &&
   defaults write '/Library/Application Support/CrashReporter/DiagnosticMessagesHistory' AutoSubmit -int 0
 }
 
 disable_siri() {
   sub_header 'Disable Siri'
-  defaults write com.apple.Siri StatusMenuVisible -bool false
-  defaults write com.apple.Siri UserHasDeclinedEnable -bool true
+  defaults write com.apple.Siri StatusMenuVisible -bool false &&
+  defaults write com.apple.Siri UserHasDeclinedEnable -bool true &&
   defaults write com.apple.assistant.support 'Assistant Enabled' -int 0
 }
 
 reload_preferences() {
   sub_header 'Reload Preferences'
-  killall -HUP cfprefsd
+  killall -HUP cfprefsd &&
   killall SystemUIServer
 }
 
