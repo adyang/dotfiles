@@ -8,6 +8,7 @@ readonly SCRIPT_DIR
 source "${SCRIPT_DIR}/lib/log.sh"
 
 main() {
+  header 'Configure MacOS'
   prepare_macos_configuration
   configure_iterm2
   configure_dock
@@ -20,12 +21,12 @@ main() {
 }
 
 prepare_macos_configuration() {
-  header 'Prepare MacOS Configuration'
+  sub_header 'Prepare MacOS Configuration'
   osascript -e 'tell application "System Preferences" to quit'
 }
 
 configure_iterm2() {
-  header 'Configure iterm2 Preferences'
+  sub_header 'Configure iterm2 Preferences'
   # shellcheck disable=SC2088
   defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '~/.iterm2'
   defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
@@ -34,13 +35,13 @@ configure_iterm2() {
 }
 
 configure_dock() {
-  header 'Configure MacOS Dock'
+  sub_header 'Configure MacOS Dock'
   defaults write com.apple.dock persistent-apps -array
   killall Dock
 }
 
 configure_finder() {
-  header 'Configure MacOS Finder'
+  sub_header 'Configure MacOS Finder'
   defaults write com.apple.finder NewWindowTarget -string 'PfLo'
   defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}"
 
@@ -60,7 +61,7 @@ configure_finder() {
 }
 
 configure_spotlight() {
-  header 'Configure Spotlight'
+  sub_header 'Configure Spotlight'
   sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array '/Volumes'
 
   defaults write com.apple.spotlight orderedItems -array \
@@ -92,28 +93,28 @@ configure_spotlight() {
 }
 
 configure_spectacle() {
-  header 'Configure Spectacle'
+  sub_header 'Configure Spectacle'
   osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Spectacle.app", hidden:false}' >/dev/null
   printf 'Existing login items:\n'
   osascript -e 'tell application "System Events" to get the name of every login item'
 }
 
 harden_macos() {
-  header 'Harden MacOS'
+  sub_header 'Harden MacOS'
   sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
   sudo -u _locationd defaults -currentHost write com.apple.locationd LocationServicesEnabled -int 0
   defaults write '/Library/Application Support/CrashReporter/DiagnosticMessagesHistory' AutoSubmit -int 0
 }
 
 disable_siri() {
-  header 'Disable Siri'
+  sub_header 'Disable Siri'
   defaults write com.apple.Siri StatusMenuVisible -bool false
   defaults write com.apple.Siri UserHasDeclinedEnable -bool true
   defaults write com.apple.assistant.support 'Assistant Enabled' -int 0
 }
 
 reload_preferences() {
-  header 'Reload Preferences'
+  sub_header 'Reload Preferences'
   killall -HUP cfprefsd
   killall SystemUIServer
 }
