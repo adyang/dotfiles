@@ -36,6 +36,11 @@ Obtain required files from password manager or external source, then run:
 3. Under `Locations`, untick iCloud Drive and tick your computer's name.
 4. Under `Tags`, untick all.
 
+### Prevent Spotlight from Indexing new Mounted Volumes (Automation not Working in Mojave)
+1. Go to `Spotlight` System Preferences > `Privacy`.
+2. Click `+` > `Cmd + Shift + .` to show hidden files.
+3. Navigate to root HD and select `/Volumes`.
+
 ### IntelliJ Settings
 1. Navigate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
 2. Enter description > tick `repo` > click `Generate token` > copy access token.

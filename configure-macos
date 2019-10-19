@@ -9,15 +9,15 @@ source "${SCRIPT_DIR}/lib/log.sh"
 
 main() {
   header 'Configure MacOS'
-  prepare_macos_configuration
-  configure_iterm2
-  configure_dock
-  configure_finder
-  configure_spotlight
-  configure_spectacle
-  harden_macos
-  disable_siri
-  reload_preferences
+  prepare_macos_configuration || exit "$?"
+  configure_iterm2 || exit "$?"
+  configure_dock || exit "$?"
+  configure_finder || exit "$?"
+  configure_spotlight || exit "$?"
+  configure_spectacle || exit "$?"
+  harden_macos || exit "$?"
+  disable_siri || exit "$?"
+  reload_preferences || exit "$?"
 }
 
 prepare_macos_configuration() {
@@ -28,40 +28,38 @@ prepare_macos_configuration() {
 configure_iterm2() {
   sub_header 'Configure iterm2 Preferences'
   # shellcheck disable=SC2088
-  defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '~/.iterm2'
+  defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '~/.iterm2' &&
   defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 }
 
 configure_dock() {
   sub_header 'Configure MacOS Dock'
-  defaults write com.apple.dock persistent-apps -array
+  defaults write com.apple.dock persistent-apps -array &&
   killall Dock
 }
 
 configure_finder() {
   sub_header 'Configure MacOS Finder'
-  defaults write com.apple.finder NewWindowTarget -string 'PfLo'
-  defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}"
+  defaults write com.apple.finder NewWindowTarget -string 'PfLo' &&
+  defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}" &&
 
-  defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+  defaults write com.apple.finder ShowMountedServersOnDesktop -bool true &&
 
-  defaults write com.apple.finder AppleShowAllFiles -bool true
-  defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-  defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+  defaults write com.apple.finder AppleShowAllFiles -bool true &&
+  defaults write NSGlobalDomain AppleShowAllExtensions -bool true &&
+  defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false &&
 
-  defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
-  defaults write com.apple.finder FXPreferredViewStyle -string 'Nlsv'
+  defaults write com.apple.finder _FXShowPosixPathInTitle -bool true &&
+  defaults write com.apple.finder FXPreferredViewStyle -string 'Nlsv' &&
 
-  defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-  defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+  defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true &&
+  defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true &&
 
   killall Finder
 }
 
 configure_spotlight() {
   sub_header 'Configure Spotlight'
-  sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array '/Volumes'
-
   defaults write com.apple.spotlight orderedItems -array \
     '{"enabled" = 1; "name" = "APPLICATIONS";}' \
     '{"enabled" = 1; "name" = "SYSTEM_PREFS";}' \
@@ -82,12 +80,12 @@ configure_spotlight() {
     '{"enabled" = 0; "name" = "IMAGES";}' \
     '{"enabled" = 0; "name" = "BOOKMARKS";}' \
     '{"enabled" = 0; "name" = "MUSIC";}' \
-    '{"enabled" = 0; "name" = "MOVIES";}'
-  defaults write com.apple.lookup.shared LookupSuggestionsDisabled -int 1
+    '{"enabled" = 0; "name" = "MOVIES";}' &&
+  defaults write com.apple.lookup.shared LookupSuggestionsDisabled -int 1 &&
 
-  sudo killall mds
-  sudo mdutil -i on / >/dev/null
-  sudo mdutil -E / >/dev/null
+  sudo killall mds &&
+  sudo mdutil -i on / &&
+  sudo mdutil -E /
 }
 
 configure_spectacle() {
