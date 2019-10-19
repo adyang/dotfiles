@@ -30,6 +30,12 @@ Obtain required files from password manager or external source, then run:
 ./import-gpg-keys --public-key <public-key-file> --secret-key <secret-key-file> --ownertrust <ownertrust-file>
 ```
 
+### Configure Finder Sidebar (No Easy Way to Automate)
+1. Open Finder > `Cmd + ,` to open Finder Preferences.
+2. `Sidebar` > Under `Favorites`, tick home directory.
+3. Under `Locations`, untick iCloud Drive and tick your computer's name.
+4. Under `Tags`, untick all.
+
 ### IntelliJ Settings
 1. Navigate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
 2. Enter description > tick `repo` > click `Generate token` > copy access token.
