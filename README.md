@@ -8,13 +8,16 @@ bash <(curl --fail --silent --show-error --location https://raw.githubuserconten
 ```
 This will setup the dotfiles repository into the current directory.
 
-There are 3 blocking interactive prompts:
+There are 4 blocking interactive prompts:
 1. Passphrase for SSH key (either use Diceware or generate from external password manager)
     - The public key will be copied into your clipboard; you can paste it into repository services while the installation proceeds
 2. Password for sudo
 3. Pause after expected failure of first `brew bundle --verbose --file=Brewfile-kext`
     - Go to `Security & Privacy` > click on `Allow`
     - Press enter to resume rest of installation
+4. Pause during configuration of MacOS
+    - Dialog `"Terminal.app" wants access to control "System Events.app"...` appears
+    - Click `OK`
 
 And 1 non-blocking prompt to set the default browser.
 
