@@ -14,7 +14,7 @@ main() {
   configure_dock || exit "$?"
   configure_finder || exit "$?"
   configure_spotlight || exit "$?"
-  configure_spectacle || exit "$?"
+  [[ "${CI}" == 'true' ]] || configure_spectacle || exit "$?"
   harden_macos || exit "$?"
   disable_siri || exit "$?"
   reload_preferences || exit "$?"
