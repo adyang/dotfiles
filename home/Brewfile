@@ -14,6 +14,7 @@ brew "tree"
 brew "telnet"
 brew "wget"
 brew "jq"
+brew "autojump"
 
 brew "asdf"
 
@@ -39,4 +40,3 @@ cask "docker"
 cask "vagrant"
 brew "vagrant-completion"
 cask "squidman"
-
