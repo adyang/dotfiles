@@ -14,12 +14,12 @@ main() {
   [[ "${CI}" == 'true' ]] || brew_kext_packages
   brew_packages
   install_powerline
-  "${SCRIPT_DIR}/configure-vim"
+  "${SCRIPT_DIR}/configure-vim" || exit "$?"
   configure_vscode
   configure_firefox
   configure_asdf_plugins
   install_pip_packages
-  "${SCRIPT_DIR}/configure-macos"
+  "${SCRIPT_DIR}/configure-macos" || exit "$?"
   [[ "${CI}" == 'true' ]] || install_macos_updates
 }
 
@@ -265,7 +265,7 @@ install_pip_packages() {
 
 install_macos_updates() {
   header 'Install MacOS Updates'
-  sudo softwareupdate --install --all
+  sudo softwareupdate --install --all --verbose
 }
 
 (return 0 2>/dev/null) || main "$@"
