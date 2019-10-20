@@ -12,7 +12,6 @@ user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
 user_pref("browser.newtabpage.activity-stream.section.highlights.includePocket", false);
 user_pref("browser.newtabpage.activity-stream.showSponsored", false);
 user_pref("browser.newtabpage.activity-stream.feeds.discoverystreamfeed", false);
-user_pref("browser.privatebrowsing.autostart", true);
 
 user_pref("geo.wifi.uri", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
 user_pref("geo.provider.ms-windows-location", false);
@@ -80,6 +79,7 @@ user_pref("layout.css.visited_links_enabled", false);
 user_pref("browser.urlbar.usepreloadedtopurls.enabled", false);
 user_pref("browser.urlbar.speculativeConnect.enabled", false);
 user_pref("browser.formfill.enable", false);
+user_pref("places.history.enabled", false);
 
 user_pref("security.ssl.require_safe_negotiation", true);
 user_pref("security.ssl.errorReporting.automatic", false);
