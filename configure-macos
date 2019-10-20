@@ -98,7 +98,7 @@ configure_spectacle() {
 harden_macos() {
   sub_header 'Harden MacOS'
   sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1 &&
-  sudo -u _locationd defaults -currentHost write com.apple.locationd LocationServicesEnabled -int 0 &&
+  sudo defaults write /var/db/locationd/Library/Preferences/ByHost/com.apple.locationd LocationServicesEnabled -int 0 &&
   defaults write '/Library/Application Support/CrashReporter/DiagnosticMessagesHistory' AutoSubmit -int 0
 }
 
