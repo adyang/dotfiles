@@ -15,6 +15,10 @@ dot::firefox() {
   "${DOT_DIR}"/configure-firefox
 }
 
+dot::vscode() {
+  "${DOT_DIR}"/configure-vscode
+}
+
 dot::macos() {
   "${DOT_DIR}"/configure-macos
 }
