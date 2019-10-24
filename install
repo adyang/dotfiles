@@ -6,6 +6,8 @@ readonly SCRIPT_DIR
 
 # shellcheck source=lib/log.sh
 source "${SCRIPT_DIR}/lib/log.sh"
+# shellcheck source=lib/file.sh
+source "${SCRIPT_DIR}/lib/file.sh"
 
 main() {
   setup_environment
@@ -16,7 +18,7 @@ main() {
   install_powerline
   "${SCRIPT_DIR}/configure-vim" || exit "$?"
   configure_vscode
-  configure_firefox
+  "${SCRIPT_DIR}/configure-firefox" || exit "$?"
   configure_asdf_plugins
   install_pip_packages
   "${SCRIPT_DIR}/configure-macos" || exit "$?"
@@ -25,9 +27,7 @@ main() {
 
 setup_environment() {
   DOT_HOME="${HOME}"
-  DOT_TMP_DIR="$(mktemp -d)" || exit "$?"
-  readonly DOT_HOME DOT_TMP_DIR
-  trap 'rm -rf "${DOT_TMP_DIR}"' EXIT
+  readonly DOT_HOME
 }
 
 sudo_keep_alive() {
@@ -71,21 +71,6 @@ symlink_nested_home_files() {
     backup_if_regular_file "${DOT_HOME}/${main_path}" || exit "$?"
     symlink_if_absent "${filepath}" "${DOT_HOME}/${main_path}" || exit "$?"
   done < <(find "${script_dir}/home-nested" -mindepth 2 -type f -print0)
-}
-
-backup_if_regular_file() {
-  local filepath="$1"
-  if [[ -f "${filepath}" && ! -L "${filepath}" ]]; then
-    mv -v "${filepath}" "${filepath}.bak"
-  fi
-}
-
-symlink_if_absent() {
-  local src="$1"
-  local target="$2"
-  if [[ ! -e "${target}" ]]; then
-    ln -sv "${src}" "${target}"
-  fi
 }
 
 brew_kext_packages() {
@@ -142,81 +127,6 @@ install_vscode_extensions() {
   while read -r extension; do
     code --force --install-extension "${extension}" || exit "$?"
   done < "${extensions_file}"
-}
-
-configure_firefox() {
-  header 'Configure Firefox'
-  create_firefox_profile_if_absent '/Applications/Firefox.app/Contents/MacOS/firefox' "${SCRIPT_DIR}/firefox" "${DOT_HOME}/Library/Application Support/Firefox"
-  symlink_firefox_configs "${SCRIPT_DIR}/firefox" "${DOT_HOME}/Library/Application Support/Firefox/Profiles/privacy"
-  install_firefox_extensions "${SCRIPT_DIR}/firefox/extensions" "${DOT_HOME}/Library/Application Support/Firefox/Profiles/privacy/extensions" "${DOT_TMP_DIR}"
-}
-
-create_firefox_profile_if_absent() {
-  local firefox_bin="$1"
-  local src_dir="$2"
-  local firefox_dir="$3"
-  if [[ ! -d "${firefox_dir}/Profiles/privacy" ]]; then
-    "${firefox_bin}" -CreateProfile "privacy ${firefox_dir}/Profiles/privacy" || exit "$?"
-    cp "${src_dir}/profiles.ini" "${firefox_dir}/" || exit "$?"
-    # Workaround to ensure Firefox starts default last start profile that is set in profiles.ini
-    "${firefox_bin}" --headless -P 'privacy' & sleep 1 && kill "$!"
-  fi
-  "${firefox_bin}" --headless -setDefaultBrowser & sleep 3 && kill "$!"
-}
-
-symlink_firefox_configs() {
-  local src_dir="$1"
-  local profile_dir="$2"
-  backup_if_regular_file "${profile_dir}/prefs.js" || exit "$?"
-  backup_if_regular_file "${profile_dir}/user.js" || exit "$?"
-  symlink_if_absent "${src_dir}/user.js" "${profile_dir}/user.js" || exit "$?"
-}
-
-install_firefox_extensions() {
-  local extension_urls_file="$1"
-  local extensions_dir="$2"
-  local tmp_dir="$3"
-  mkdir -p "${extensions_dir}" || exit "$?"
-  local url
-  while read -r url; do
-    install_firefox_extension_if_absent "${url}" "${extensions_dir}" "${tmp_dir}" || exit "$?"
-  done < "${extension_urls_file}"
-}
-
-install_firefox_extension_if_absent() {
-  local meta_url="$1"
-  local extensions_dir="$2"
-  local tmp_dir="$3"
-  local extension_id extension_name download_url checksum
-  obtain_firefox_extension_info "${meta_url}" > "${tmp_dir}/extension-info" || return "$?"
-  IFS=$'\n' read -rd '' extension_id extension_name download_url checksum < "${tmp_dir}/extension-info"
-  if [[ -f "${extensions_dir}/${extension_id}.xpi" ]]; then
-    echo "${extension_name} already exists at '${extensions_dir}/${extension_id}.xpi'."
-  else
-    echo "Installing ${extension_name}..."
-    download_firefox_extension "${download_url}" "${tmp_dir}/${extension_id}" "${checksum}" || return "$?"
-    mv -v "${tmp_dir}/${extension_id}" "${extensions_dir}/${extension_id}.xpi"
-  fi
-}
-
-obtain_firefox_extension_info() {
-  local meta_url="$1"
-  local meta
-  meta="$(curl --fail --silent --show-error --location "${meta_url}")" || return "$?"
-  jq --raw-output --exit-status \
-    '.guid, .name."en-US", .current_version.files[0].url, .current_version.files[0].hash, "\u0000"
-      | if . == null then
-          "Error: missing extension info field(s).\n"|halt_error(1)
-        else . end' \
-    <<<"${meta}"
-}
-
-download_firefox_extension() {
-  local url="$1"
-  local dest="$2"
-  local checksum="$3"
-  curl --fail --progress-bar --location --output "${dest}" "${url}" || return "$?"
-  sha256sum --check <<<"${checksum#sha256:} ${dest}"
 }
 
 configure_asdf_plugins() {
