@@ -17,7 +17,7 @@ main() {
   brew_packages
   install_powerline
   "${SCRIPT_DIR}/configure-vim" || exit "$?"
-  configure_vscode
+  "${SCRIPT_DIR}/configure-vscode" || exit "$?"
   "${SCRIPT_DIR}/configure-firefox" || exit "$?"
   configure_asdf_plugins
   install_pip_packages
@@ -101,32 +101,6 @@ install_powerline() {
     mkdir -p "${local_bin}"
     ln -sfv "${dest}" "${local_bin}/powerline-go"
   fi
-}
-
-configure_vscode() {
-  header 'Configure VS Code'
-  symlink_vscode_configs "${SCRIPT_DIR}/vscode" "${DOT_HOME}/Library/Application Support/Code/User"
-  install_vscode_extensions "${SCRIPT_DIR}/vscode/extensions"
-}
-
-symlink_vscode_configs() {
-  local src_dir="$1"
-  local dest_dir="$2"
-  mkdir -p "${dest_dir}"
-  local configs=('keybindings.json' 'settings.json' 'snippets')
-  local config
-  for config in "${configs[@]}"; do
-    backup_if_regular_file "${dest_dir}/${config}" || exit "$?"
-    symlink_if_absent "${src_dir}/${config}" "${dest_dir}/${config}" || exit "$?"
-  done
-}
-
-install_vscode_extensions() {
-  local extensions_file="$1"
-  local extension
-  while read -r extension; do
-    code --force --install-extension "${extension}" || exit "$?"
-  done < "${extensions_file}"
 }
 
 configure_asdf_plugins() {
