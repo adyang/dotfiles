@@ -11,6 +11,10 @@ dot::vim() {
   "${DOT_DIR}"/configure-vim
 }
 
+dot::firefox() {
+  "${DOT_DIR}"/configure-firefox
+}
+
 dot::macos() {
   "${DOT_DIR}"/configure-macos
 }
