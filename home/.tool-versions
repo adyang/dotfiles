@@ -1,2 +1,2 @@
 python 3.7.4 2.7.16
-java adopt-openjdk-13+33 adopt-openjdk-8u222-b10
+java adopt-openjdk-11.0.5+10 adopt-openjdk-8u222-b10
