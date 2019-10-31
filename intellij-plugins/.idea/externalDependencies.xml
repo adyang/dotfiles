@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ExternalDependencies">
     <plugin id="Lombook Plugin" />
+    <plugin id="Pythonid" />
     <plugin id="org.intellij.scala" />
   </component>
 </project>
