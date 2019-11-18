@@ -16,6 +16,7 @@ main() {
   configure_spotlight || exit "$?"
   [[ "${CI}" == 'true' ]] || configure_spectacle || exit "$?"
   harden_macos || exit "$?"
+  disable_automatic_download || exit "$?"
   disable_siri || exit "$?"
   reload_preferences || exit "$?"
 }
@@ -103,6 +104,11 @@ harden_macos() {
   defaults write com.apple.AdLib forceLimitAdTracking -bool yes &&
   defaults write com.apple.AdLib AD_DEVICE_IDFA -string '00000000-0000-0000-0000-000000000000' &&
   defaults write '/Library/Application Support/CrashReporter/DiagnosticMessagesHistory' AutoSubmit -int 0
+}
+
+disable_automatic_download() {
+  sub_header 'Disable Software Updates Automatic Download'
+  sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool false
 }
 
 disable_siri() {
