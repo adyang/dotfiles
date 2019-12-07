@@ -23,7 +23,7 @@ expect <<EOF || exit "$?"
 spawn ssh-add -K "${GEN_SSH_HOME}/.ssh/id_ed25519"
 expect {
     -re "^Enter passphrase .*: $" { send -- "${passphrase}\r" }
-    eof
+    eof { exit }
 }
 expect {
     -re "Bad passphrase.*: $" { exit 1 }
