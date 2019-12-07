@@ -22,10 +22,7 @@ ssh-keygen -t ed25519 -f "${GEN_SSH_HOME}/.ssh/id_ed25519" -N "${passphrase}" ||
 expect <<EOF || exit "$?"
 spawn ssh-add -K "${GEN_SSH_HOME}/.ssh/id_ed25519"
 expect {
-    -re "^Enter passphrase .*: $" { send -- "${passphrase}\r" }
-    eof { exit }
-}
-expect {
+    -re "^Enter passphrase .*: $" { send -- "${passphrase}\r"; exp_continue }
     -re "Bad passphrase.*: $" { exit 1 }
     eof
 }
