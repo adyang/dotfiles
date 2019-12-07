@@ -12,6 +12,7 @@ source "${SCRIPT_DIR}/lib/file.sh"
 main() {
   setup_environment
   [[ "${CI}" == 'true' ]] || sudo_keep_alive
+  configure_shell
   symlink_dotfiles
   [[ "${CI}" == 'true' ]] || brew_kext_packages
   brew_packages
@@ -41,6 +42,11 @@ sudo_until_process_ends() {
     sleep 20
     kill -0 "$$" || exit
   done 2>/dev/null &
+}
+
+configure_shell() {
+  header "Configure Shell"
+  sudo chsh -s /bin/bash "$(whoami)" || exit "$?"
 }
 
 symlink_dotfiles() {
