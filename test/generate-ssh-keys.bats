@@ -33,7 +33,7 @@ teardown() {
 
   assert_success
   assert_line --partial "ssh-add -K \"${GEN_SSH_HOME}/.ssh/id_ed25519\""
-  assert_line 'send -- "pass\r"'
+  assert_line --partial 'send -- "pass\r"'
 }
 
 @test "[generate-ssh-keys] empty passphrase" {
