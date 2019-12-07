@@ -110,7 +110,7 @@ bash <(curl --fail --silent --show-error --location https://raw.githubuserconten
 ```
 Run install script (note to clean up symlinked files or reset snapshot if standard bootstrap was previously run):
 ```console
-vagrant ssh -c '/vagrant/install' <<<$'vagrant\n'
+vagrant ssh -c '/Users/Shared/vagrant/install' <<<$'vagrant\n'
 ```
 Restore snapshot:
 ```console
