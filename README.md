@@ -8,14 +8,24 @@ bash <(curl --fail --silent --show-error --location https://raw.githubuserconten
 ```
 This will setup the dotfiles repository into the current directory.
 
-There are 4 blocking interactive prompts:
+There are 6 blocking interactive prompts:
 1. Passphrase for SSH key (either use Diceware or generate from external password manager)
     - The public key will be copied into your clipboard; you can paste it into repository services while the installation proceeds
 2. Password for sudo
 3. Pause after expected failure of first `brew bundle --verbose --file=Brewfile-kext`
     - Go to `Security & Privacy` > click on `Allow`
     - Press enter to resume rest of installation
-4. Pause during configuration of MacOS
+4. Pause on brewing of `gradle`/ `maven` cask, which tries to open `adoptopenjdk`
+    - Click `Cancel`
+    - Go to `Security & Privacy` > click on `Allow Anyway`
+    - If brew fails, interrupt and rerun install/ bootstrap script
+    - On `macOS cannot verify the developer...` dialog, click `Open`
+5. Pause on installation of VS Code
+    - Click `OK`
+    - Go to `Security & Privacy` > click on `Open Anyway`
+    - On dialog, click `Open`
+    - If installation of VS Code extension fails, rerun install/ bootstrap script
+6. Pause during configuration of MacOS
     - Dialog `"Terminal.app" wants access to control "System Events.app"...` appears
     - Click `OK`
 

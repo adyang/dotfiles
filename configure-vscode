@@ -18,8 +18,17 @@ main() {
 }
 
 configure_vscode() {
+  ensure_macos_permission
   symlink_vscode_configs "${SCRIPT_DIR}/vscode" "${DOT_HOME}/Library/Application Support/Code/User"
   install_vscode_extensions "${SCRIPT_DIR}/vscode/extensions"
+}
+
+ensure_macos_permission() {
+  if ! code --list-extensions; then
+    note $'\nPlease allow opening of "Visual Studio Code" in System Preferences > Security & Privacy > General.'
+    note 'Then click "Open" on subsequent dialog.'
+    read -rp 'Press RETURN to continue when done...' || exit "$?"
+  fi
 }
 
 symlink_vscode_configs() {
