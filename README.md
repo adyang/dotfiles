@@ -110,7 +110,7 @@ vagrant rsync-auto
 ```
 Consider taking a snapshot of the fresh installation:
 ```console
-vagrant snapshot save fresh-install
+vagrant snapshot save default fresh-install
 ```
 Run bootstrap via standard instructions:
 ```console
