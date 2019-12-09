@@ -62,8 +62,8 @@ teardown() {
   run brew_kext_packages <<<$'\n'
 
   assert_success
-  assert_line --index 1 --partial 'Please allow kext installation'
-  assert_line --index 2 --regexp '^brew bundle --verbose --file=.*Brewfile-kext$'
+  assert_line --index 2 --partial 'Please allow kext installation'
+  assert_line --index 3 --regexp '^brew bundle --verbose --file=.*Brewfile-kext$'
 }
 
 @test "[install] brew_kext_packages: first brew bundle fails and read fails" {
@@ -82,8 +82,8 @@ teardown() {
   run brew_kext_packages
 
   assert_failure 1
-  assert_line --index 1 --partial 'Please allow kext installation'
-  refute_line --index 2 'brew bundle --verbose --file=Brewfile-kext'
+  assert_line --index 2 --partial 'Please allow kext installation'
+  refute_line --index 3 'brew bundle --verbose --file=Brewfile-kext'
 }
 
 @test "[install] brew_kext_packages: first brew bundle fails and second brew bundle fails" {
