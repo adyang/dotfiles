@@ -113,17 +113,15 @@ configure_asdf_plugins() {
   header 'Configure asdf Plugins'
   # shellcheck source=/dev/null
   source "$(brew --prefix asdf)/asdf.sh" || exit "$?"
-  local plugin_props
-  while IFS=' ' read -ra plugin_props; do
-    configure_plugin "${plugin_props[@]}" || exit "$?"
-  done < "${DOT_HOME}/.tool-versions"
+  configure_plugins || exit "$?"
+  configure_plugin_versions || exit "$?"
 }
 
-configure_plugin() {
-  local plugin="$1"
-  local versions=("${@:2}")
-  upadd_plugin "${plugin}" || return "$?"
-  install_plugin_versions "${plugin}" "${versions[@]}"
+configure_plugins() {
+  local plugin_props
+  while IFS=' ' read -ra plugin_props; do
+    upadd_plugin "${plugin_props[@]}" || return "$?"
+  done < "${DOT_HOME}/.asdf-plugins"
 }
 
 upadd_plugin() {
@@ -131,8 +129,15 @@ upadd_plugin() {
   if [[ "$(asdf plugin-list)" =~ (^|$'\n')"${plugin}"($|$'\n') ]]; then
     asdf plugin-update "${plugin}"
   else
-    asdf plugin-add "${plugin}"
+    asdf plugin-add "$@"
   fi
+}
+
+configure_plugin_versions() {
+  local plugin_versions
+  while IFS=' ' read -ra plugin_versions; do
+    install_plugin_versions "${plugin_versions[@]}" || return "$?"
+  done < "${DOT_HOME}/.tool-versions"
 }
 
 install_plugin_versions() {

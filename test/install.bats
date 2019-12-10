@@ -251,19 +251,23 @@ teardown() {
   source() {
     return 1
   }
-  mock_echo 'configure_plugin'
+  mock_echo 'upadd_plugins'
+  echo 'plugin repo' > "${tmp_dot_home}/.asdf-plugins"
+  mock_echo 'install_plugin_versions'
   echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
 
   run configure_asdf_plugins
 
   assert_failure 1
-  refute_line --partial 'configure_plugin'
+  refute_line --partial 'upadd_plugins'
+  refute_line --partial 'install_plugin_versions'
 }
 
 @test "[install] configure_asdf_plugins: upadd_plugin fails" {
   upadd_plugin() {
     return 1
   }
+  echo 'plugin repo' > "${tmp_dot_home}/.asdf-plugins"
   mock_echo 'source'
   mock_echo 'install_plugin_versions'
   echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
@@ -276,9 +280,10 @@ teardown() {
 
 @test "[install] configure_asdf_plugins: asdf install <plugin> <version> fails" {
   mock_failure 'asdf' 'install'
+  echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
   mock_echo 'source'
   mock_echo 'upadd_plugin'
-  echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
+  echo 'plugin repo' > "${tmp_dot_home}/.asdf-plugins"
 
   run configure_asdf_plugins
 
