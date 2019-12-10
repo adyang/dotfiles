@@ -19,9 +19,6 @@ brew "autojump"
 
 brew "asdf"
 
-cask "adoptopenjdk"
-brew "gradle"
-brew "maven"
 brew "leiningen"
 
 cask "dotnet-sdk"
