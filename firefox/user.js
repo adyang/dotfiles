@@ -132,3 +132,4 @@ user_pref("network.cookie.cookieBehavior", 1);
 user_pref("network.IDN_show_punycode", true);
 
 user_pref("extensions.pocket.enabled", false);
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);

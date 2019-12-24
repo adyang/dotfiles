@@ -44,6 +44,9 @@ symlink_firefox_configs() {
   backup_if_regular_file "${profile_dir}/prefs.js" || exit "$?"
   backup_if_regular_file "${profile_dir}/user.js" || exit "$?"
   symlink_if_absent "${src_dir}/user.js" "${profile_dir}/user.js" || exit "$?"
+  mkdir -p "${profile_dir}/chrome" || exit "$?"
+  backup_if_regular_file "${profile_dir}/chrome/userChrome.css" || exit "$?"
+  symlink_if_absent "${src_dir}/userChrome.css" "${profile_dir}/chrome/userChrome.css" || exit "$?"
 }
 
 install_firefox_extensions() {
