@@ -53,7 +53,8 @@ Obtain required files from password manager or external source, then run:
 1. Navigate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
 2. Enter description > tick `repo` > click `Generate token` > copy access token.
 3. In IntelliJ, navigate `Configure` > `Settings Repository`, paste HTTPS url of settings repo and enter access token.
-4. Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins.
+4. `Cmd/Ctrl + Shift + A` to open `Actions` > type and select `Keymap` > select desired default keymap.
+5. Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins.
 
 ### Enable Firefox Extensions
 The Firefox extensions installed via the scripts are disabled by default. To enable them:
