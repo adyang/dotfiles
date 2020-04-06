@@ -20,6 +20,7 @@ teardown() {
   sudo_until_process_ends() {
     echo '[FAILURE] should exit immediately on sudo validation failure'
   }
+  sudo --reset-timestamp
 
   run sudo_keep_alive <<< $'wrong\nwrong\nwrong\n'
 
