@@ -256,6 +256,7 @@ teardown() {
   echo 'plugin repo' > "${tmp_dot_home}/.asdf-plugins"
   mock_echo 'install_plugin_versions'
   echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
+  mock_echo 'additional_plugins_setup'
 
   run configure_asdf_plugins
 
@@ -272,6 +273,7 @@ teardown() {
   mock_echo 'source'
   mock_echo 'install_plugin_versions'
   echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
+  mock_echo 'additional_plugins_setup'
 
   run configure_asdf_plugins
 
@@ -285,6 +287,7 @@ teardown() {
   mock_echo 'source'
   mock_echo 'upadd_plugin'
   echo 'plugin repo' > "${tmp_dot_home}/.asdf-plugins"
+  mock_echo 'additional_plugins_setup'
 
   run configure_asdf_plugins
 
