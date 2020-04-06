@@ -17,12 +17,12 @@ teardown() {
 }
 
 @test "[install] sudo_keep_alive: password validation failure" {
+  mock_failure 'sudo' '--stdin' '--validate' '--prompt'
   sudo_until_process_ends() {
     echo '[FAILURE] should exit immediately on sudo validation failure'
   }
-  sudo --reset-timestamp
 
-  run sudo_keep_alive <<< $'wrong\nwrong\nwrong\n'
+  run sudo_keep_alive
 
   assert_failure 1
   refute_output --partial '[FAILURE]'
