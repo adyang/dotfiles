@@ -1,6 +1,6 @@
 ---
 os: osx
-osx_image: 
+osx_image:
   - xcode11.2
   - xcode10.1
 addons:
@@ -9,9 +9,7 @@ addons:
       - jq
       - coreutils
     update: true
-sudo: required
 script: >
   ./test/run-tests
   && brew unlink python@2
   && bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap) <<< $'ssh-key-pass\nsudo-pass\n\n'
-
