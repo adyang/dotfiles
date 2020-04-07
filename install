@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 UNRESOLVED_DIR="$(dirname "${BASH_SOURCE[0]}")" || exit "$?"
 SCRIPT_DIR="$(cd "${UNRESOLVED_DIR}" &>/dev/null && pwd -P)" || exit "$?"
 readonly SCRIPT_DIR
@@ -115,9 +113,11 @@ configure_asdf_plugins() {
   header 'Configure asdf Plugins'
   # shellcheck source=/dev/null
   source "$(brew --prefix asdf)/asdf.sh" || exit "$?"
+  set -x
   configure_plugins || exit "$?"
   additional_plugins_setup || exit "$?"
   configure_plugin_versions || exit "$?"
+  set +x
 }
 
 configure_plugins() {
