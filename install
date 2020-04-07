@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 UNRESOLVED_DIR="$(dirname "${BASH_SOURCE[0]}")" || exit "$?"
 SCRIPT_DIR="$(cd "${UNRESOLVED_DIR}" &>/dev/null && pwd -P)" || exit "$?"
 readonly SCRIPT_DIR
