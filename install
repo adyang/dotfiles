@@ -138,7 +138,7 @@ upadd_plugin() {
 
 additional_plugins_setup() {
   "${DOT_HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring"
-  sed -i 's/set -e/set -xe/g' ~/.asdf/plugins/java/bin/install
+  sed -i '' 's/set -e/set -xe/g' ~/.asdf/plugins/java/bin/install
 }
 
 configure_plugin_versions() {
