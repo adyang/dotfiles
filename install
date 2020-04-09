@@ -113,11 +113,9 @@ configure_asdf_plugins() {
   header 'Configure asdf Plugins'
   # shellcheck source=/dev/null
   source "$(brew --prefix asdf)/asdf.sh" || exit "$?"
-  set -x
   configure_plugins || exit "$?"
   additional_plugins_setup || exit "$?"
   configure_plugin_versions || exit "$?"
-  set +x
 }
 
 configure_plugins() {
@@ -138,8 +136,6 @@ upadd_plugin() {
 
 additional_plugins_setup() {
   "${DOT_HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring"
-  sed -i '' 's/set -e/set -xe/g' ~/.asdf/plugins/java/bin/install
-  sed -i '' "s/args=('-s' '-f')/args=('-s' '-f' '--show-error')/g" ~/.asdf/plugins/java/bin/install
 }
 
 configure_plugin_versions() {
