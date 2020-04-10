@@ -136,6 +136,7 @@ upadd_plugin() {
 
 additional_plugins_setup() {
   "${DOT_HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring"
+  sed -i '' 's|local binary_link|local binary_link; cat "${CACHE_DIR}/adopt-openjdk11.json" "${CACHE_DIR}/adopt-openjdk8.json"|g' ~/.asdf/plugins/java/bin/functions
 }
 
 configure_plugin_versions() {
