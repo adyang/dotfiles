@@ -64,6 +64,12 @@ The Firefox extensions installed via the scripts are disabled by default. To ena
 4. Tick `Allow this extension to run in Private Windows` > `Okay, Got It` on another popup dialog.
 5. Repeat for the rest of the disabled extensions.
 
+### Import Temporary Containers Extension Preferences
+1. Navigate to `about:addons`.
+2. Click on the `...` on the Temporary Containers extension > `Preferences`.
+3. Click on the `Export/Import` tab.
+4. Click `Import from local file` and select the `temporary-containers-preferences.json` file.
+
 ### Configure Default Firefox Search Engine
 1. Navigate to target search engine site.
 2. Click on the triple dot `...` to the right of the address bar > `Add Search Engine`.
