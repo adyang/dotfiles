@@ -1,5 +1,5 @@
 python
-java https://github.com/adyang/asdf-java.git
+java
 maven https://github.com/adyang/asdf-maven.git
 gradle
 nodejs
