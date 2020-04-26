@@ -99,8 +99,8 @@ install_powerline() {
   header 'Install powerline-go'
   local local_bin="${DOT_HOME}/.local/bin"
   local install_dir="${DOT_HOME}/.powerline-go"
-  local url='https://github.com/justjanne/powerline-go/releases/download/v1.13.0/powerline-go-darwin-amd64'
-  local dest="${install_dir}/${url##*/}-v1.13.0"
+  local url='https://github.com/justjanne/powerline-go/releases/download/v1.17.0/powerline-go-darwin-amd64'
+  local dest="${install_dir}/${url##*/}-v1.17.0"
   if [[ ! -f "${dest}" ]]; then
     curl --create-dirs --progress-bar --location --output "${dest}" "${url}" || exit "$?"
     chmod u+x "${dest}"
