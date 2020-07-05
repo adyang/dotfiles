@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/adyang/dotfiles.svg?branch=master)](https://travis-ci.org/adyang/dotfiles)
+[![Build Status](https://api.travis-ci.org/adyang/dotfiles.svg?branch=master)](https://travis-ci.org/adyang/dotfiles)
 
 # Dotfiles
 
