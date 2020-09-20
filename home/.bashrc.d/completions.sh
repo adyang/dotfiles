@@ -7,7 +7,8 @@ if type brew &>/dev/null; then
       [[ -r "${completion}" ]] && source "${completion}"
     done
   fi
+
+  complete -C "${HOMEBREW_PREFIX}/bin/terraform" terraform
 fi
 
 eval "$(register-python-argcomplete pipx)"
-

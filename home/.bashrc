@@ -7,4 +7,3 @@ for script in "${HOME}"/.bashrc.d/*.sh; do
     source "${script}"
   fi
 done
-

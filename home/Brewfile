@@ -25,6 +25,7 @@ brew "r"
 brew "bats-core"
 
 brew "awscli"
+brew "hashicorp/tap/terraform"
 
 cask "1password"
 cask "iterm2"
