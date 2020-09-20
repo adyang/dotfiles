@@ -1,7 +1,8 @@
 ---
 os: osx
 osx_image:
-  - xcode11.2
+  - xcode11.3
+  - xcode12
 addons:
   homebrew:
     packages:
