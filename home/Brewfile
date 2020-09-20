@@ -19,12 +19,12 @@ brew "jq"
 brew "autojump"
 
 brew "asdf"
-
 brew "leiningen"
-
 cask "dotnet-sdk"
 brew "r"
 brew "bats-core"
+
+brew "awscli"
 
 cask "1password"
 cask "iterm2"
