@@ -7,3 +7,5 @@
 	path = ~/work/.gitconfig
 [diff]
 	submodule = log
+[pull]
+	rebase = true
