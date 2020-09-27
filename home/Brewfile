@@ -17,6 +17,7 @@ brew "ngrep"
 brew "wget"
 brew "jq"
 brew "autojump"
+brew "ipcalc"
 
 brew "asdf"
 brew "leiningen"
