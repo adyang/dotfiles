@@ -159,7 +159,7 @@ install_pip_packages() {
   header 'Install pip Packages'
   python -m pip install --upgrade pip || exit "$?"
   python -m pip install --upgrade --user pipx || exit "$?"
-  python -m pipx install ansible || exit "$?"
+  python -m pipx install --include-deps ansible || exit "$?"
   python -m pipx install yolk3k || exit "$?"
 }
 
