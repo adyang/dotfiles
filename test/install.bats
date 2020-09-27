@@ -314,7 +314,7 @@ teardown() {
 }
 
 @test "[install] install_pip_packages: pipx install ansible fails" {
-  mock_failure 'python' '-m pipx install ansible'
+  mock_failure 'python' '-m pipx install --include-deps ansible'
 
   run install_pip_packages
 
@@ -335,4 +335,3 @@ teardown() {
   assert_failure 1
   refute_line '[FAILURE] failed to exit'
 }
-
