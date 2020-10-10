@@ -125,7 +125,7 @@ teardown() {
 @test "[install] install_powerline: powerline-go already installed" {
   mock_echo 'curl'
   mkdir -p "${DOT_HOME}/.powerline-go"
-  touch "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.17.0"
+  touch "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.18.0"
   
   run install_powerline
 
@@ -136,13 +136,13 @@ teardown() {
 @test "[install] install_powerline: powerline-go not installed" {
   curl() {
     mkdir -p "${DOT_HOME}/.powerline-go"
-    touch "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.17.0"
+    touch "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.18.0"
   }
 
   run install_powerline
 
   assert_success
-  assert [ "${DOT_HOME}/.local/bin/powerline-go" -ef "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.17.0" ]
+  assert [ "${DOT_HOME}/.local/bin/powerline-go" -ef "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.18.0" ]
 }
 
 @test "[install] install_powerline: powerline-go not installed but download fails" {
@@ -153,9 +153,9 @@ teardown() {
   run install_powerline
 
   assert_failure 22
-  refute [ -x "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.17.0" ]
+  refute [ -x "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.18.0" ]
   refute [ -d "${DOT_HOME}/.local/bin" ]
-  refute [ "${DOT_HOME}/.local/bin/powerline-go" -ef "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.17.0" ]
+  refute [ "${DOT_HOME}/.local/bin/powerline-go" -ef "${DOT_HOME}/.powerline-go/powerline-go-darwin-amd64-v1.18.0" ]
 }
 
 @test "[install] symlink_home_files: regular file with same name as home file present" {
