@@ -21,14 +21,14 @@ teardown() {
     echo 'brew-script'
   }
   mock_echo 'sudo'
-  mock_echo '/usr/bin/ruby'
+  mock_echo '/bin/bash'
   mock_echo 'brew'
 
   run install_brew
 
   assert_success
   assert_line --index 0 'sudo mkdir -p /usr/local/lib/pkgconfig'
-  assert_line --index 1 '/usr/bin/ruby -e brew-script'
+  assert_line --index 1 '/bin/bash -c brew-script'
 }
 
 
@@ -38,13 +38,13 @@ teardown() {
     return 22
   }
   mock_echo 'sudo'
-  mock_echo '/usr/bin/ruby'
+  mock_echo '/bin/bash'
   mock_echo 'brew'
 
   run install_brew
 
   assert_failure 22
-  refute_output --partial '/usr/bin/ruby'
+  refute_output --partial '/bin/bash'
   refute_output --partial 'brew'
 }
 
@@ -52,7 +52,7 @@ teardown() {
   mock_is_brew_installed 1
   mock_echo 'curl'
   mock_echo 'sudo'
-  mock_failure '/usr/bin/ruby'
+  mock_failure '/bin/bash'
   mock_echo 'brew'
 
   run install_brew
@@ -65,21 +65,21 @@ teardown() {
   mock_is_brew_installed 0
   mock_echo 'curl'
   mock_echo 'sudo'
-  mock_echo '/usr/bin/ruby'
+  mock_echo '/bin/bash'
   mock_echo 'brew'
 
   run install_brew
 
   assert_success
   refute_output --partial 'curl'
-  refute_output --partial '/usr/bin/ruby'
+  refute_output --partial '/bin/bash'
 }
 
 @test "[bootstrap] install_brew: brew commands are all successful" {
   mock_is_brew_installed 0
   mock_echo 'curl'
   mock_echo 'sudo'
-  mock_echo '/usr/bin/ruby'
+  mock_echo '/bin/bash'
   mock_echo 'brew'
 
   run install_brew
@@ -139,4 +139,3 @@ mock_is_brew_installed() {
     fi
   }
 }
-

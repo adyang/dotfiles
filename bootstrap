@@ -15,10 +15,10 @@ main() {
 install_brew() {
   if ! type brew &>/dev/null; then
     local install
-    install="$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" || exit "$?"
+    install="$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" || exit "$?"
     # Workaround installer not setting correct permissions when directory does not exists
     sudo mkdir -p /usr/local/lib/pkgconfig || exit "$?"
-    /usr/bin/ruby -e "${install}" || exit "$?"
+    /bin/bash -c "${install}" || exit "$?"
   fi
   brew analytics off && brew analytics
 }
