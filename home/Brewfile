@@ -35,7 +35,7 @@ brew "svn" # SVN is removed in Xcode 11.4 but it is used during install of font-
 cask "font-inconsolata-g-for-powerline"
 cask "spectacle"
 cask "firefox"
-cask "waterfox"
+cask "waterfox-classic"
 cask "visual-studio-code"
 cask "intellij-idea"
 cask "rstudio"
