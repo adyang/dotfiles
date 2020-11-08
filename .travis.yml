@@ -11,5 +11,5 @@ addons:
     update: true
 script: >
   ./test/run-tests
-  && brew unlink python@2
+  && bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh) --force
   && bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap) <<< $'ssh-key-pass\nsudo-pass\n\n'
