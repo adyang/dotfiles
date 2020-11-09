@@ -28,6 +28,7 @@ brew "bats-core"
 
 brew "awscli"
 brew "terraform"
+brew "helm"
 
 cask "1password"
 cask "iterm2"
