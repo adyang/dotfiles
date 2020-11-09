@@ -12,5 +12,6 @@ addons:
 script: >
   ./test/run-tests
   && brew unlink python@2
-  && brew uninstall python
+  && brew list
+  && brew uninstall python3
   && bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap) <<< $'ssh-key-pass\nsudo-pass\n\n'
