@@ -1,0 +1,11 @@
+---
+name: dotfiles
+on: [push]
+jobs:
+  test:
+    runs-on: macos-10.15
+    steps:
+      - uses: actions/checkout@v2
+      - run: >
+          ./test/run-tests
+          && bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap) <<< $'ssh-key-pass\nsudo-pass\n\n'
