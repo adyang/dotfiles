@@ -1,4 +1,4 @@
-![dotfiles](https://github.com/adyang/dotfiles/workflows/dotfiles/badge.svg)
+[![dotfiles](https://github.com/adyang/dotfiles/workflows/dotfiles/badge.svg)](https://github.com/adyang/dotfiles/actions?query=workflow%3Adotfiles)
 
 # Dotfiles
 
