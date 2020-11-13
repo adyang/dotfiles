@@ -12,7 +12,7 @@ jobs:
         run: ./test/run-tests
       - name: Clean binaries and uninstall Homebrew to simulate clean bootstrap
         run: >
-          rm -v /usr/local/bin/{dotnet,R,aws} /Applications/Firefox.app
+          rm -rv /usr/local/bin/{dotnet,R,aws} /Applications/Firefox.app
           && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"
       - name: Bootstrap dotfiles
         run: bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap) <<< $'ssh-key-pass\nsudo-pass\n\n'
