@@ -111,7 +111,7 @@ user_pref("browser.send_pings", false);
 user_pref("browser.send_pings.require_same_host", true);
 user_pref("browser.sessionstore.privacy_level", 2);
 
-user_pref("dom.event.clipboardevents.enabled", false);
+user_pref("dom.event.clipboardevents.enabled", true);
 
 user_pref("media.peerconnection.enabled", false);
 user_pref("media.peerconnection.ice.default_address_only", true);
