@@ -38,6 +38,9 @@ Obtain required files from password manager or external source, then run:
 ./import-gpg-keys --public-key <public-key-file> --secret-key <secret-key-file> --ownertrust <ownertrust-file>
 ```
 
+### Copy Additional SSH Configuration
+Obtain additional SSH configuration files from password manager or external source, and copy them into `${HOME}/.ssh/config.d/` directory.
+
 ### Configure Finder Sidebar (No Easy Way to Automate)
 1. Open Finder > `Cmd + ,` to open Finder Preferences.
 2. `Sidebar` > Under `Favorites`, tick home directory.
