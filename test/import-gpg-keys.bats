@@ -37,7 +37,7 @@ teardown() {
   run "${IMPORT_GPG_KEYS}"
 
   assert_failure 2
-  assert_output "\
+  assert_output --partial "\
 usage: ./import-gpg-keys [--public-key <public-key-file>]
                          [--secret-key <secret-key-file>]
                          [--ownertrust <ownertrust-file>]"
@@ -54,7 +54,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   run "${IMPORT_GPG_KEYS}" --invalid-option
 
   assert_failure 2
-  assert_line --index 0 "Invalid option: '--invalid-option'"
+  assert_line --index 0 --partial "Invalid option: '--invalid-option'"
   assert_line --index 1 --partial 'usage'
 }
 
@@ -64,7 +64,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   run "${IMPORT_GPG_KEYS}" --public-key
 
   assert_failure 2
-  assert_line --index 0 "Invalid value for '--public-key': '' is not a valid file or does not exists"
+  assert_line --index 0 --partial "Invalid value for '--public-key': '' is not a valid file or does not exists"
   assert_line --index 1 --partial 'usage'
 }
 
@@ -74,7 +74,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   run "${IMPORT_GPG_KEYS}" --public-key non-existent-file
 
   assert_failure 2
-  assert_line --index 0 "Invalid value for '--public-key': 'non-existent-file' is not a valid file or does not exists"
+  assert_line --index 0 --partial "Invalid value for '--public-key': 'non-existent-file' is not a valid file or does not exists"
   assert_line --index 1 --partial 'usage'
 }
 
@@ -96,7 +96,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   run "${IMPORT_GPG_KEYS}" --secret-key non-existent-file
 
   assert_failure 2
-  assert_line --index 0 "Invalid value for '--secret-key': 'non-existent-file' is not a valid file or does not exists"
+  assert_line --index 0 --partial "Invalid value for '--secret-key': 'non-existent-file' is not a valid file or does not exists"
   assert_line --index 1 --partial 'usage'
 }
 
@@ -118,7 +118,7 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   run "${IMPORT_GPG_KEYS}" --ownertrust non-existent-file
 
   assert_failure 2
-  assert_line --index 0 "Invalid value for '--ownertrust': 'non-existent-file' is not a valid file or does not exists"
+  assert_line --index 0 --partial "Invalid value for '--ownertrust': 'non-existent-file' is not a valid file or does not exists"
   assert_line --index 1 --partial 'usage'
 }
 
@@ -166,4 +166,3 @@ usage: ./import-gpg-keys [--public-key <public-key-file>]
   assert_line --partial 'pub'
   assert_line --partial "${keyid}"
 }
-
