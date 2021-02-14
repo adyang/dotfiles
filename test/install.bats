@@ -314,7 +314,7 @@ teardown() {
 }
 
 @test "[install] install_pip_packages: pipx install ansible fails" {
-  mock_failure 'python' '-m pipx install --include-deps ansible'
+  mock_failure 'python' '-m pipx install --include-deps --pip-args=--upgrade --force ansible'
 
   run install_pip_packages
 
@@ -323,7 +323,7 @@ teardown() {
 }
 
 @test "[install] install_pip_packages: pipx install yolk3k fails" {
-  mock_failure 'python' '-m pipx install yolk3k'
+  mock_failure 'python' '-m pipx install --pip-args=--upgrade --force yolk3k'
 
   install_pip_packages_with_exit_test() {
     install_pip_packages
