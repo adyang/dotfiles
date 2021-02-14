@@ -40,15 +40,11 @@ Obtain required files from password manager or external source, then run:
 
 ### Configure Additional SSH Keys
 For each additional key:
-1. Generate new SSH Key Pair, e.g. assuming keyfile `id_ed25519_suffix`:
+1. Generate new SSH Key Pair, e.g. assuming key-filename `id_ed25519_suffix`:
     ```console
-    ssh-keygen -t ed25519 -f "${HOME}/.ssh/id_ed25519_suffix"
-    ssh-add -K "${HOME}/.ssh/id_ed25519_suffix"
+    ./generate-ssh-keys --key-filename id_ed25519_suffix
     ```
-2. Copy public key and paste it into corresponding repository services
-    ```console
-    pbcopy <"${HOME}/.ssh/id_ed25519_suffix.pub"
-    ```
+2. Paste copied public key into corresponding repository services
 3. Obtain its SSH configuration file from password manager or external source, and copy it into `${HOME}/.ssh/config.d/` directory.
 
 ### Configure Finder Sidebar (No Easy Way to Automate)
