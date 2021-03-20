@@ -52,6 +52,7 @@ configure_finder() {
 
   defaults write com.apple.finder _FXShowPosixPathInTitle -bool true &&
   defaults write com.apple.finder FXPreferredViewStyle -string 'Nlsv' &&
+  defaults write com.apple.finder FXDefaultSearchScope -string "SCcf" &&
 
   defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true &&
   defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true &&
