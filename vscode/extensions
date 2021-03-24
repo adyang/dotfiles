@@ -3,3 +3,5 @@ betterthantomorrow.calva
 ms-dotnettools.csharp
 Orta.vscode-jest
 hashicorp.terraform
+ms-azuretools.vscode-docker
+ms-kubernetes-tools.vscode-kubernetes-tools
