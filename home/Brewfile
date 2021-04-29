@@ -19,6 +19,7 @@ brew "wget"
 brew "jq"
 brew "autojump"
 brew "ipcalc"
+brew "imagemagick"
 
 brew "asdf"
 brew "leiningen"
