@@ -58,6 +58,12 @@ For each additional key:
 2. Click `+` > `Cmd + Shift + .` to show hidden files.
 3. Navigate to root HD and select `/Volumes`.
 
+### Disable System Shortcuts that Opens Terminal to Prevent Conflicts With IntelliJ (Automation via plist not Working)
+1. Go to `Spotlight` System Preferences > `Keyboard`.
+2. Under `Shortcuts` tab, click `Services`.
+3. Untick `Open man Page in Terminal`.
+4. Untick `Search man Page Index in Terminal`.
+
 ### IntelliJ Settings
 1. Navigate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
 2. Enter description > tick `repo` > click `Generate token` > copy access token.
