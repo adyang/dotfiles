@@ -9,3 +9,6 @@
 	submodule = log
 [pull]
 	rebase = true
+[core]
+	autocrlf = input
+	safecrlf = true
