@@ -1,4 +1,5 @@
 tap "homebrew/cask-fonts"
+tap "homebrew/cask-versions"
 
 brew "vim"
 brew "git"
@@ -47,6 +48,7 @@ cask "vagrant"
 brew "vagrant-completion"
 cask "squidman"
 cask "libreoffice"
+cask "calibre4"
 cask "vlc"
 cask "visualvm"
 cask "wireshark"
