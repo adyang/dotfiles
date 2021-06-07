@@ -87,6 +87,11 @@ The Firefox extensions installed via the scripts are disabled by default. To ena
 5. Click on the `Isolation` > `Global` tab.
 6. Under `Exclude Permanent Containers`, select `Work`.
 
+### Enable Firefox Containers Bookmark Menus
+1. Navigate to `about:addons`.
+2. Click on the `...` on the Firefox Multi-Account Containers extension > `Preferences`.
+3. Tick `Enable Bookmark Menus` > `Allow` `Read and modify bookmarks` permission in popup dialog.
+
 ### Configure Default Firefox Search Engine
 1. Navigate to target search engine site.
 2. Click on the triple dot `...` to the right of the address bar > `Add Search Engine`.
