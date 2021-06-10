@@ -1,6 +1,6 @@
 {
   "version": "1.9.2",
-  "date": 1623319236500,
+  "date": 1623320668900,
   "preferences": {
     "automaticMode": {
       "active": true,
@@ -30,7 +30,7 @@
             "container": "default"
           },
           "ctrlleft": {
-            "action": "always",
+            "action": "notsamedomain",
             "container": "default"
           },
           "left": {
