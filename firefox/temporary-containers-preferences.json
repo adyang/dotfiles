@@ -1,6 +1,6 @@
 {
   "version": "1.9.2",
-  "date": 1623320668900,
+  "date": 1624456742400,
   "preferences": {
     "automaticMode": {
       "active": true,
@@ -26,7 +26,7 @@
         },
         "mouseClick": {
           "middle": {
-            "action": "never",
+            "action": "always",
             "container": "default"
           },
           "ctrlleft": {
