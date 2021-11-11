@@ -57,5 +57,7 @@
             "value": "#42b883"
         }
     ],
-    "workbench.startupEditor": "newUntitledFile"
+    "workbench.startupEditor": "newUntitledFile",
+    "redhat.telemetry.enabled": false,
+    "security.workspace.trust.untrustedFiles": "open"
 }
