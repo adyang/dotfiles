@@ -22,6 +22,9 @@ brew "autojump"
 brew "ipcalc"
 brew "imagemagick"
 
+# asdf plugin dependencies
+brew "openssl"
+
 brew "asdf"
 brew "leiningen"
 cask "dotnet-sdk"
