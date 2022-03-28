@@ -22,3 +22,8 @@ dot::vscode() {
 dot::macos() {
   "${DOT_DIR}"/configure-macos
 }
+
+dot::brew() {
+  brew bundle --file="${HOME}/Brewfile-kext" --verbose \
+    && brew bundle --file="${HOME}/Brewfile" --verbose
+}
