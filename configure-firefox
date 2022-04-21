@@ -22,6 +22,7 @@ main() {
 configure_firefox() {
   create_firefox_profile_if_absent '/Applications/Firefox.app/Contents/MacOS/firefox' "${SCRIPT_DIR}/firefox" "${DOT_HOME}/Library/Application Support/Firefox"
   symlink_firefox_configs "${SCRIPT_DIR}/firefox" "${DOT_HOME}/Library/Application Support/Firefox/Profiles/privacy"
+  update_userjs "${DOT_HOME}/Library/Application Support/Firefox/Profiles/privacy"
   install_firefox_extensions "${SCRIPT_DIR}/firefox/extensions" "${DOT_HOME}/Library/Application Support/Firefox/Profiles/privacy/extensions" "${DOT_TMP_DIR}"
 }
 
@@ -41,12 +42,23 @@ create_firefox_profile_if_absent() {
 symlink_firefox_configs() {
   local src_dir="$1"
   local profile_dir="$2"
-  backup_if_regular_file "${profile_dir}/prefs.js" || exit "$?"
-  backup_if_regular_file "${profile_dir}/user.js" || exit "$?"
-  symlink_if_absent "${src_dir}/user.js" "${profile_dir}/user.js" || exit "$?"
-  mkdir -p "${profile_dir}/chrome" || exit "$?"
-  backup_if_regular_file "${profile_dir}/chrome/userChrome.css" || exit "$?"
-  symlink_if_absent "${src_dir}/userChrome.css" "${profile_dir}/chrome/userChrome.css" || exit "$?"
+  local filepath
+  for filepath in "${src_dir}/arkenfox"/{updater.sh,user-overrides.js}; do
+    local filename="${filepath##*/}"
+    backup_if_regular_file "${profile_dir}/${filename}" || exit
+    symlink_if_absent "${filepath}" "${profile_dir}/${filename}" || exit
+  done
+  cp -f "${src_dir}/arkenfox/prefsCleaner.sh" "${profile_dir}/prefsCleaner.sh" || exit
+
+  mkdir -p "${profile_dir}/chrome" || exit
+  backup_if_regular_file "${profile_dir}/chrome/userChrome.css" || exit
+  symlink_if_absent "${src_dir}/userChrome.css" "${profile_dir}/chrome/userChrome.css" || exit
+}
+
+update_userjs() {
+  local profile_dir="$1"
+  "${profile_dir}/updater.sh" -p "${profile_dir}" -us || exit
+  (cd "${profile_dir}" && "./prefsCleaner.sh" -s) || exit
 }
 
 install_firefox_extensions() {
