@@ -18,4 +18,6 @@ jobs:
           rm -rfv /usr/local/bin/{dotnet,R,Rscript,aws,aws_completer} '/Applications/Firefox.app' '/Applications/Google Chrome.app'
           && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"
       - name: Bootstrap dotfiles
-        run: bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap) <<< $'ssh-key-pass\nsudo-pass\n\n'
+        run: >
+          bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap) <<<$'ssh-key-pass\nsudo-pass\n\n'
+          && wait "$!"
