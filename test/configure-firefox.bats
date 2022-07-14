@@ -72,35 +72,37 @@ teardown() {
   refute_line --partial 'firefox --headless'
 }
 
-@test "[configure-firefox] symlink_firefox_configs: user.js absent" {
-  mkdir -p "${tmp_script_dir}/firefox"
-  touch "${tmp_script_dir}/firefox/user.js"
+@test "[configure-firefox] symlink_firefox_configs: updater.sh and user-overrides.js absent" {
+  mkdir -p "${tmp_script_dir}/firefox/arkenfox"
+  touch "${tmp_script_dir}/firefox/arkenfox"/{updater.sh,user-overrides.js,prefsCleaner.sh}
   mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
-  echo 'prefs' >"${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/prefs.js"
 
   run symlink_firefox_configs "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
 
   assert_success
-  refute [ -e "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/prefs.js" ]
-  assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/prefs.js.bak")" 'prefs'
-  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user.js" -ef "${tmp_script_dir}/firefox/user.js" ]
+  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/updater.sh" -ef "${tmp_script_dir}/firefox/arkenfox/updater.sh" ]
+  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user-overrides.js" -ef "${tmp_script_dir}/firefox/arkenfox/user-overrides.js" ]
 }
 
-@test "[configure-firefox] symlink_firefox_configs: user.js present" {
-  mkdir -p "${tmp_script_dir}/firefox"
-  touch "${tmp_script_dir}/firefox/user.js"
+@test "[configure-firefox] symlink_firefox_configs: updater.sh and user-overrides.js present" {
+  mkdir -p "${tmp_script_dir}/firefox/arkenfox"
+  touch "${tmp_script_dir}/firefox/arkenfox"/{updater.sh,user-overrides.js,prefsCleaner.sh}
   mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
-  echo 'user.js' >"${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user.js"
+  echo 'updater.sh' >"${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/updater.sh"
+  echo 'user-overrides.js' >"${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user-overrides.js"
 
   run symlink_firefox_configs "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
 
   assert_success
-  assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user.js.bak")" 'user.js'
-  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user.js" -ef "${tmp_script_dir}/firefox/user.js" ]
+  assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/updater.sh.bak")" 'updater.sh'
+  assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user-overrides.js.bak")" 'user-overrides.js'
+  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/updater.sh" -ef "${tmp_script_dir}/firefox/arkenfox/updater.sh" ]
+  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user-overrides.js" -ef "${tmp_script_dir}/firefox/arkenfox/user-overrides.js" ]
 }
 
 @test "[configure-firefox] symlink_firefox_configs: userChrome.css absent" {
-  mkdir -p "${tmp_script_dir}/firefox"
+  mkdir -p "${tmp_script_dir}/firefox/arkenfox"
+  touch "${tmp_script_dir}/firefox/arkenfox/prefsCleaner.sh"
   touch "${tmp_script_dir}/firefox/userChrome.css"
   mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
 
@@ -111,7 +113,8 @@ teardown() {
 }
 
 @test "[configure-firefox] symlink_firefox_configs: userChrome.css present" {
-  mkdir -p "${tmp_script_dir}/firefox"
+  mkdir -p "${tmp_script_dir}/firefox/arkenfox"
+  touch "${tmp_script_dir}/firefox/arkenfox/prefsCleaner.sh"
   touch "${tmp_script_dir}/firefox/userChrome.css"
   mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/chrome"
   echo 'userChrome.css' >"${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/chrome/userChrome.css"
