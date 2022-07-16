@@ -49,10 +49,6 @@ symlink_firefox_configs() {
     symlink_if_absent "${filepath}" "${profile_dir}/${filename}" || exit
   done
   cp -f "${src_dir}/arkenfox/prefsCleaner.sh" "${profile_dir}/prefsCleaner.sh" || exit
-
-  mkdir -p "${profile_dir}/chrome" || exit
-  backup_if_regular_file "${profile_dir}/chrome/userChrome.css" || exit
-  symlink_if_absent "${src_dir}/userChrome.css" "${profile_dir}/chrome/userChrome.css" || exit
 }
 
 update_userjs() {

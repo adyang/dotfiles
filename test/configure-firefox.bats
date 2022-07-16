@@ -100,32 +100,6 @@ teardown() {
   assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/user-overrides.js" -ef "${tmp_script_dir}/firefox/arkenfox/user-overrides.js" ]
 }
 
-@test "[configure-firefox] symlink_firefox_configs: userChrome.css absent" {
-  mkdir -p "${tmp_script_dir}/firefox/arkenfox"
-  touch "${tmp_script_dir}/firefox/arkenfox/prefsCleaner.sh"
-  touch "${tmp_script_dir}/firefox/userChrome.css"
-  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
-
-  run symlink_firefox_configs "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
-
-  assert_success
-  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/chrome/userChrome.css" -ef "${tmp_script_dir}/firefox/userChrome.css" ]
-}
-
-@test "[configure-firefox] symlink_firefox_configs: userChrome.css present" {
-  mkdir -p "${tmp_script_dir}/firefox/arkenfox"
-  touch "${tmp_script_dir}/firefox/arkenfox/prefsCleaner.sh"
-  touch "${tmp_script_dir}/firefox/userChrome.css"
-  mkdir -p "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/chrome"
-  echo 'userChrome.css' >"${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/chrome/userChrome.css"
-
-  run symlink_firefox_configs "${tmp_script_dir}/firefox" "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy"
-
-  assert_success
-  assert_equal "$(cat "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/chrome/userChrome.css.bak")" 'userChrome.css'
-  assert [ "${tmp_dot_home}/Library/Application Support/Firefox/Profiles/privacy/chrome/userChrome.css" -ef "${tmp_script_dir}/firefox/userChrome.css" ]
-}
-
 @test "[configure-firefox] install_firefox_extensions: install multiple extensions" {
   mock_echo 'install_firefox_extension_if_absent'
   mkdir -p "${tmp_script_dir}/firefox"
