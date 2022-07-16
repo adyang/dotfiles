@@ -19,5 +19,7 @@ jobs:
           && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"
       - name: Bootstrap dotfiles
         run: >
-          bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap) <<<$'ssh-key-pass\nsudo-pass\n\n'
-          && wait "$!"
+          trap '[[ -f "${TEMP_BOOTSTRAP_SCRIPT}" ]] && rm -f -- "${TEMP_BOOTSTRAP_SCRIPT}"' EXIT
+          && TEMP_BOOTSTRAP_SCRIPT="$(mktemp)"
+          && curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap >"${TEMP_BOOTSTRAP_SCRIPT}"
+          && bash "${TEMP_BOOTSTRAP_SCRIPT}" <<<$'ssh-key-pass\nsudo-pass\n\n'
