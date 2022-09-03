@@ -2,7 +2,7 @@
 
 await() {
   local commands=("$@")
-  local timeoutSecs=5
+  local timeoutSecs=15
   local current expiry
 
   current="$(date +%s)"
