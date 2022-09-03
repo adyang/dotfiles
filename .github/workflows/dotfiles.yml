@@ -5,21 +5,10 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [macos-12, macos-11, macos-10.15]
+        os: [macos-12, macos-11]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install bats-core dependencies for running tests
-        run: brew install coreutils
-      - name: Unit tests
-        run: ./test/run-tests
-      - name: Clean binaries and uninstall Homebrew to simulate clean bootstrap
+      - name: Test Spotlight Configration
         run: >
-          rm -rfv /usr/local/bin/{dotnet,R,Rscript,aws,aws_completer} '/Applications/Firefox.app' '/Applications/Google Chrome.app'
-          && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"
-      - name: Bootstrap dotfiles
-        run: >
-          trap '[[ -f "${TEMP_BOOTSTRAP_SCRIPT}" ]] && rm -f -- "${TEMP_BOOTSTRAP_SCRIPT}"' EXIT
-          && TEMP_BOOTSTRAP_SCRIPT="$(mktemp)"
-          && curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap >"${TEMP_BOOTSTRAP_SCRIPT}"
-          && bash "${TEMP_BOOTSTRAP_SCRIPT}" <<<$'ssh-key-pass\nsudo-pass\n\n'
+          ./configure-macos
