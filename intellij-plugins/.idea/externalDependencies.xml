@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ExternalDependencies">
     <plugin id="org.jetbrains.settingsRepository" />
+    <plugin id="PythonCore" />
     <plugin id="Pythonid" />
     <plugin id="org.intellij.scala" />
   </component>
