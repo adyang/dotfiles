@@ -65,11 +65,11 @@ For each additional key:
 4. Untick `Search man Page Index in Terminal`.
 
 ### IntelliJ Settings
-1. Navigate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > click on `Generate new token`.
-2. Enter description > tick `repo` > click `Generate token` > copy access token.
-3. In IntelliJ, navigate `Configure` > `Settings Repository`, paste HTTPS url of settings repo and enter access token.
-4. `Cmd/Ctrl + Shift + A` to open `Actions` > type and select `Keymap` > select desired default keymap.
-5. Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins.
+1. Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins > click `Restart` IDE.
+1. Navigate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > `Tokens (classic)` > click on `Generate new token (classic)`.
+1. Enter `Note` > tick `repo` > click `Generate token` > copy access token.
+1. `Cmd/Ctrl + Shift + A` to open `Actions` > type and select `Settings Repository...` > paste HTTPS url of settings repo and click `Overwrite Local` > enter access token.
+1. `Cmd/Ctrl + Shift + A` to open `Actions` > type and select `Keymap` > select desired default keymap.
 
 ### Enable Firefox Extensions
 The Firefox extensions installed via the scripts are disabled by default. To enable them:
