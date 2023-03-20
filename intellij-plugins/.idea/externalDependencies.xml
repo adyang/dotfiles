@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ExternalDependencies">
     <plugin id="org.jetbrains.settingsRepository" />
-    <plugin id="Lombook Plugin" />
     <plugin id="Pythonid" />
     <plugin id="org.intellij.scala" />
   </component>
