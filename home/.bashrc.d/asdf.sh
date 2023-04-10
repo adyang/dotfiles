@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /usr/local/opt/asdf/asdf.sh
+source "$(brew --prefix asdf)/libexec/asdf.sh"
 
 asdf_java_home() {
   local java_path
