@@ -21,6 +21,7 @@ brew "jq"
 brew "autojump"
 brew "ipcalc"
 brew "imagemagick"
+brew "bash-completion"
 
 # asdf plugin dependencies
 brew "openssl"
