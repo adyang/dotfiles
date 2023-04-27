@@ -17,6 +17,7 @@ main() {
   [[ "${CI}" == 'true' ]] || brew_kext_packages
   brew_packages
   install_powerline
+  configure_docker
   "${SCRIPT_DIR}/configure-vim" || exit "$?"
   "${SCRIPT_DIR}/configure-vscode" || exit "$?"
   "${SCRIPT_DIR}/configure-firefox" || exit "$?"
@@ -107,6 +108,25 @@ install_powerline() {
     mkdir -p "${local_bin}"
     ln -sfv "${dest}" "${local_bin}/powerline-go"
   fi
+}
+
+configure_docker() {
+  header 'Configure Docker'
+  configure_docker_cli_plugins "${DOT_HOME}/.docker/cli-plugins" || exit
+  configure_colima || exit
+}
+
+configure_docker_cli_plugins() {
+  local plugins_dir="$1"
+  local plugin
+  mkdir -p "${plugins_dir}" || return
+  for plugin in {docker-compose,docker-buildx}; do
+    symlink_if_absent "$(brew --prefix "${plugin}")/bin/${plugin}" "${plugins_dir}/${plugin}" || return
+  done
+}
+
+configure_colima() {
+  symlink_if_absent "${DOT_HOME}/.colima/ssh_config" "${DOT_HOME}/.ssh/config.d/colima"
 }
 
 configure_asdf_plugins() {
