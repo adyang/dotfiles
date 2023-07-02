@@ -31,6 +31,7 @@ brew "leiningen"
 cask "dotnet-sdk"
 brew "r"
 brew "bats-core"
+brew "shellcheck"
 
 brew "awscli"
 brew "colima"
