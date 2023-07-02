@@ -16,7 +16,7 @@ main() {
   configure_dock || exit "$?"
   configure_finder || exit "$?"
   configure_spotlight || exit "$?"
-  [[ "${CI}" == 'true' ]] || configure_spectacle || exit "$?"
+  [[ "${CI}" == 'true' ]] || configure_hammerspoon || exit "$?"
   harden_macos || exit "$?"
   disable_automatic_download || exit "$?"
   disable_siri || exit "$?"
@@ -98,9 +98,9 @@ is_spotlight_ready() {
   [[ "$(mdutil -vs /)" =~ 'Indexing '(enabled|disabled) ]]
 }
 
-configure_spectacle() {
-  sub_header 'Configure Spectacle'
-  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Spectacle.app", hidden:false}' >/dev/null &&
+configure_hammerspoon() {
+  sub_header 'Configure Hammerspoon'
+  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Hammerspoon.app", hidden:false}' >/dev/null &&
   printf 'Existing login items:\n' &&
   osascript -e 'tell application "System Events" to get the name of every login item'
 }
