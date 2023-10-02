@@ -24,7 +24,6 @@ main() {
   configure_asdf_plugins
   install_pip_packages
   "${SCRIPT_DIR}/configure-macos" || exit "$?"
-  [[ "${CI}" == 'true' ]] || install_macos_updates
 }
 
 setup_environment() {
@@ -176,11 +175,6 @@ install_pip_packages() {
   python -m pip install --upgrade --user pipx || exit "$?"
   python -m pipx install --include-deps --pip-args='--upgrade' --force ansible || exit "$?"
   python -m pipx install --pip-args='--upgrade' --force yolk3k || exit "$?"
-}
-
-install_macos_updates() {
-  header 'Install MacOS Updates'
-  sudo softwareupdate --install --all --verbose
 }
 
 (return 0 2>/dev/null) || main "$@"
