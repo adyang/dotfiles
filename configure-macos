@@ -17,6 +17,8 @@ main() {
   configure_finder || exit "$?"
   configure_spotlight || exit "$?"
   [[ "${CI}" == 'true' ]] || configure_hammerspoon || exit "$?"
+  configure_maccy || exit "$?"
+  list_login_items || exit "$?"
   harden_macos || exit "$?"
   disable_automatic_download || exit "$?"
   disable_siri || exit "$?"
@@ -100,8 +102,21 @@ is_spotlight_ready() {
 
 configure_hammerspoon() {
   sub_header 'Configure Hammerspoon'
-  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Hammerspoon.app", hidden:false}' >/dev/null &&
-  printf 'Existing login items:\n' &&
+  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Hammerspoon.app", hidden:false}' >/dev/null
+}
+
+configure_maccy() {
+  sub_header 'Configure Maccy'
+  open '/Applications/Maccy.app' &&
+  osascript -e 'tell application "Maccy" to quit' && # To generate Maccy's default preferences, otherwise subsequent configurations will not apply
+  defaults write org.p0deje.Maccy KeyboardShortcuts_popup -string '{"carbonKeyCode":9,"carbonModifiers":768}' &&
+  defaults write org.p0deje.Maccy SUEnableAutomaticChecks -bool true &&
+  defaults write org.p0deje.Maccy pasteByDefault -bool true &&
+  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Maccy.app", hidden:false}' >/dev/null
+}
+
+list_login_items() {
+  sub_header 'List Login Items'
   osascript -e 'tell application "System Events" to get the name of every login item'
 }
 
