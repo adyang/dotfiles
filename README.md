@@ -58,6 +58,12 @@ For each additional key:
 2. Click `+` > `Cmd + Shift + .` to show hidden files.
 3. Navigate to root HD and select `/Volumes`.
 
+### Configure Maccy Max Menu Item Length (Automation setting only works on UI Activation)
+1. Open Maccy > `Cmd + ,` to open Preferences.
+2. Under `Appearance` > Click on `Title Length` input box to focus on it.
+3. Move focus to another field, e.g. `Number of items` > Exit Preferences.
+4. Verify max menu item length setting is applied.
+
 ### Disable System Shortcuts that Opens Terminal to Prevent Conflicts With IntelliJ (Automation via plist not Working)
 1. Go to `Spotlight` System Preferences > `Keyboard`.
 2. Under `Shortcuts` tab, click `Services`.

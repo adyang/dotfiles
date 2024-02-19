@@ -112,7 +112,9 @@ configure_maccy() {
   defaults write org.p0deje.Maccy KeyboardShortcuts_popup -string '{"carbonKeyCode":9,"carbonModifiers":768}' &&
   defaults write org.p0deje.Maccy SUEnableAutomaticChecks -bool true &&
   defaults write org.p0deje.Maccy pasteByDefault -bool true &&
-  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Maccy.app", hidden:false}' >/dev/null
+  defaults write org.p0deje.Maccy maxMenuItemLength -int 200 &&
+  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Maccy.app", hidden:false}' >/dev/null &&
+  open '/Applications/Maccy.app'
 }
 
 list_login_items() {
