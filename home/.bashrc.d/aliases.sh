@@ -26,3 +26,4 @@ alias glod='git log --graph --pretty='\''%Cred%h%Creset -%C(auto)%d%Creset %s %C
 alias glog='git log --oneline --decorate --graph'
 alias gloga='git log --oneline --decorate --graph --all'
 
+alias k=kubectl
