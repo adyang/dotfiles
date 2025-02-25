@@ -128,63 +128,8 @@ Watch specific test(s):
 
 ## Development
 ### Development Commands
-Start virtual machine:
-```console
-vagrant up
-```
-Sync files into /vagrant folder in another terminal:
-```console
-vagrant rsync-auto
-```
-Consider taking a snapshot of the fresh installation:
-```console
-vagrant snapshot save default fresh-install
-```
-Run bootstrap via standard instructions:
-```console
-vagrant ssh
-eval "$(ssh-agent -s)"
-bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap)
-```
-Run install script (note to clean up symlinked files or reset snapshot if standard bootstrap was previously run):
-```console
-vagrant ssh -c '/Users/Shared/vagrant/install' <<<$'vagrant\n'
-```
-Restore snapshot:
-```console
-vagrant snapshot restore fresh-install
-```
-
-### Workaround Development Issues
-If `vagrant up` keeps failing because of box download, use the following command to keep retrying:
-```console
-while ! vagrant box add apscommode/macos-10.14; do : ; done
-```
-Also if using macOS, consider keeping the display on:
-```console
-caffeinate -d
-```
-
-### Creating macOS Vagrant Boxes
-[macinbox](https://github.com/bacongravy/macinbox) is used to create macOS Vagrant Box.
-
-[installinstallmacos.py](https://github.com/munki/macadmin-scripts/blob/master/installinstallmacos.py) is used to download a macOS installer disk image.
-
-1. Download desired disk image:
-    ```console
-    installinstallmacos.py
-    ```
-    Select desired installer and choose build base on host hardware.
-
-2. Install macinbox:
-    ```console
-    sudo gem install macinbox
-    ```
-
-3. Create macOS Vagrant Box, e.g.:
-    ```console
-    sudo macinbox --name macos-10.14 --box-format virtualbox --memory 4096 --installer-dmg <path/to/downloaded/disk/image>
-    ```
+Due to the way macOS is setup, it has become very difficult to start a new version of macOS on an older version of macOS for local development.
+Hence, the way forward would be to just test the installation on CI with macOS runners.
 
 ## References
 1. https://github.com/trptcolin/dotfiles
