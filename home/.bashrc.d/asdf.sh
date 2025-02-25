@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(brew --prefix asdf)/libexec/asdf.sh"
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 asdf_java_home() {
   local java_path
