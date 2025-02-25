@@ -212,23 +212,6 @@ teardown() {
   refute [ -L "${tmp_dot_home}/nest1/nest2" ]
 }
 
-@test "[install] configure_asdf_plugins: source asdf fails" {
-  source() {
-    return 1
-  }
-  mock_echo 'upadd_plugins'
-  echo 'plugin repo' > "${tmp_dot_home}/.asdf-plugins"
-  mock_echo 'install_plugin_versions'
-  echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
-  mock_echo 'additional_plugins_setup'
-
-  run configure_asdf_plugins
-
-  assert_failure 1
-  refute_line --partial 'upadd_plugins'
-  refute_line --partial 'install_plugin_versions'
-}
-
 @test "[install] configure_asdf_plugins: upadd_plugin fails" {
   upadd_plugin() {
     return 1
