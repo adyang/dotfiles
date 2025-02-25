@@ -21,6 +21,7 @@ brew "jq"
 brew "zoxide"
 brew "ipcalc"
 brew "imagemagick"
+brew "powerline-go"
 brew "bash-completion"
 
 # asdf plugin dependencies

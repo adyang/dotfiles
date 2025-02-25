@@ -16,7 +16,6 @@ main() {
   symlink_dotfiles
   [[ "${CI}" == 'true' ]] || brew_kext_packages
   brew_packages
-  install_powerline
   configure_docker
   "${SCRIPT_DIR}/configure-vim" || exit "$?"
   "${SCRIPT_DIR}/configure-vscode" || exit "$?"
@@ -93,20 +92,6 @@ brew_packages() {
   header 'Brewing Packages'
   brew update || exit "$?"
   brew bundle --verbose --file="${DOT_HOME}/Brewfile" || exit "$?"
-}
-
-install_powerline() {
-  header 'Install powerline-go'
-  local local_bin="${DOT_HOME}/.local/bin"
-  local install_dir="${DOT_HOME}/.powerline-go"
-  local url='https://github.com/justjanne/powerline-go/releases/download/v1.18.0/powerline-go-darwin-amd64'
-  local dest="${install_dir}/${url##*/}-v1.18.0"
-  if [[ ! -f "${dest}" ]]; then
-    curl --create-dirs --progress-bar --location --output "${dest}" "${url}" || exit "$?"
-    chmod u+x "${dest}"
-    mkdir -p "${local_bin}"
-    ln -sfv "${dest}" "${local_bin}/powerline-go"
-  fi
 }
 
 configure_docker() {
