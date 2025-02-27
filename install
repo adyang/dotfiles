@@ -129,28 +129,15 @@ configure_plugins() {
 
 upadd_plugin() {
   local plugin="$1"
-  if [[ "$(asdf plugin-list)" =~ (^|$'\n')"${plugin}"($|$'\n') ]]; then
-    asdf plugin-update "${plugin}"
+  if [[ "$(asdf plugin list)" =~ (^|$'\n')"${plugin}"($|$'\n') ]]; then
+    asdf plugin update "${plugin}"
   else
-    asdf plugin-add "$@"
+    asdf plugin add "$@"
   fi
 }
 
 configure_plugin_versions() {
-  local plugin_versions
-  while IFS=' ' read -ra plugin_versions; do
-    install_plugin_versions "${plugin_versions[@]}" || return "$?"
-  done < "${DOT_HOME}/.tool-versions"
-}
-
-install_plugin_versions() {
-  local plugin="$1"
-  local versions=("${@:2}")
-  local v
-  for v in "${versions[@]}"; do
-    asdf install "${plugin}" "${v}" || return "$?"
-  done
-  asdf global "${plugin}" "${versions[@]}"
+  asdf install
 }
 
 install_pip_packages() {
