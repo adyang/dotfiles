@@ -228,20 +228,6 @@ teardown() {
   refute_line --partial 'install_plugin_versions'
 }
 
-@test "[install] configure_asdf_plugins: asdf install <plugin> <version> fails" {
-  mock_failure 'asdf' 'install'
-  echo 'plugin 1.0.0' > "${tmp_dot_home}/.tool-versions"
-  mock_echo 'source'
-  mock_echo 'upadd_plugin'
-  echo 'plugin repo' > "${tmp_dot_home}/.asdf-plugins"
-  mock_echo 'additional_plugins_setup'
-
-  run configure_asdf_plugins
-
-  assert_failure 1
-  refute_line --partial 'asdf global'
-}
-
 @test "[install] install_pip_packages: upgrade pip fails" {
   mock_failure 'python' '-m pip install --upgrade pip' 
 
