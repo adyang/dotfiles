@@ -229,12 +229,12 @@ teardown() {
 
 @test "[configure-firefox] download_firefox_extension: download fails" {
   mock_failure 'curl'
-  mock_echo 'shasum'
+  mock_echo 'sha256sum'
 
   run download_firefox_extension 'download-url' "${tmp_dot_home}/extension-id"
 
   assert_failure 1
-  refute_line --partial 'shasum'
+  refute_line --partial 'sha256sum'
 }
 
 @test "[configure-firefox] download_firefox_extension: checksum succeeds" {
@@ -260,5 +260,5 @@ teardown() {
   run download_firefox_extension 'download-url' "${tmp_dot_home}/extension-id" "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 
   assert_failure 1
-  assert_line --partial 'no properly formatted SHA checksum'
+  assert_line --partial 'FAILED'
 }

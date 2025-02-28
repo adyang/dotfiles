@@ -101,7 +101,7 @@ download_firefox_extension() {
   local dest="$2"
   local checksum="$3"
   curl --fail --progress-bar --location --output "${dest}" "${url}" || return "$?"
-  shasum --algorithm 256 --check <<<"${checksum#sha256:} ${dest}"
+  sha256sum --check <<<"${checksum#sha256:} ${dest}"
 }
 
 (return 0 2>/dev/null) || main "$@"
