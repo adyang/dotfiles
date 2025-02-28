@@ -229,17 +229,17 @@ teardown() {
 
 @test "[configure-firefox] download_firefox_extension: download fails" {
   mock_failure 'curl'
-  mock_echo 'sha256sum'
+  mock_echo 'gsha256sum'
 
   run download_firefox_extension 'download-url' "${tmp_dot_home}/extension-id"
 
   assert_failure 1
-  refute_line --partial 'sha256sum'
+  refute_line --partial 'gsha256sum'
 }
 
 @test "[configure-firefox] download_firefox_extension: checksum succeeds" {
   printf 'extension' > "${tmp_dot_home}/extension-download"
-  checksum="$(sha256sum "${tmp_dot_home}/extension-download")"
+  checksum="$(gsha256sum "${tmp_dot_home}/extension-download")"
   curl() {
     local dest="$5"
     mv "${tmp_dot_home}/extension-download" "${dest}"
