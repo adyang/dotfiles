@@ -10,7 +10,7 @@ backup_if_regular_file() {
 symlink_if_absent() {
   local src="$1"
   local target="$2"
-  if [[ ! -e "${target}" ]]; then
+  if [[ ! -e "${target}" && ! -L "${target}" ]]; then
     ln -sv "${src}" "${target}"
   fi
 }
