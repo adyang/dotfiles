@@ -53,10 +53,13 @@ For each additional key:
 3. Under `Locations`, untick iCloud Drive and tick your computer's name.
 4. Under `Tags`, untick all.
 
-### Prevent Spotlight from Indexing new Mounted Volumes (Automation not Working in Mojave)
-1. Go to `Spotlight` System Preferences > `Privacy`.
-2. Click `+` > `Cmd + Shift + .` to show hidden files.
-3. Navigate to root HD and select `/Volumes`.
+### Configure Spotlight Search results (Automation causes System Prefs UI Issue in macOS Sequoia)
+1. Go to `Spotlight` System Preferences.
+2. Ensure only the following is ticked (untick the rest):
+    * Applications
+    * Calculator
+    * Folders
+    * System Settings
 
 ### Configure Maccy Max Menu Item Length (Automation setting only works on UI Activation)
 1. Open Maccy > `Cmd + ,` to open Preferences.
@@ -86,21 +89,17 @@ The Firefox extensions installed via the scripts are disabled by default. To ena
 5. Repeat for the rest of the disabled extensions.
 
 ### Import/ Configure Temporary Containers Extension Preferences
-1. Navigate to `about:addons`.
-2. Click on the `...` on the Temporary Containers extension > `Preferences`.
-3. Click on the `Export/Import` tab.
-4. Click `Import from Firefox Sync`.
+1. Login to Firefox Sync.
+2. Navigate to `about:addons`.
+3. Click on the `...` on the Temporary Containers extension > `Preferences`.
+4. Click on the `Export/Import` tab.
+5. Click `Import from Firefox Sync`.
 
 ### Enable Firefox Containers Bookmark Menus
 1. Navigate to `about:addons`.
 2. Click on the `...` on the Firefox Multi-Account Containers extension > `Preferences`.
 3. Tick `Enable Bookmark Menus` > `Allow` `Read and modify bookmarks` permission in popup dialog.
-
-### Configure Default Firefox Search Engine
-1. Navigate to target search engine site.
-2. Click on the triple dot `...` to the right of the address bar > `Add Search Engine`.
-3. Navigate to `about:preferences#search`
-4. Under `Default Search Engine` > select target search engine.
+4. Tick `Enable synchronization`.
 
 ### Reboot System
 Reboot system in order for MacOS updates to complete:
