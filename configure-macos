@@ -66,6 +66,7 @@ configure_finder() {
 
 configure_spotlight() {
   sub_header 'Configure Spotlight'
+  defaults write com.apple.assistant.support 'Search Queries Data Sharing Status' -int 2 &&
   defaults write com.apple.lookup.shared LookupSuggestionsDisabled -int 1 &&
 
   sudo killall mds &&
