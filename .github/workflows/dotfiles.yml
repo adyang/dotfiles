@@ -9,6 +9,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - name: Read spotlight preference on fresh install
+        run: defaults read com.apple.Spotlight
       - name: Install bats-core dependencies for running tests
         run: brew install coreutils
       - name: Unit tests
