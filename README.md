@@ -67,13 +67,6 @@ For each additional key:
 3. Untick `Open man Page in Terminal`.
 4. Untick `Search man Page Index in Terminal`.
 
-### IntelliJ Settings
-1. Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins > click `Restart` IDE.
-1. Navigate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > `Tokens (classic)` > click on `Generate new token (classic)`.
-1. Enter `Note` > tick `repo` > click `Generate token` > copy access token.
-1. `Cmd/Ctrl + Shift + A` to open `Actions` > type and select `Settings Repository...` > paste HTTPS url of settings repo and click `Overwrite Local` > enter access token.
-1. `Cmd/Ctrl + Shift + A` to open `Actions` > type and select `Keymap` > select desired default keymap.
-
 ### Enable Firefox Extensions
 The Firefox extensions installed via the scripts are disabled by default. To enable them:
 1. Navigate to `about:addons`.
@@ -94,6 +87,13 @@ The Firefox extensions installed via the scripts are disabled by default. To ena
 2. Click on the `...` on the Firefox Multi-Account Containers extension > `Preferences`.
 3. Tick `Enable Bookmark Menus` > `Allow` `Read and modify bookmarks` permission in popup dialog.
 4. Tick `Enable synchronization`.
+
+### IntelliJ Settings
+1. Open `./intellij-plugins` project > `Required plugins weren't loaded` dialog on bottom-right > click `Install required plugins` to install plugins > click `Restart` IDE.
+1. Navigate to GitHub > `Settings` > `Developer settings` > `Personal access tokens` > `Tokens (classic)` > click on `Generate new token (classic)`.
+1. Enter `Note` > tick `repo` > click `Generate token` > copy access token.
+1. `Cmd/Ctrl + Shift + A` to open `Actions` > type and select `Settings Repository...` > paste HTTPS url of settings repo and click `Overwrite Local` > enter access token.
+1. `Cmd/Ctrl + Shift + A` to open `Actions` > type and select `Keymap` > select desired default keymap.
 
 ### Reboot System
 Reboot system in order for MacOS updates to complete:
