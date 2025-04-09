@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+readonly SCRIPTS_LIB_DIR='{{ joinPath .chezmoi.workingTree "lib" }}'
+
+# shellcheck source=../../../lib/log.bash
+source "${SCRIPTS_LIB_DIR}/log.bash"
+
+
+header 'Brewing Packages'
+brew bundle --verbose --file="${HOME}/Brewfile" || exit

@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
+TMP_DIR="$(mktemp -d)" || exit
+readonly TMP_DIR
+
+readonly SCRIPTS_LIB_DIR='{{ joinPath .chezmoi.workingTree "lib" }}'
+
+# shellcheck source=../../../lib/log.bash
+source "${SCRIPTS_LIB_DIR}/log.bash"
+
+main() {
+  DOT_HOME="${DOT_HOME:-${HOME}}"
+  readonly DOT_HOME
+
+  header 'Configure Vim'
+  configure_vim "${DOT_HOME}/.vim-plugins"
+  header 'Install Language Servers'
+  install_language_servers "${DOT_HOME}/.local/bin" "${DOT_HOME}/.language-servers"
+}
+
+configure_vim() {
+  local plugins_file="$1"
+  local plugins=()
+  local plugin
+  while read -r plugin || [[ -n "${plugin}" ]]; do
+    plugins+=("${plugin}")
+  done <"${plugins_file}" || return "$?"
+
+  install_vim_plugins "${plugins[@]}"
+}
+
+install_vim_plugins() {
+  local plugins=("$@")
+  local plugins_path="${DOT_HOME}/.vim/pack/plugins"
+  mkdir -p "${plugins_path}"/{start,opt}
+  for plugin in "${plugins[@]}"; do
+    local basename="${plugin##*/}"
+    local dirname="${basename%.*}"
+    local plugin_dir="${plugins_path}/start/${dirname}"
+    if [[ -d "${plugin_dir}" ]]; then
+      git -C "${plugin_dir}" pull origin master || return "$?"
+    else
+      git clone "${plugin}" "${plugin_dir}" || return "$?"
+    fi
+  done
+  vim -c 'helptags ALL' -c 'qall!' &> /dev/null
+}
+
+install_language_servers() {
+  local local_bin="$1"
+  local install_base_dir="$2"
+  local install_dir="${install_base_dir}/terraform-lsp/v0.0.11-beta2"
+  local url='https://github.com/juliosueiras/terraform-lsp/releases/download/v0.0.11-beta2/terraform-lsp_0.0.11-beta2_darwin_amd64.tar.gz'
+  local archive="${TMP_DIR}/${url##*/}"
+  local dest="${install_dir}/terraform-lsp"
+  if [[ ! -f "${dest}" ]]; then
+    curl --progress-bar --location --output "${archive}" "${url}" || exit "$?"
+    mkdir -p "${install_dir}" \
+      && tar -C "${install_dir}" -xzvf "${archive}" 'terraform-lsp' || exit "$?"
+    chmod u+x "${dest}" || exit "$?"
+    mkdir -p "${local_bin}" \
+      && ln -sfv "${dest}" "${local_bin}/terraform-lsp"
+  fi
+}
+
+(return 0 2>/dev/null) || main "$@"

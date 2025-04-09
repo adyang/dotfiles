@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+
+readonly SCRIPTS_LIB_DIR='{{ joinPath .chezmoi.workingTree "lib" }}'
+
+# shellcheck source=../../../lib/log.bash
+source "${SCRIPTS_LIB_DIR}/log.bash"
+# shellcheck source=../../../lib/await.bash
+source "${SCRIPTS_LIB_DIR}/await.bash"
+
+main() {
+  header 'Configure MacOS'
+  prepare_macos_configuration || exit
+  configure_iterm2 || exit
+  configure_dock || exit
+  configure_finder || exit
+  configure_spotlight || exit
+  [[ "${CI}" == 'true' ]] || configure_hammerspoon || exit
+  configure_maccy || exit
+  list_login_items || exit
+  harden_macos || exit
+  disable_automatic_download || exit
+  disable_siri || exit
+  reload_preferences || exit
+}
+
+prepare_macos_configuration() {
+  sub_header 'Prepare MacOS Configuration'
+  osascript -e 'tell application "System Preferences" to quit'
+}
+
+configure_iterm2() {
+  sub_header 'Configure iterm2 Preferences'
+  # shellcheck disable=SC2088
+  defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '~/.iterm2' &&
+  defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
+}
+
+configure_dock() {
+  sub_header 'Configure MacOS Dock'
+  defaults write com.apple.dock persistent-apps -array &&
+  killall Dock
+}
+
+configure_finder() {
+  sub_header 'Configure MacOS Finder'
+  defaults write com.apple.finder NewWindowTarget -string 'PfLo' &&
+  defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}" &&
+
+  defaults write com.apple.finder ShowMountedServersOnDesktop -bool true &&
+
+  defaults write com.apple.finder AppleShowAllFiles -bool true &&
+  defaults write NSGlobalDomain AppleShowAllExtensions -bool true &&
+  defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false &&
+
+  defaults write com.apple.finder _FXShowPosixPathInTitle -bool true &&
+  defaults write com.apple.finder FXPreferredViewStyle -string 'Nlsv' &&
+  defaults write com.apple.finder FXDefaultSearchScope -string "SCcf" &&
+
+  defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true &&
+  defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true &&
+
+  killall Finder
+}
+
+configure_spotlight() {
+  sub_header 'Configure Spotlight'
+  defaults write com.apple.assistant.support 'Search Queries Data Sharing Status' -int 2 &&
+  defaults write com.apple.lookup.shared LookupSuggestionsDisabled -int 1 &&
+
+  sudo killall mds &&
+  sleep 1 &&
+  await is_spotlight_ready &&
+  sudo mdutil -i on / &&
+  sudo mdutil -E /
+}
+
+is_spotlight_ready() {
+  [[ "$(mdutil -vs /)" =~ 'Indexing '(enabled|disabled) ]]
+}
+
+configure_hammerspoon() {
+  sub_header 'Configure Hammerspoon'
+  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Hammerspoon.app", hidden:false}' >/dev/null
+}
+
+configure_maccy() {
+  sub_header 'Configure Maccy'
+  open '/Applications/Maccy.app' &&
+  osascript -e 'tell application "Maccy" to quit' && # To generate Maccy's default preferences, otherwise subsequent configurations will not apply
+  defaults write org.p0deje.Maccy KeyboardShortcuts_popup -string '{"carbonKeyCode":9,"carbonModifiers":768}' &&
+  defaults write org.p0deje.Maccy SUEnableAutomaticChecks -bool true &&
+  defaults write org.p0deje.Maccy pasteByDefault -bool true &&
+  defaults write org.p0deje.Maccy windowSize -string '[1200,800]' &&
+  osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Maccy.app", hidden:false}' >/dev/null &&
+  open '/Applications/Maccy.app'
+}
+
+list_login_items() {
+  sub_header 'List Login Items'
+  osascript -e 'tell application "System Events" to get the name of every login item'
+}
+
+harden_macos() {
+  sub_header 'Harden MacOS'
+  sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1 &&
+
+  sudo defaults write /var/db/locationd/Library/Preferences/ByHost/com.apple.locationd LocationServicesEnabled -int 0 &&
+  defaults write com.apple.AdLib forceLimitAdTracking -bool yes &&
+  defaults write com.apple.AdLib AD_DEVICE_IDFA -string '00000000-0000-0000-0000-000000000000' &&
+  defaults write '/Library/Application Support/CrashReporter/DiagnosticMessagesHistory' AutoSubmit -int 0
+}
+
+disable_automatic_download() {
+  sub_header 'Disable Software Updates Automatic Download'
+  sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool false
+}
+
+disable_siri() {
+  sub_header 'Disable Siri'
+  defaults write com.apple.Siri StatusMenuVisible -bool false &&
+  defaults write com.apple.Siri UserHasDeclinedEnable -bool true &&
+  defaults write com.apple.assistant.support 'Assistant Enabled' -int 0
+}
+
+reload_preferences() {
+  sub_header 'Reload Preferences'
+  killall -HUP cfprefsd &&
+  killall SystemUIServer
+}
+
+(return 0 2>/dev/null) || main "$@"
