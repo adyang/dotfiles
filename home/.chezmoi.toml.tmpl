@@ -1,2 +1,14 @@
-[hooks.read-source-state.pre]
+{{- $profiles := list "work" "personal" "others" -}}
+{{- $profile := promptChoiceOnce . "profile" "Choose your profile for this machine" $profiles -}}
+
+[data]
+    profile = {{ $profile | quote }}
+
+[hooks.init.pre]
     command = ".local/share/chezmoi/bootstrap"
+
+[diff]
+    scriptContents = false
+
+[update]
+    recurseSubmodules = false

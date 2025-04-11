@@ -1,0 +1,14 @@
+{{- if eq .profile "personal" -}}
+#!/usr/bin/env bash
+
+readonly SCRIPTS_LIB_DIR="${CHEZMOI_WORKING_TREE}/lib"
+
+# shellcheck source=../../lib/log.bash
+source "${SCRIPTS_LIB_DIR}/log.bash"
+
+header 'Clone Git Submodules'
+
+cd "${CHEZMOI_WORKING_TREE}" || exit
+git submodule update --init --recursive || exit
+git submodule foreach --recursive 'git checkout main' || exit
+{{- end -}}

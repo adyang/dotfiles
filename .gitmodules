@@ -1,0 +1,4 @@
+[submodule "home/dot_profiles/personal"]
+  path = home/dot_profiles/personal
+  url = git@github.com:adyang/dotfiles-personal.git
+  update = rebase

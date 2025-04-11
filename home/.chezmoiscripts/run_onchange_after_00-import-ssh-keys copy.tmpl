@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
+TMP_DIR="$(mktemp -d)" || exit
+readonly TMP_DIR
+
+readonly SCRIPTS_LIB_DIR="${CHEZMOI_WORKING_TREE}/lib"
+
+# shellcheck source=../../lib/log.bash
+source "${SCRIPTS_LIB_DIR}/log.bash"
+
+header 'Import SSH Keys'
+{{ range $name, $config := index .sshKeys .profile }}
+op read '{{ $config.privateKeyOpId }}' --out-file "${HOME}/.ssh/{{ $name }}" || exit
+op read '{{ $config.publicKeyOpId }}' --out-file "${HOME}/.ssh/{{ $name }}.pub" || exit
+cat <<EOF >"${TMP_DIR}/passphrase"
+op read '{{ $config.passphraseOpId }}'
+EOF
+chmod u+x "${TMP_DIR}/passphrase" || exit
+SSH_ASKPASS="${TMP_DIR}/passphrase" SSH_ASKPASS_REQUIRE='force' ssh-add --apple-use-keychain "${HOME}/.ssh/{{ $name }}" || exit
+{{ end -}}

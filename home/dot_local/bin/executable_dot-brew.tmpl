@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 readonly SCRIPTS_LIB_DIR='{{ joinPath .chezmoi.workingTree "lib" }}'
+readonly PROFILE_BREWFILE='{{ joinPath .chezmoi.homeDir ".profiles" .profile "Brewfile" }}'
 
 # shellcheck source=../../../lib/log.bash
 source "${SCRIPTS_LIB_DIR}/log.bash"
@@ -8,3 +9,6 @@ source "${SCRIPTS_LIB_DIR}/log.bash"
 
 header 'Brewing Packages'
 brew bundle --verbose --file="${HOME}/Brewfile" || exit
+if [[ -f "${PROFILE_BREWFILE}" ]]; then
+    brew bundle --verbose --file="${PROFILE_BREWFILE}" || exit
+fi

@@ -1,0 +1,15 @@
+[sshKeys.personal]
+    [sshKeys.personal.id_ed25519]
+        privateKeyOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/254wgnkx4f6kysagy4dzxplez4/yu75y2vizs7mi6m2tjk7sotede"
+        publicKeyOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/254wgnkx4f6kysagy4dzxplez4/2qz3ui4rslbljmd6i4rov73wie"
+        passphraseOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/254wgnkx4f6kysagy4dzxplez4/ohuj5con2zsglkik23xiqcvls4"
+
+[sshKeys.work]
+    [sshKeys.work.id_ed25519]
+        privateKeyOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/hhsdvfeuf5ftvbu5jmpxl3xtxi/mojb5yy5m7hk2hewwvj2vpmov4"
+        publicKeyOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/hhsdvfeuf5ftvbu5jmpxl3xtxi/p5hrxup6lqbth2dlln2janh22e"
+        passphraseOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/hhsdvfeuf5ftvbu5jmpxl3xtxi/x7iwxuzv2bqptghmigd3im5bde"
+    [sshKeys.work.id_ed25519_work]
+        privateKeyOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/hhsdvfeuf5ftvbu5jmpxl3xtxi/t4xxj34ucxymtwp3wwjukpi5fy"
+        publicKeyOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/hhsdvfeuf5ftvbu5jmpxl3xtxi/hz77hx6xte4jneboldtl7uzy5a"
+        passphraseOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/hhsdvfeuf5ftvbu5jmpxl3xtxi/yc6qzi6rcz622o2ehn5dlfyc7u"
