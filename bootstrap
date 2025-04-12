@@ -1,17 +1,39 @@
 #!/bin/bash
 
 main() {
-  install_brew <<<$'\n'
+  install_brew <<<$'\n' || exit
+  install_password_manager || exit
 }
 
 install_brew() {
   if ! type brew &>/dev/null; then
     local install
-    install="$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" || exit
+    install="$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" || return
     # Workaround installer not setting correct permissions when directory does not exists
-    sudo mkdir -p /usr/local/lib/pkgconfig || exit
-    /bin/bash -c "${install}" || exit
+    sudo mkdir -p /usr/local/lib/pkgconfig || return
+    /bin/bash -c "${install}" || return
+    setup_brew_environment || return
     brew analytics off && brew analytics
+  fi
+}
+
+setup_brew_environment() {
+  local brew_prefix
+  if [[ "$(sysctl -n machdep.cpu.brand_string)" =~ 'Apple' ]]; then
+    brew_prefix='/opt/homebrew'
+  else
+    brew_prefix='/usr/local'
+  fi
+  eval "$("${brew_prefix}/bin/brew" shellenv)"
+}
+
+install_password_manager() {
+  if [[ ! -e '/Applications/1Password.app' ]]; then
+    brew install --cask 1password || return
+  fi
+
+  if ! type op &>/dev/null; then
+    brew install --cask 1password-cli || return
   fi
 }
 
