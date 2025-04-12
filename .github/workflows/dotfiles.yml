@@ -9,10 +9,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - name: Install bats-core dependencies for running tests
-        run: brew install coreutils
-      - name: Unit tests
-        run: ./test/run-tests
       - name: Clean binaries and uninstall Homebrew to simulate clean bootstrap
         run: >
           rm -rfv /usr/local/bin/{dotnet,R,Rscript,aws,aws_completer,2to3*,idle3*,pydoc3*,python3*,python3-config*} '/Applications/Firefox.app' '/Applications/Google Chrome.app'
@@ -20,7 +16,4 @@ jobs:
       - name: Bootstrap dotfiles
         run: >
           unset HOMEBREW_NO_INSTALL_FROM_API
-          && trap '[[ -f "${TEMP_BOOTSTRAP_SCRIPT}" ]] && rm -f -- "${TEMP_BOOTSTRAP_SCRIPT}"' EXIT
-          && TEMP_BOOTSTRAP_SCRIPT="$(mktemp)"
-          && curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap >"${TEMP_BOOTSTRAP_SCRIPT}"
-          && bash "${TEMP_BOOTSTRAP_SCRIPT}" <<<$'ssh-key-pass\nsudo-pass\n\n'
+          && sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply --verbose --promptChoice profile=others "${GITHUB_REPOSITORY%/*}" <<<$'sudo-pass\n\n'
