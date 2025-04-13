@@ -16,4 +16,4 @@ jobs:
       - name: Bootstrap dotfiles
         run: >
           unset HOMEBREW_NO_INSTALL_FROM_API
-          && sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply --verbose --promptChoice profile=others "${GITHUB_REPOSITORY%/*}" <<<$'sudo-pass\n\n'
+          && sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply --verbose  --recurse-submodules=false --promptChoice profile=others "${GITHUB_REPOSITORY%/*}" <<<$'sudo-pass\n\n'
