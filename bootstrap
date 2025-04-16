@@ -37,12 +37,12 @@ install_password_manager() {
     brew install --cask 1password-cli || return
   fi
 
-  note $'\nPlease sign in to your 1Password account.'
+  printf '\n%s\n' 'Please sign in to your 1Password account. And enable 1Password CLI Integration on the app (https://developer.1password.com/docs/cli/app-integration).'
   read -rp 'Press RETURN to continue when done...' || return
 }
 
 install_dotfiles() {
-  sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply adyang
+  sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --verbose --recurse-submodules=false --apply adyang
 }
 
 main "$@"
