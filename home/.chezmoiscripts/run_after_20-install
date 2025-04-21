@@ -14,7 +14,6 @@ main() {
   "${LOCAL_BIN_DIR}/dot-brew" || exit
   configure_docker
   "${LOCAL_BIN_DIR}/dot-vim" || exit
-  "${LOCAL_BIN_DIR}/dot-vscode" || exit
   "${LOCAL_BIN_DIR}/dot-firefox" || exit
   configure_asdf_plugins
   install_pip_packages
