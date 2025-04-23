@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+readonly SCRIPTS_LIB_DIR='{{ joinPath .chezmoi.workingTree "lib" }}'
+
+# shellcheck source=../../../lib/log.bash
+source "${SCRIPTS_LIB_DIR}/log.bash"
+
+main() {
+  header 'Configure asdf Plugins'
+  export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+  configure_plugins || exit
+  configure_plugin_versions || exit
+}
+
+configure_plugins() {
+  local plugin_props
+  while IFS=' ' read -ra plugin_props; do
+    upadd_plugin "${plugin_props[@]}" || return "$?"
+  done < "${HOME}/.asdf-plugins"
+}
+
+upadd_plugin() {
+  local plugin="$1"
+  if [[ "$(asdf plugin list)" =~ (^|$'\n')"${plugin}"($|$'\n') ]]; then
+    asdf plugin update "${plugin}"
+  else
+    asdf plugin add "$@"
+  fi
+}
+
+configure_plugin_versions() {
+  asdf install
+}
+
+(return 0 2>/dev/null) || main "$@"
