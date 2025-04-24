@@ -16,7 +16,6 @@ main() {
   "${LOCAL_BIN_DIR}/dot-vim" || exit
   "${LOCAL_BIN_DIR}/dot-firefox" || exit
   "${LOCAL_BIN_DIR}/dot-asdf" || exit
-  install_pip_packages
   "${LOCAL_BIN_DIR}/dot-macos" || exit
 }
 
@@ -50,14 +49,6 @@ configure_docker_cli_plugins() {
   for plugin in {docker-compose,docker-buildx}; do
     symlink_if_absent "$(brew --prefix "${plugin}")/bin/${plugin}" "${plugins_dir}/${plugin}" || return
   done
-}
-
-install_pip_packages() {
-  header 'Install pip Packages'
-  python -m pip install --upgrade pip || exit
-  python -m pip install --upgrade --user pipx || exit
-  python -m pipx install --include-deps --pip-args='--upgrade' --force ansible || exit
-  python -m pipx install --pip-args='--upgrade' --force yolk3k || exit
 }
 
 (return 0 2>/dev/null) || main "$@"
