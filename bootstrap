@@ -42,7 +42,7 @@ install_password_manager() {
 }
 
 install_dotfiles() {
-  sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --verbose --recurse-submodules=false --apply adyang
+  sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --verbose --recurse-submodules=false --no-tty --apply adyang
 }
 
 main "$@"
