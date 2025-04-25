@@ -33,6 +33,7 @@ brew "shellcheck"
 
 brew "awscli"
 brew "colima"
+brew "qemu"
 brew "docker"
 brew "docker-compose"
 brew "docker-buildx"
