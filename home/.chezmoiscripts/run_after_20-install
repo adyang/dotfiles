@@ -5,14 +5,11 @@ readonly LOCAL_BIN_DIR="${HOME}/.local/bin"
 
 # shellcheck source=../../lib/log.bash
 source "${SCRIPTS_LIB_DIR}/log.bash"
-# shellcheck source=../../lib/file.bash
-source "${SCRIPTS_LIB_DIR}/file.bash"
 
 main() {
   [[ "${CI}" == 'true' ]] || sudo_keep_alive
   configure_shell
   "${LOCAL_BIN_DIR}/dot-brew" || exit
-  configure_docker
   "${LOCAL_BIN_DIR}/dot-vim" || exit
   "${LOCAL_BIN_DIR}/dot-firefox" || exit
   "${LOCAL_BIN_DIR}/dot-asdf" || exit
@@ -35,20 +32,6 @@ sudo_until_process_ends() {
 configure_shell() {
   header "Configure Shell"
   sudo chsh -s /bin/bash "$(whoami)" || exit
-}
-
-configure_docker() {
-  header 'Configure Docker'
-  configure_docker_cli_plugins "${HOME}/.docker/cli-plugins" || exit
-}
-
-configure_docker_cli_plugins() {
-  local plugins_dir="$1"
-  local plugin
-  mkdir -p "${plugins_dir}" || return
-  for plugin in {docker-compose,docker-buildx}; do
-    symlink_if_absent "$(brew --prefix "${plugin}")/bin/${plugin}" "${plugins_dir}/${plugin}" || return
-  done
 }
 
 (return 0 2>/dev/null) || main "$@"
