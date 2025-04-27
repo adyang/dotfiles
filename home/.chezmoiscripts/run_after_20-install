@@ -31,7 +31,7 @@ sudo_until_process_ends() {
 
 configure_shell() {
   header "Configure Shell"
-  sudo chsh -s /bin/bash "$(whoami)" || exit
+  sudo chsh -s /bin/zsh "$(whoami)" || exit
 }
 
 (return 0 2>/dev/null) || main "$@"

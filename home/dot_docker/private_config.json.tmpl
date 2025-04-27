@@ -1,7 +1,7 @@
 {
 	"auths": {},
 	"cliPluginsExtraDirs": [
-		"{{ output "brew" "--prefix" | trim }}/lib/docker/cli-plugins"
+		"{{ .brewPrefix }}/lib/docker/cli-plugins"
 	] ,
 	"credsStore": "osxkeychain",
 	"currentContext": "{{ isExecutable (lookPath "docker") | ternary (output "docker" "context" "show" | trim) "default" }}"

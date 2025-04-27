@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+PATH="${PATH}:${HOME}/.local/bin"
+
+for script in "${HOME}"/.zshrc.d/*.zsh; do
+  if [[ -r "${script}" ]]; then
+    source "${script}" 
+  fi
+done

@@ -1,0 +1,31 @@
+#!/usr/bin/env zsh
+
+alias ls='ls -G'
+alias la='ls -lAh'
+alias ll='ls -lh'
+
+alias ga='git add'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gbr='git branch --remote'
+alias gcmsg='git commit -m'
+alias gcam='git commit -a -m'
+alias 'gc!'='git commit -v --amend'
+alias 'gcn!'='git commit -v --no-edit --amend'
+alias gst='git status'
+alias gss='git status -s'
+alias gp='git push'
+alias gup='git pull --rebase'
+alias gupa='git pull --rebase --autostash'
+alias gco='git checkout'
+alias gcb='git checkout -b'
+alias gcm='git checkout master'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias glg='git log --stat'
+alias glo='git log --oneline --decorate'
+alias glod='git log --graph --pretty='\''%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset'\'
+alias glog='git log --oneline --decorate --graph'
+alias gloga='git log --oneline --decorate --graph --all'
+
+alias k=kubectl

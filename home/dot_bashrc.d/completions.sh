@@ -8,5 +8,3 @@ if type brew &>/dev/null; then
     done
   fi
 fi
-
-eval "$(register-python-argcomplete pipx)"

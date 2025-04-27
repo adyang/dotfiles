@@ -3,6 +3,7 @@
 
 [data]
     profile = {{ $profile | quote }}
+    brewPrefix = {{ output "brew" "--prefix" | trim | quote }}
 
 [diff]
     scriptContents = false
