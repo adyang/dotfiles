@@ -16,5 +16,4 @@ jobs:
       - name: Bootstrap dotfiles
         run: >
           unset HOMEBREW_NO_INSTALL_FROM_API
-          && type docker && docker version && docker context show
           && ./bootstrap <<<$'sudo-pass\n\no\n'
