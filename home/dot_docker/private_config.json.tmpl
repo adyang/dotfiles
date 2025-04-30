@@ -4,5 +4,5 @@
 		"{{ .brewPrefix }}/lib/docker/cli-plugins"
 	] ,
 	"credsStore": "osxkeychain",
-	"currentContext": "{{ lookPath "docker" }}"
+	"currentContext": "{{ if lookPath "docker" }}{{ output "docker" "context" "show" | trim }}{{ else }}default{{ end }}"
 }
