@@ -47,6 +47,7 @@ cask "1password-cli"
 cask "iterm2"
 brew "svn" # SVN is removed in Xcode 11.4 but it is used during install of font-inconsolata-g-for-powerline
 cask "font-inconsolata-g-for-powerline"
+cask "gpg-suite-no-mail"
 cask "hammerspoon"
 cask "maccy"
 cask "firefox"
