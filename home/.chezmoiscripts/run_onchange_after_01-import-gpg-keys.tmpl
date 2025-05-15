@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+readonly SCRIPTS_LIB_DIR="${CHEZMOI_WORKING_TREE}/lib"
+
+# shellcheck source=../../lib/log.bash
+source "${SCRIPTS_LIB_DIR}/log.bash"
+
+header 'Import GPG Keys'
+{{ range (index .gpgKeys .profile) }}
+op read '{{ .privateKeysOpId }}' | gpg --import
+if (( PIPESTATUS[0] > 0 || PIPESTATUS[1] > 0 )); then
+  exit 1
+fi
+
+op read '{{ .ownertrustOpId }}' | gpg --import-ownertrust
+if (( PIPESTATUS[0] > 0 || PIPESTATUS[1] > 0 )); then
+  exit 1
+fi
+{{ end -}}

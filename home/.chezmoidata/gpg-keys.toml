@@ -1,0 +1,7 @@
+[[gpgKeys.personal]]
+    privateKeysOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/5doq477gg4ldf5ohfx7khzn2eu/gtv2x3th5llzc7vfjcwajuipwy"
+    ownertrustOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/5doq477gg4ldf5ohfx7khzn2eu/m3eae3stppklijnhuzsi2f6cti"
+
+[[gpgKeys.work]]
+    privateKeysOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/5doq477gg4ldf5ohfx7khzn2eu/gtv2x3th5llzc7vfjcwajuipwy"
+    ownertrustOpId = "op://gywzfaxud5i3tw6hubkyrgiesq/5doq477gg4ldf5ohfx7khzn2eu/m3eae3stppklijnhuzsi2f6cti"
