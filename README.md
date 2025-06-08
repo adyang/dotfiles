@@ -1,26 +1,20 @@
 [![dotfiles](https://github.com/adyang/dotfiles/workflows/dotfiles/badge.svg)](https://github.com/adyang/dotfiles/actions?query=workflow%3Adotfiles)
 
 # Dotfiles
+## Prerequisites
+1. Give Terminal Disk Access to avoid installation failure:
+    * Go to `Privacy & Security` system preferences > `Full Disk Access` > click `+` and authenticate > select `Applications/Utilities/Terminal.app` > click `Open`
 
 ## Bootstrap
 ```console
 bash <(curl --fail --silent --show-error --location https://raw.githubusercontent.com/adyang/dotfiles/master/bootstrap)
 ```
-This will setup the dotfiles repository into the current directory.
+This will setup the dotfiles repository via [chezmoi](https://www.chezmoi.io/).
 
-There are 5 blocking interactive prompts:
-1. Passphrase for SSH key (either use Diceware or generate from external password manager)
-    - The public key will be copied into your clipboard; you can paste it into repository services while the installation proceeds
-2. Password for sudo
-3. Pause after expected failure of first `brew bundle --verbose --file=Brewfile-kext`
-    - Go to `Security & Privacy` > click on `Allow`
-    - Press enter to resume rest of installation
-4. Pause on installation of VS Code
-    - Click `OK`
-    - Go to `Security & Privacy` > click on `Open Anyway`
-    - On dialog, click `Open`
-    - If installation of VS Code extension fails, rerun install/ bootstrap script
-5. Pause during configuration of MacOS
+There are a few blocking interactive prompts:
+1. Prompt to sign in to 1Password and to turn on 1Password CLI integration.
+1. Password for sudo during brewing of apps
+1. Pause during configuration of MacOS
     - Dialog `"Terminal.app" wants access to control "System Events.app"...` appears
     - Click `OK`
 
@@ -31,21 +25,6 @@ And 1 non-blocking prompt to set the default browser.
 ```console
 sudo fdesetup enable
 ```
-
-### Import GPG Keys
-Obtain required files from password manager or external source, then run:
-```console
-./import-gpg-keys --public-key <public-key-file> --secret-key <secret-key-file> --ownertrust <ownertrust-file>
-```
-
-### Configure Additional SSH Keys
-For each additional key:
-1. Generate new SSH Key Pair, e.g. assuming key-filename `id_ed25519_suffix`:
-    ```console
-    ./generate-ssh-keys --key-filename id_ed25519_suffix
-    ```
-2. Paste copied public key into corresponding repository services
-3. Obtain its SSH configuration file from password manager or external source, and copy it into `${HOME}/.ssh/config.d/` directory.
 
 ### Configure Finder Sidebar (No Easy Way to Automate)
 1. Open Finder > `Cmd + ,` to open Finder Preferences.
@@ -99,24 +78,6 @@ The Firefox extensions installed via the scripts are disabled by default. To ena
 Reboot system in order for MacOS updates to complete:
 ```console
 sudo shutdown -r now
-```
-
-## Testing
-Run all tests:
-```console
-./test/run-tests
-```
-Run specific test(s):
-```console
-./test/run-tests <paths/to/bats/file ...>
-```
-Watch all tests:
-```console
-./test/watch-tests
-```
-Watch specific test(s):
-```console
-./test/watch-tests <paths/to/bats/file ...>
 ```
 
 ## Development
