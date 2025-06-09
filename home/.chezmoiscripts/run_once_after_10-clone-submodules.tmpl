@@ -1,7 +1,7 @@
-{{- if eq .profile "personal" -}}
 #!/usr/bin/env bash
 
 readonly SCRIPTS_LIB_DIR="${CHEZMOI_WORKING_TREE}/lib"
+readonly PROFILE_SUBMODULE='{{ joinPath "home/dot_profiles" .profile }}'
 
 # shellcheck source=../../lib/log.bash
 source "${SCRIPTS_LIB_DIR}/log.bash"
@@ -9,6 +9,7 @@ source "${SCRIPTS_LIB_DIR}/log.bash"
 header 'Clone Git Submodules'
 
 cd "${CHEZMOI_WORKING_TREE}" || exit
-git submodule update --init --recursive || exit
-git submodule foreach --recursive 'git checkout main' || exit
-{{- end -}}
+if git submodule status "${PROFILE_SUBMODULE}" >/dev/null; then
+    git submodule update --init --recursive "${PROFILE_SUBMODULE}" || exit
+    git submodule foreach --recursive 'git checkout main' || exit
+fi

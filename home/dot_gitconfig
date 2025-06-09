@@ -12,4 +12,4 @@
 	autocrlf = input
 	safecrlf = true
 [includeIf "gitdir:~/work/"]
-	path = ~/work/.gitconfig
+	path = ~/.profiles/work/.gitconfig

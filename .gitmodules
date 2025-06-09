@@ -2,3 +2,7 @@
   path = home/dot_profiles/personal
   url = git@github.com:adyang/dotfiles-personal.git
   update = rebase
+[submodule "home/dot_profiles/work"]
+	path = home/dot_profiles/work
+	url = git@github.com:adyang/dotfiles-work.git
+  update = rebase
