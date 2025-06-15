@@ -19,6 +19,7 @@ brew "zoxide"
 brew "ipcalc"
 brew "imagemagick"
 brew "powerline-go"
+brew "fdupes"
 
 # asdf plugin dependencies
 brew "openssl"
