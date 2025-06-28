@@ -67,7 +67,7 @@ cask "wireshark"
 cask "superduper"
 cask "zoom"
 
-vscode "MS-vsliveshare.vsliveshare"
+vscode "MS-vsliveshare.vsliveshare" unless ENV["CI"]
 vscode "betterthantomorrow.calva" unless ENV["CI"]
 vscode "ms-dotnettools.csharp"
 vscode "Orta.vscode-jest"
