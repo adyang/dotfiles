@@ -68,7 +68,7 @@ cask "superduper"
 cask "zoom"
 
 vscode "MS-vsliveshare.vsliveshare"
-vscode "betterthantomorrow.calva"
+vscode "betterthantomorrow.calva" unless ENV["CI"]
 vscode "ms-dotnettools.csharp"
 vscode "Orta.vscode-jest"
 vscode "sumneko.lua"
