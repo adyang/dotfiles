@@ -69,12 +69,12 @@ cask "zoom"
 
 vscode "MS-vsliveshare.vsliveshare" unless ENV["CI"]
 vscode "betterthantomorrow.calva" unless ENV["CI"]
-vscode "ms-dotnettools.csharp"
-vscode "Orta.vscode-jest"
-vscode "sumneko.lua"
-vscode "hashicorp.terraform"
-vscode "ms-azuretools.vscode-docker"
-vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
-vscode "timonwong.shellcheck"
-vscode "redhat.vscode-yaml"
-vscode "redhat.vscode-xml"
+vscode "ms-dotnettools.csharp" unless ENV["CI"]
+vscode "Orta.vscode-jest" unless ENV["CI"]
+vscode "sumneko.lua" unless ENV["CI"]
+vscode "hashicorp.terraform" unless ENV["CI"]
+vscode "ms-azuretools.vscode-docker" unless ENV["CI"]
+vscode "ms-kubernetes-tools.vscode-kubernetes-tools" unless ENV["CI"]
+vscode "timonwong.shellcheck" unless ENV["CI"]
+vscode "redhat.vscode-yaml" unless ENV["CI"]
+vscode "redhat.vscode-xml" unless ENV["CI"]
