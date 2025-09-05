@@ -14,6 +14,7 @@ main() {
   configure_dock || exit
   configure_finder || exit
   configure_spotlight || exit
+  configure_screen_captures || exit
   [[ "${CI}" == 'true' ]] || configure_hammerspoon || exit
   configure_maccy || exit
   list_login_items || exit
@@ -76,6 +77,13 @@ configure_spotlight() {
 
 is_spotlight_ready() {
   [[ "$(mdutil -vs /)" =~ 'Indexing '(enabled|disabled) ]]
+}
+
+configure_screen_captures() {
+  sub_header 'Configure Screen Captures'
+  local screen_captures_dir="${HOME}/Desktop/Screen Captures"
+  mkdir -p "${screen_captures_dir}" &&
+  defaults write com.apple.screencapture location -string "${screen_captures_dir}"
 }
 
 configure_hammerspoon() {
