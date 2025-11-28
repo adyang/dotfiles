@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+readonly PROFILE_BIN_DIR='{{ joinPath .chezmoi.homeDir ".profiles" .profile "bin" }}'
+
+if [[ -d "${PROFILE_BIN_DIR}" ]]; then
+    PATH="${PATH}:${PROFILE_BIN_DIR}"
+fi
