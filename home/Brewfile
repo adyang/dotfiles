@@ -20,6 +20,7 @@ brew "ipcalc"
 brew "imagemagick"
 brew "powerline-go"
 brew "fdupes"
+brew "exiftool"
 
 # asdf plugin dependencies
 brew "openssl"
