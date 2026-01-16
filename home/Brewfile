@@ -64,7 +64,7 @@ cask "drawio"
 cask "calibre"
 cask "vlc"
 cask "visualvm"
-cask "wireshark"
+cask "wireshark-app"
 cask "superduper"
 cask "zoom"
 
