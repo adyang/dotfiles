@@ -42,7 +42,6 @@ brew "kubectl"
 brew "kind"
 brew "helm"
 cask "virtualbox"
-cask "parallels"
 
 cask "1password"
 cask "1password-cli"
