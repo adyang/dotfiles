@@ -59,5 +59,6 @@
     ],
     "workbench.startupEditor": "newUntitledFile",
     "redhat.telemetry.enabled": false,
-    "security.workspace.trust.untrustedFiles": "open"
+    "security.workspace.trust.untrustedFiles": "open",
+    "docker.extension.enableComposeLanguageServer": false
 }
