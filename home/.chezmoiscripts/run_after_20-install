@@ -13,6 +13,7 @@ main() {
   "${LOCAL_BIN_DIR}/dot-vim" || exit
   "${LOCAL_BIN_DIR}/dot-firefox" || exit
   "${LOCAL_BIN_DIR}/dot-asdf" || exit
+  "${LOCAL_BIN_DIR}/dot-uv-tools" || exit
   [[ "${CI}" == 'true' ]] || "${LOCAL_BIN_DIR}/dot-macos" || exit
 }
 

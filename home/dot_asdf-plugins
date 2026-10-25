@@ -1,7 +1,9 @@
 python
+uv
 java
 maven
 gradle
 nodejs
+deno
 postgres
 terraform

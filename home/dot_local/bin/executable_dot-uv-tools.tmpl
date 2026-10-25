@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+readonly SCRIPTS_LIB_DIR='{{ joinPath .chezmoi.workingTree "lib" }}'
+readonly PROFILE_UV_TOOLS='{{ joinPath .chezmoi.homeDir ".profiles" .profile ".uv-tools" }}'
+
+# shellcheck source=../../../lib/log.bash
+source "${SCRIPTS_LIB_DIR}/log.bash"
+
+if [[ ! -f "${PROFILE_UV_TOOLS}" ]]; then
+    exit
+fi
+
+header 'Uving Packages'
+
+export UV_PYTHON_PREFERENCE=only-managed
+
+while read -r tool; do
+    uv tool install "${tool}" || exit
+done <"${PROFILE_UV_TOOLS}"
